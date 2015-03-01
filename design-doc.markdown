@@ -1,16 +1,41 @@
-# YES HELLO WHAT
+# Doctopus
 
-High-level goal: pull code from Some Source; find the docs within That
-Source; Execute Some Command to generate the docs; put the docs in the
-Right Place.
+## High-level goals:
+
+ - pull code from Some Source
+ - find the docs within That Source
+ - Execute Some Command to generate the docs
+ - put the docs in the Right Place.
 
 Note: The Right Place is on the web (we want an HTTP server -- HTTP Kit)
 
-### Differentiation:
+### Differentiation from existing tools:
+
 1. Separation of concerns from Sphinx
+ - Sphinx/RST is an implementation, not a protocol, so will need to wrap it, rather than implement it.
+ - Doctopus doesn't care what kind of documentation system you're using because document generation is pluggable.
+
+2. Doesn't support editing or previewing documentation -- just aggregation.
+
 
 ## Structure
 
-Some sort of thing that parses a file
+### File Parsing
 
-Some sort of thing that finds all the files of a type in a directory
+Doctopus takes a configuration file that contains project roots, or documentation roots that you wish to walk. Doctopus begins this walk in the ``source`` directory.
+
+As Doctopus walks the directory tree it will parse, and convert each file that matches the documentation format that you've configured for the repository in question.
+
+**note:** Multiple documentation formats within a single source repository are not a specific goal of Doctopus.
+
+### HTML output
+
+Files that match the type of markup language you've configured for your source project will get converted to HTML in a directory structure mirroring the original, but situated in the ``output`` directory root.
+
+
+### Routing HTTP to documentation sections
+
+Early versions will most likely to the static compilation to a central directory, namespaced by repository which documentation comes from.
+
+Later versions may begin to explore dynamically building index pages that display the full tree of documentation regardless of the input markup language.
+
