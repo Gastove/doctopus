@@ -11,8 +11,7 @@
   (if (re-find #"(?i)md|markdown|mdown$" (.getPath file-handle))
     true
     false
-    )
-  )
+    ))
 
 
 (defn filter-the-docs
