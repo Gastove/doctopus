@@ -15,14 +15,13 @@
   )
 
 
-(defn filtered-the-docs
+(defn filter-the-docs
   "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
   [[path directories files] doc-type-fn]
-    (if-let [matched-files (filter doc-type-fn files)]
-      [path matched-files]
-      nil
-    )
-  )
+  (if-let [matched-files (filter doc-type-fn files)]
+    [path matched-files]
+    nil
+    ))
 
 
 (declare truncate-str)
@@ -34,7 +33,7 @@
         ]
     (for [matched-file matched-files]
       [doc-root str-rel-path matched-file])
-  )
+    ))
 
 
 (defn truncate-str
@@ -51,4 +50,4 @@
         assembled-result (assemble-the-results filtered-docs)
         ]
     assembled-result
-  )
+    ))
