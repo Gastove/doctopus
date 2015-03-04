@@ -5,13 +5,27 @@
 ;; THIS IS TOTALLY DATABASS
 ;; (pprint (fs/walk vector "/Users/rossdonaldson/Code/doctopus/src/"))
 
-(defn markdown-type
-  "returns true only for type files. Expects a Java.Util.FileHandle"
-  [file-handle]
-  (if (re-find #"(?i)md|markdown|mdown$" (.getPath file-handle))
+(defn is-type?
+  "Returns true if the type of the file matches the type given."
+  [file-handle type-regex]
+  (if (re-find type-regex (.getPath file-handle))
     true
     false
     ))
+
+
+(defn markdown-type
+  "returns true only for type files. Expects a Java.Util.FileHandle"
+  [file-handle]
+  (is-type? #"(?i)md|markdown|mdown$" (.getpath file-handle)
+            ))
+
+
+(defn restructured-type
+  "returns true only for type files. Expects a Java.Util.FileHandle"
+  [file-handle]
+  (is-type? #"(?i)rst|rest$" (.getPath file-handle)
+            ))
 
 
 (defn filter-the-docs
@@ -42,7 +56,7 @@
 
 
 (defn walk-the-docs
-  "Walk the docs"
+  "Walk the docs; currently only looks for Markdown Documents."
   [doc-root]
   (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
         filtered-docs (filter-the-docs docs-all markdown-type)
