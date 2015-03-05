@@ -5,23 +5,30 @@
 ;; THIS IS TOTALLY DATABASS
 ;; (pprint (fs/walk vector "/Users/rossdonaldson/Code/doctopus/src/"))
 
-(defn is-type?
+(defmulti is-type?
   "Returns true if the type of the file matches the type given."
-  [file-handle type-regex]
-  (if (re-find type-regex (.getPath file-handle))
+  (fn [fobj regex] (class fobj)))
+
+(defmethod is-type? java.lang.String
+  [file-string type-regex]
+  (if (re-find type-regex file-string)
     true
     false
     ))
 
+(defmethod is-type? java.io.File
+  [file-handle type-regex]
+  (is-type? (.getPath file-handle) type-regex))
 
-(defn markdown-type
+
+(defn markdown?
   "returns true only for type files. Expects a Java.Util.FileHandle"
   [file-handle]
-  (is-type? #"(?i)md|markdown|mdown$" (.getpath file-handle)
+  (is-type? file-handle #"(?i)md|markdown|mdown$"
             ))
 
 
-(defn restructured-type
+(defn restructured-text?
   "returns true only for type files. Expects a Java.Util.FileHandle"
   [file-handle]
   (is-type? #"(?i)rst|rest$" (.getPath file-handle)
