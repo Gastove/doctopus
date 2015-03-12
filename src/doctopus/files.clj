@@ -13,8 +13,7 @@
   [file-string type-regex]
   (if (re-find type-regex file-string)
     true
-    false
-    ))
+    false))
 
 (defmethod is-type? java.io.File
   [file-handle type-regex]
@@ -37,23 +36,20 @@
 
 (defn filter-the-docs
   "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
-  [[path directories files] doc-type-fn]
-  (println directories)
-  (if-let [matched-files (filter doc-type-fn files)]
-    [path matched-files]
-    nil))
+  [path-listing doc-type-fn]
+  (into [] (for [[path directory files] path-listing
+                 :let [found-files (filter doc-type-fn files)]
+                 :when (not-empty found-files)]
+             [path found-files])))
 
 
 (declare truncate-str)
 (defn assemble-the-results
   "More stuff"
-  [doc-root [path matched-files]]
-  (let [str-path (.getPath path)
-        str-rel-path (truncate-str doc-root str-path)
-        ]
-    (for [matched-file matched-files]
-      [doc-root str-rel-path matched-file])
-    ))
+  [doc-root path-and-files]
+  (flatten (for [[path matched-files] path-and-files]
+             (for [matched-file matched-files]
+               (fs/file path matched-file)))))
 
 
 (defn truncate-str
@@ -66,8 +62,7 @@
   "Walk the docs; currently only looks for Markdown Documents."
   [doc-root]
   (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
-        filtered-docs (filter-the-docs docs-all markdown-type)
-        assembled-result (assemble-the-results doc-root filtered-docs)
-        ]
+        filtered-docs (filter-the-docs docs-all markdown?)
+        assembled-result (assemble-the-results doc-root filtered-docs)]
     assembled-result
     ))
