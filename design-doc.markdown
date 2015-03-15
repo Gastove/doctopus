@@ -39,3 +39,15 @@ Early versions will most likely to the static compilation to a central directory
 
 Later versions may begin to explore dynamically building index pages that display the full tree of documentation regardless of the input markup language.
 
+
+# Thoughts
+
+Here's an idea: I wonder if using Heroku as a use-case makes sense. That is: what if you could host Doctopus directly on a heroku instance? This would require a couple things:
+
+1. *Limited use of the local file system* -- Instead of a flow from, say, git -> local tmp -> local FS, we'd need to go git -> local tmp -> some database.
+1. *We could, potentially, _also_ host docs, a la RTD*
+2. *We have to be sure a Heroku dyno actually has git installed*. This is a damn fine question.
+1. Ponies?
+
+My thought goes something like: we have a postgres instance as an authoritative Repo Storage service -- it stores everything we need to go generate a set of docs. We use local tmp to clone the repo in
+to, then put the generated content in to Redis, from whence the docs are served.
