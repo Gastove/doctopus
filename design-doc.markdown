@@ -51,3 +51,6 @@ Here's an idea: I wonder if using Heroku as a use-case makes sense. That is: wha
 
 My thought goes something like: we have a postgres instance as an authoritative Repo Storage service -- it stores everything we need to go generate a set of docs. We use local tmp to clone the repo in
 to, then put the generated content in to Redis, from whence the docs are served.
+
+The biggest thing I don't know at this point is this: _what size limits would this impose on a repo we want to pull in?_ Heroku provides what they call an Ephemeral File System; it is writable, I
+assume through the Jave temporary file API (which the filesystem util we're using wraps). So. Questions about.
