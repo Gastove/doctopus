@@ -1,38 +1,18 @@
 (ns doctopus.files
-  (:require [me.raynes.fs :as fs]
-            [clojure.string :as str]))
+  "Tools for managing files.
+
+We have: tools for walking a directory and returning only files matching a predicate.
+
+We probably want, but don't yet have: tools for managing local temp (making
+temp dirs, moving around any output generated, cleaning up later)."
+  (:require [clojure.string :as str]
+            [doctopus.files.predicates :refer [markdown]]
+            [me.raynes.fs :as fs]))
+
+;; I think we've pretty much captured this by now? -- RMD Sun Mar 15 20:37:46 2015
 
 ;; THIS IS TOTALLY DATABASS
 ;; (pprint (fs/walk vector "/Users/rossdonaldson/Code/doctopus/src/"))
-
-(defmulti is-type?
-  "Returns true if the type of the file matches the type given."
-  (fn [fobj regex] (class fobj)))
-
-(defmethod is-type? java.lang.String
-  [file-string type-regex]
-  (if (re-find type-regex file-string)
-    true
-    false))
-
-(defmethod is-type? java.io.File
-  [file-handle type-regex]
-  (is-type? (.getPath file-handle) type-regex))
-
-
-(defn markdown?
-  "returns true only for type files. Expects a Java.Util.FileHandle"
-  [file-handle]
-  (is-type? file-handle #"(?i)md|markdown|mdown$"
-            ))
-
-
-(defn restructured-text?
-  "returns true only for type files. Expects a Java.Util.FileHandle"
-  [file-handle]
-  (is-type? #"(?i)rst|rest$" (.getPath file-handle)
-            ))
-
 
 (defn filter-the-docs
   "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
