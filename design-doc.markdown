@@ -54,3 +54,7 @@ to, then put the generated content in to Redis, from whence the docs are served.
 
 The biggest thing I don't know at this point is this: _what size limits would this impose on a repo we want to pull in?_ Heroku provides what they call an Ephemeral File System; it is writable, I
 assume through the Jave temporary file API (which the filesystem util we're using wraps). So. Questions about.
+
+## Pandoc
+
+Vendorizing pandoc would be the sweetest goddamn thing, and I have no idea how to do it. But [this dude](https://github.com/toshgoodson/pandoc-bin) apparently figured it out? IDEK.
