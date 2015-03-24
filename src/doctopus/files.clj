@@ -6,7 +6,7 @@ We have: tools for walking a directory and returning only files matching a predi
 We probably want, but don't yet have: tools for managing local temp (making
 temp dirs, moving around any output generated, cleaning up later)."
   (:require [clojure.string :as str]
-            [doctopus.files.predicates :refer [markdown]]
+            [doctopus.files.predicates :refer [markdown?]]
             [me.raynes.fs :as fs]))
 
 ;; I think we've pretty much captured this by now? -- RMD Sun Mar 15 20:37:46 2015
@@ -34,8 +34,8 @@ temp dirs, moving around any output generated, cleaning up later)."
 
 (defn truncate-str
   "Removes non-relatice path data from a string"
-  [fq-path rel-path]
-  (str/replace fq-path rel-path ""))
+  [fq-path remove-from-fq-path]
+  (str/replace fq-path remove-from-fq-path ""))
 
 
 (defn walk-the-docs
