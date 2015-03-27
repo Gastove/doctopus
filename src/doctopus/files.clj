@@ -47,9 +47,9 @@ We have: tools for walking a directory and returning only files matching a predi
 
 (defn walk-the-docs
   "Walk the docs; currently only looks for Markdown Documents."
-  [doc-root]
+  [doc-root pred]
   (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
-        filtered-docs (filter-the-docs docs-all markdown?)
+        filtered-docs (filter-the-docs docs-all pred)
         assembled-result (assemble-the-results doc-root filtered-docs)]
     assembled-result
     ))
