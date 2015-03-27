@@ -33,10 +33,17 @@ We have: tools for walking a directory and returning only files matching a predi
 
 
 (defn truncate-str
-  "Removes non-relatice path data from a string"
-  [fq-path remove-from-fq-path]
-  (str/replace fq-path remove-from-fq-path ""))
-
+  "Given a fully qualified root directory, correctly return the path, relative
+  to a given root. I.E: given /foo/bar/baz and root baz, return /;
+  given /foo/bar/baz and root bar, return /baz."
+  [fq-path root-path]
+  (let [fq-path-string (.toString fq-path)
+        root-path-string (.toString root-path)
+        splitting-regex (re-pattern root-path-string)
+        ending-regex (re-pattern (str root-path-string "$"))]
+    (if (re-find ending-regex fq-path-string)
+      "/"
+      (last (clojure.string/split fq-path-string splitting-regex)))))
 
 (defn walk-the-docs
   "Walk the docs; currently only looks for Markdown Documents."
