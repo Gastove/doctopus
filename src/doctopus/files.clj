@@ -53,3 +53,34 @@ We have: tools for walking a directory and returning only files matching a predi
         assembled-result (assemble-the-results doc-root filtered-docs)]
     assembled-result
     ))
+
+(defn htmlify
+  "Ingests a path. Turns the contents in to html, truncates the path, returns
+  the pair."
+  [path root html-fn]
+  (let [html (html-fn (slurp path))
+        truncated-path (truncate-str path root)]
+    [html truncated-path]))
+
+(defn write-doc
+  [[html rel-path] target-dir]
+  (let [output-path (clojure.string/join "/" [target-dir rel-path])
+        output-file (java.io.File. output-path)]
+    (fs/create output-file)
+    (spit output-file html)))
+
+(defn read-and-write-dir
+  "Searches a source dir for all files that match a given predicate.
+
+  Calls a provided function on each doc which will convert that doc to HTML.
+
+  Writes the result in to a target directory, preserving relative file structure
+  from the source-dir root."
+  [src-dir target-dir type-pred html-fn]
+  (let [docs-to-htmlify (walk-the-docs src-dir type-pred)]
+    (doseq [doc docs-to-htmlify
+            :let [html-relpath-pair (htmlify doc src-dir html-fn)]]
+                                        ;(println "Here's one")
+                                        ;(println html-relpath-pair)
+      (write-doc html-relpath-pair target-dir)
+      )))
