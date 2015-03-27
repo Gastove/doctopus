@@ -3,8 +3,8 @@
 
 We have: tools for walking a directory and returning only files matching a predicate.
 
-We probably want, but don't yet have: tools for managing local temp (making
-temp dirs, moving around any output generated, cleaning up later)."
+  We probably want, but don't yet have: tools for managing local temp (making
+  temp dirs, moving around any output generated, cleaning up later)."
   (:require [clojure.string :as str]
             [doctopus.files.predicates :refer [markdown?]]
             [me.raynes.fs :as fs]))
