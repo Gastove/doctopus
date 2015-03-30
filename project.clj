@@ -5,7 +5,8 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [markdown-clj "0.9.63"]
-                 [me.raynes/fs "1.4.6"]]
+                 [me.raynes/fs "1.4.6"]
+                 [lein-light-nrepl]]
   :main ^:skip-aot doctopus.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
