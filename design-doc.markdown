@@ -39,12 +39,12 @@ Early versions will most likely to the static compilation to a central directory
 
 Later versions may begin to explore dynamically building index pages that display the full tree of documentation regardless of the input markup language.
 
-
 # Thoughts
 
+## Heroku
 Here's an idea: I wonder if using Heroku as a use-case makes sense. That is: what if you could host Doctopus directly on a heroku instance? This would require a couple things:
 
-1. *Limited use of the local file system* -- Instead of a flow from, say, git -> local tmp -> local FS, we'd need to go git -> local tmp -> some database.
+1. *Limited use of the local file system* -- Instead of a flow from, say, git -> local tmp -> local FS, we'd need to go git -> < maybe local tmp, if needed?> -> some database.
 1. *We could, potentially, _also_ host docs, a la RTD*
 2. *We have to be sure a Heroku dyno actually has git installed*. This is a damn fine question.
 1. Ponies?
@@ -58,3 +58,12 @@ assume through the Jave temporary file API (which the filesystem util we're usin
 ## Pandoc
 
 Vendorizing pandoc would be the sweetest goddamn thing, and I have no idea how to do it. But [this dude](https://github.com/toshgoodson/pandoc-bin) apparently figured it out? IDEK.
+
+
+# Known Things that Need to Get Done
+
+Currently, we've made some headway in to a) filtering a directory for docs that match a predicate (currently markdown), b) converting that markdown to html, c) writing that out. This leaves.... some major pieces left to go after.
+
+1. **Setting up an HTTP server and Routes** -- This involves roughly one easy part and one hard part. The easy part is the HTTP server; the much harder part is exposing routes and responding to requests. When this task is done, it should implement some version of this workflow: `Incoming request received -> appropriate document loaded -> appropriate document returned`.
+2. **HTML Parsing / Templating ** -- It's not clear that every tool will produce consistent HTML -- and it sure would be nice for a Doctopus page to have a consistent look.
+3. **Solidify the clone / parse / store workflow** -- Pretty self-explanatory. This is, after all, the core thing that ties this all together. 
