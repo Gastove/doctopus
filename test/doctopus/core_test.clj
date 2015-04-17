@@ -2,6 +2,4 @@
   (:require [clojure.test :refer :all]
             [doctopus.core :refer :all]))
 
-(deftest a-test
-  (testing "FIXME, I fail."
-    (is (= 0 1))))
+;; I'm leaving this NS for now, but at the moment there's nothing real to test.
