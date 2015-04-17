@@ -6,6 +6,7 @@
   :dependencies [[org.clojure/clojure "1.6.0"]
                  [markdown-clj "0.9.63"]
                  [me.raynes/fs "1.4.6"]]
+  :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.core
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
