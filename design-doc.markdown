@@ -66,4 +66,5 @@ Currently, we've made some headway in to a) filtering a directory for docs that 
 
 1. **Setting up an HTTP server and Routes** -- This involves roughly one easy part and one hard part. The easy part is the HTTP server; the much harder part is exposing routes and responding to requests. When this task is done, it should implement some version of this workflow: `Incoming request received -> appropriate document loaded -> appropriate document returned`.
 2. **HTML Parsing / Templating ** -- It's not clear that every tool will produce consistent HTML -- and it sure would be nice for a Doctopus page to have a consistent look.
-3. **Solidify the clone / parse / store workflow** -- Pretty self-explanatory. This is, after all, the core thing that ties this all together. 
+3. **Solidify the clone / parse / store workflow** -- Pretty self-explanatory. This is, after all, the core thing that ties this all together.
+4. **Marginalia** -- We've talked about using [Marginalia](https://github.com/gdeer81/marginalia) to write Doctopus' own docs, then use it to host them. This would be a real neat exercise; we should get this wired up.
