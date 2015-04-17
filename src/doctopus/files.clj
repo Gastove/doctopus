@@ -1,10 +1,12 @@
 (ns doctopus.files
   "Tools for managing files.
 
-We have: tools for walking a directory and returning only files matching a predicate.
+  We have: tools for walking a directory and returning only files
+  matching a predicate.
 
-  We probably want, but don't yet have: tools for managing local temp (making
-  temp dirs, moving around any output generated, cleaning up later)."
+  We probably want, but don't yet have: tools for managing local
+  temp (making temp dirs, moving around any output generated, cleaning
+  up later)."
   (:require [clojure.string :as str]
             [doctopus.files.predicates :refer [markdown?]]
             [me.raynes.fs :as fs]))
@@ -45,6 +47,11 @@ We have: tools for walking a directory and returning only files matching a predi
       "/"
       (last (clojure.string/split fq-path-string splitting-regex)))))
 
+(defn set-ext
+  "For a given file with extension foo.bar, set extension to .html"
+  [strang]
+  (clojure.string/replace strang #"\.(\w+)$" ".html"))
+
 (defn walk-the-docs
   "Walk the docs; currently only looks for Markdown Documents."
   [doc-root pred]
@@ -59,10 +66,12 @@ We have: tools for walking a directory and returning only files matching a predi
   the pair."
   [path root html-fn]
   (let [html (html-fn (slurp path))
-        truncated-path (truncate-str path root)]
-    [html truncated-path]))
+        truncated-path (truncate-str path root)
+        htmlified-path (set-ext truncated-path)]
+    [html htmlified-path]))
 
 (defn write-doc
+  "This is prooooooobably not how we wanna do this f'reals?"
   [[html rel-path] target-dir]
   (let [output-path (clojure.string/join "/" [target-dir rel-path])
         output-file (java.io.File. output-path)]
