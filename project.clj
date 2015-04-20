@@ -12,7 +12,7 @@
                  [ring/ring-defaults "0.1.4"]
                  [ring/ring-core "1.3.2"]
                  [ring/ring-devel "1.3.2"]
-                 [bidi "1.9.4"]]
+                 [bidi "1.18.10"]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
