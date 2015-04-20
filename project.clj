@@ -14,6 +14,6 @@
                  [ring/ring-devel "1.3.2"]
                  [bidi "1.9.4"]]
   :plugins [[lein-marginalia "0.8.0"]]
-  :main ^:skip-aot doctopus.core
+  :main ^:skip-aot doctopus.web
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})
