@@ -1,7 +1,6 @@
 (ns doctopus.web
   (:require [bidi.ring :as bidi]
             [clojure.java.io :as io]
-            [clojure.string :as str]
             [doctopus.configuration :refer [server-config]]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
