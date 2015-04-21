@@ -1,5 +1,6 @@
 (ns doctopus.files-test
   (:require [doctopus.files :refer :all]
+            [doctopus.test-utilities :refer :all]
             [clojure.test :refer :all]))
 
 (deftest test-truncate-str
