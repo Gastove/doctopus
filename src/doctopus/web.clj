@@ -1,6 +1,7 @@
 (ns doctopus.web
   (:require [bidi.ring :as bidi]
             [clojure.java.io :as io]
+            [clojure.string :as str]
             [doctopus.configuration :refer [server-config]]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
@@ -20,17 +21,30 @@
             :headers {"Content-Type" "text/html"}
             :body (slurp (io/resource "500.html"))}))))
 
+(defn four-oh-four
+  [req]
+  (log/debug "404ing on request:" req)
+  {:status 404
+   :headers {"Content-Type" "text/html"}
+   :body (format "<h3>Could not find a page matching %s </h3>" (get-in req [:params :ext]))})
+
 (defn serve-index
+  "Just returns our index.html, with the content-type set correctly"
   [_]
   (-> (slurp (io/resource "index.html"))
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
-(def routes
-  (bidi/make-handler ["/" {"" {:get serve-index}}]))
+;; Bidi routes are defined as nested sets of ""
+(def routes ["/" {""           {:get serve-index}
+                  "index.html" {:get serve-index}
+                  [:ext]       four-oh-four}])
+
+(def application-handlers
+  (bidi/make-handler routes))
 
 (def application
-  (-> (wrap-defaults routes site-defaults)
+  (-> (wrap-defaults application-handlers site-defaults)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
          wrap-error-page
