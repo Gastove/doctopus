@@ -22,11 +22,18 @@
             :body (slurp (io/resource "500.html"))}))))
 
 (defn four-oh-four
-  [req]
-  (log/debug "404ing on request:" req)
+  [route]
+  (log/debug "404ing on route:" route)
   {:status 404
    :headers {"Content-Type" "text/html"}
-   :body (format "<h3>Could not find a page matching %s </h3>" (get-in req [:params :ext]))})
+   :body (format "<h3>Could not find a page matching %s </h3>" route)})
+
+(defn wrap-route-not-found
+  [handler]
+  (fn [request]
+    (if-let [response (handler request)]
+      response
+      (four-oh-four (:uri request)))))
 
 (defn serve-index
   "Just returns our index.html, with the content-type set correctly"
@@ -37,14 +44,14 @@
 
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""           {:get serve-index}
-                  "index.html" {:get serve-index}
-                  [:ext]       four-oh-four}])
+                  "index.html" {:get serve-index}}])
 
 (def application-handlers
   (bidi/make-handler routes))
 
 (def application
   (-> (wrap-defaults application-handlers site-defaults)
+      (wrap-route-not-found)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
          wrap-error-page
