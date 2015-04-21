@@ -9,9 +9,3 @@
           remove-str "/foo/bar/baz/bing/"
           result (truncate-str fq remove-str)]
       (is (= result "bang/document.markdown")))))
-
-;(deftest test-walk-the-docs
-;  (testing "When we walk the docs, we get a vector of File objects"
-;    (let [root-str "resources"]
-;      (doseq file (walk-the-docs root-str)
-;        (is (contains? (.getPath file)))))))
