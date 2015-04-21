@@ -1,0 +1,2 @@
+{:nomad/hosts {"engine" {:env :development}}
+ :port 8080}
