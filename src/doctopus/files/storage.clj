@@ -22,25 +22,30 @@
 ;; Control atom for Backend functions.
 (def *backend* (atom "temp-fs"))
 
-(defn load-documents [k] (load-from-storage @*backend* k))
-(defn save-documents [k docs] (save-to-storage @*backend* k docs))
+;; (defn load-documents [k] (load-from-storage @*backend* k))
+;; (defn save-documents [k docs] (save-to-storage @*backend* k docs))
 
 (defprotocol DoctopusBackend
+  (set-backend! [this backend])
   (load-from-storage [this k])
   (save-to-storage [this k v]))
 
-(defmulti set-backend! class)
-(defmethod set-backend! Backend
-  [])
-(defmethod set-backend! :default)
+;; (defmulti set-backend!
+;;   "Makes sure the Backend gets set only to a valid instance of the Backend class"
+;;   class)
 
-;; A name, a configuration map, a get function
+;; (defmethod set-backend! doctopus.files.storage.Backend
+;;   [bkend]
+;;   ())
+;; (defmethod set-backend! :default)
+
+;; The actual interface to a backend.
 (defrecord Backend
-    [name conf load-fn save-fn]
+    [default-backend available-backends load-fn save-fn]
   DoctopusBackend
   (load-from-storage [this k]
     (let [{:keys [conf load-fn]} this]
       (load-fn conf k)))
   (save-to-storage [this k v]
     (let [{:keys [conf save-fn]} this]
-      (save-fn conf k))))
+      (save-fn conf k v))))
