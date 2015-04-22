@@ -1,6 +1,7 @@
 (ns doctopus.storage-impls.temp-fs
-  (:require [me.raynes.fs :as fs]
-            [doctopus.files.storage-impls :refer :all])
+  (:require [doctopus.files :as files]
+            [doctopus.files.storage-impls :refer :all]
+            [me.raynes.fs :as fs])
   (:import [doctopus.files.storage-impls.BackendImplementation]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
@@ -16,7 +17,7 @@
   [rel-path]
   (let [html-re #"\.html$"
         assure-suffix #(if (re-find html-re rel-path) rel-path (str rel-path ".html"))
-        file-handle (fs/file @*temp-dir* rel-path)]
+        file-handle (fs/file @temp-dir rel-path)]
     (slurp file-handle)))
 
 (defn save-html-file
@@ -33,4 +34,10 @@
   (doseq [[path html] path-html-pairs] (save-html-file key path html)))
 
 (defn load-fn
-  [key])
+  "This is as Version 1 a way of doing this as I can think of:
+
+  1. We load html
+  2. We wrap that html in a function that returns itself, so we can Bidi"
+  [key]
+  (let [rel-path-html-pairs (files/read-html key)]
+    (into [] (map #([rel-path (fn [_] html)]) rel-path-html-pairs))))
