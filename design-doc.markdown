@@ -68,3 +68,24 @@ Currently, we've made some headway in to a) filtering a directory for docs that 
 2. **HTML Parsing / Templating ** -- It's not clear that every tool will produce consistent HTML -- and it sure would be nice for a Doctopus page to have a consistent look.
 3. **Solidify the clone / parse / store workflow** -- Pretty self-explanatory. This is, after all, the core thing that ties this all together.
 4. **Marginalia** -- We've talked about using [Marginalia](https://github.com/gdeer81/marginalia) to write Doctopus' own docs, then use it to host them. This would be a real neat exercise; we should get this wired up.
+
+
+# Ye Doc Data Structure
+
+This _might_ turn out to just be a place where Ross thinks out loud;
+forgive him. The problem to solve is: what is the best data structure
+to represent documentation? In particular: each specific doc will have
+some amount of information about which _path_ it should respond to;
+how do we structure the combination of paths and data (or data-loading
+functions) such that we can easily accomplish tasks like writing the
+whole works to storage, or knowing which data to serve at the end of a
+route?
+
+A relevant implementation detail: `bidi` expects routes to be a
+recursive data structure of the basic form
+`[path-matcher, handler]`. Handler might, itself, be another
+pair. Because Clojure, `bidi` doesn't care if this is a vector or a
+vector of vectors or a vector of maps or what-have-you.
+
+
+
