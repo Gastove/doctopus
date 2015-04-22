@@ -1,12 +1,13 @@
 (ns doctopus.storage-impls.temp-fs
-  (:require [doctopus.files :as files]
+  (:require [clojure.string :as str]
+            [doctopus.files :as files]
             [doctopus.files.storage-impls :refer :all]
             [me.raynes.fs :as fs])
   (:import [doctopus.files.storage-impls.BackendImplementation]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
 ;; within this directory
-(def temp-dir (atom (fs/temp-dir "doctopus-temp")))
+(def temp-dir (atom (fs/temp-dir  "doctopus-temp")))
 
 (defn regenerate-temp-dir
   "Generates a new temp dir"
@@ -26,7 +27,9 @@
   becomes the primary subdirectory in the filesystem."
   [key rel-path data]
   (binding [fs/*cwd* @temp-dir]
-    (let [file-handle (fs/file key rel-path)]
+    (let [assure-relativity #(if (re-find #"^/" %) (subs % 1) %)
+          file-handle (fs/file key (assure-relativity rel-path))]
+      (fs/mkdirs (fs/parent file-handle))
       (spit file-handle data))))
 
 (defn save-fn
@@ -39,5 +42,7 @@
   1. We load html
   2. We wrap that html in a function that returns itself, so we can Bidi"
   [key]
-  (let [rel-path-html-pairs (files/read-html key)]
-    (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs))))
+  (binding [fs/*cwd* @temp-dir]
+    (let [dir (fs/file key)
+          rel-path-html-pairs (files/read-html dir)]
+      (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))
