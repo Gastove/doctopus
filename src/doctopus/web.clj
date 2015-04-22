@@ -50,14 +50,27 @@
   [_]
   (serve-html (templates/add-head)))
 
-(defn add-head
+(defn serve-add-tentacle-form
   [_]
-  (serve-html "ADD A HEAD, DAWG"))
+  (serve-html (templates/add-tentacle)))
+
+(defn add-head
+  [request]
+   (let [head-name (get (:form-params request) "name")]
+     (serve-html (str "ADD A HEAD: " head-name))))
+
+(defn add-tentacle
+  [request]
+   (let [params (:form-params request)
+         tentacle-name (get params "name")
+         head-name (get params "head")]
+     (serve-html (str "ADD A TENTACLE: " tentacle-name " BELONGING TO: " head-name))))
 
 ;; Bidi routes are defined as nested sets of ""
-(def routes ["/" {""           {:get serve-index}
-                  "index.html" {:get serve-index}
-                  "add-head"   {:get serve-add-head-form :post add-head}}])
+(def routes ["/" {""             {:get serve-index}
+                  "index.html"   {:get serve-index}
+                  "add-head"     {:get serve-add-head-form :post add-head}
+                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}])
 
 (def application-handlers
   (bidi/make-handler routes))

@@ -27,6 +27,11 @@
   [head]
   (enlive/html [:li (linkify (:root head) (:name head))]))
 
+(defn- head-option
+  [head]
+  (let [head-name (:name head)]
+    (enlive/html [:option {:value head-name} head-name])))
+
 (defn- tentacle-li
   [tentacle]
   (enlive/html [:li (linkify (:root tentacle) (:name tentacle))]))
@@ -39,6 +44,13 @@
   [:form]
   []
   [:form] (enlive/set-attr :action "/add-head")
+  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
+
+(defsnippet add-tentacle-snippet "templates/add-tentacle.html"
+  [:form]
+  []
+  [:form] (enlive/set-attr :action "/add-tentacle")
+  [:select] (enlive/content (map head-option (get-heads)))
   [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
 
 (defsnippet index-snippet "templates/index.html"
@@ -89,4 +101,8 @@
 (defn add-head
   []
   (html (add-head-snippet)))
+
+(defn add-tentacle
+  []
+  (html (add-tentacle-snippet)))
 
