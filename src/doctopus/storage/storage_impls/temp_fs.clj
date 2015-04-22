@@ -3,8 +3,7 @@
             [doctopus.files :as files]
             [doctopus.files.storage-impls :refer :all]
             [doctopus.storage.storage-impls.fs-impl :refer [save-html-file]]
-            [me.raynes.fs :as fs])
-  (:import [doctopus.files.storage-impls.BackendImplementation]))
+            [me.raynes.fs :as fs]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
 ;; within this directory
