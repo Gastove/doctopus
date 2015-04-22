@@ -78,6 +78,9 @@
     (fs/create output-file)
     (spit output-file html)))
 
+
+;; This cool dood needs to be changed to use the new storage
+;; backend... eventually.
 (defn read-and-write-dir
   "Searches a source dir for all files that match a given predicate.
 
@@ -89,7 +92,5 @@
   (let [docs-to-htmlify (walk-the-docs src-dir type-pred)]
     (doseq [doc docs-to-htmlify
             :let [html-relpath-pair (htmlify doc src-dir html-fn)]]
-                                        ;(println "Here's one")
-                                        ;(println html-relpath-pair)
       (write-doc html-relpath-pair target-dir)
       )))
