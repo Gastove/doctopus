@@ -1,5 +1,6 @@
 (ns doctopus.storage
-  "Defines how Doctopus speaks to different places it can store generated HTML")
+  "Defines how Doctopus speaks to different places it can store generated HTML"
+  (:require [doctopus.storage-impls :as storage-impls]))
 
 ;; ## Storage
 ;; Doctopus shouldn't really care _where_ it puts generated HTML; it
@@ -19,9 +20,9 @@
 ;; At time of writing, I'm thinking of loading and saving one Tentacle worth of
 ;; documents all at once.
 
+;; P. Sure I'm not using this
 ;; Control atom for Backend functions.
-(def *backend* (atom "temp-fs"))
-
+;;(def *backend* (atom "temp-fs"))
 ;; (defn load-documents [k] (load-from-storage @*backend* k))
 ;; (defn save-documents [k docs] (save-to-storage @*backend* k docs))
 
@@ -41,11 +42,20 @@
 
 ;; The actual interface to a backend.
 (defrecord Backend
-    [default-backend available-backends load-fn save-fn]
+    [backend available-backends]
   DoctopusBackend
+  (set-backend! [this backend]
+    (if (contains? (this :available-backends) backend)
+      (assoc this :backend backend)
+      (throw (java.lang.RuntimeException.
+              (str "Cannot use declared storage backend: " backend)))))
   (load-from-storage [this k]
-    (let [{:keys [conf load-fn]} this]
-      (load-fn conf k)))
+    (let [load-fn (get-in this [:backend :load-fn])]
+      (load-fn k)))
   (save-to-storage [this k v]
-    (let [{:keys [conf save-fn]} this]
-      (save-fn conf k v))))
+    (let [save-fn (get-in this [:backend :save-fn])]
+      (save-fn k v))))
+
+(def available-backends {:temp-fs storage-impls/temp-fs-backend})
+
+(def backend (Backend. storage-impls/temp-fs-backend available-backends))
