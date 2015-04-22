@@ -97,5 +97,5 @@
   [src-dir]
   (let [docs (walk-docs-dir src-dir html?)]
     (into [] (for [doc docs
-           :let [html-relpath-pair (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
-               html-relpath-pair))))
+           :let [[html rel-path] (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
+               [rel-path html]))))
