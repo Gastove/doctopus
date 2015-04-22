@@ -1,4 +1,5 @@
-(ns doctopus.storage-impls)
+(ns doctopus.storage-impls
+  (:require [doctopus.storage-impls.temp-fs :as temp-fs-impl]))
 
 ;; ## Backend Implementations
 ;; A backend implementation needs to expose two functions: one for load, and one
@@ -18,3 +19,7 @@
 ;;  ["/foo" foo-fn]]
 
 (defrecord BackendImplementation [name load-fn save-fn])
+
+(def temp-fs-backend (BackendImplementation. "temp-fs"
+                                             temp-fs-impl/load-fn
+                                             temp-fs-impl/save-fn))
