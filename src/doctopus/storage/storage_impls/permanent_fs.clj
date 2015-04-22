@@ -3,7 +3,7 @@
              [configuration :refer [server-config]]
              [files :as files]]
             [me.raynes.fs :as fs]
-            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file]]))
+            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file] :as fs-impl]))
 
 (def root (fs/file (:permanent-fs-root (server-config))))
 (if-not (fs/exists? root) (fs/mkdirs root))
@@ -22,3 +22,7 @@
     (let [dir (fs/file key)
           rel-path-html-pairs (files/read-html dir)]
       (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))
+
+(defn remove-fn
+  [key]
+  (fs-impl/remove root key))

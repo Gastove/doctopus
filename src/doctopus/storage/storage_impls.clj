@@ -19,12 +19,14 @@
 ;; [["/"    root-fn]
 ;;  ["/foo" foo-fn]]
 
-(defrecord BackendImplementation [name load-fn save-fn])
+(defrecord BackendImplementation [name load-fn save-fn remove-fn])
 
 (def temp-fs-backend (BackendImplementation. "temp-fs"
                                              temp-fs-impl/load-fn
-                                             temp-fs-impl/save-fn))
+                                             temp-fs-impl/save-fn
+                                             temp-fs-impl/remove-fn))
 
 (def permanent-fs-backend (BackendImplementation. "permanent-fs"
                                                   perm-fs-impl/load-fn
-                                                  perm-fs-impl/save-fn))
+                                                  perm-fs-impl/save-fn
+                                                  perm-fs-impl/remove-fn))

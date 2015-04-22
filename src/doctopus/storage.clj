@@ -23,7 +23,8 @@
 (defprotocol DoctopusBackend
   (set-backend! [this backend])
   (load-from-storage [this k])
-  (save-to-storage [this k v]))
+  (save-to-storage [this k v])
+  (remove-from-storage [this k]))
 
 ;; The actual interface to a backend.
 (defrecord Backend
@@ -39,7 +40,10 @@
       (load-fn k)))
   (save-to-storage [this k v]
     (let [save-fn (get-in this [:backend :save-fn])]
-      (save-fn k v))))
+      (save-fn k v)))
+  (remove-from-storage [this k]
+    (let [remove-fn (get-in this [:backend :remove-fn])]
+      (remove-fn k))))
 
 (def available-backends {:temp-fs storage-impls/temp-fs-backend
                          :perm-fs storage-impls/permanent-fs-backend})

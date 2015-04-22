@@ -22,3 +22,10 @@
           file-handle (fs/file key (assure-relativity rel-path))]
       (fs/mkdirs (fs/parent file-handle))
       (spit file-handle data))))
+
+(defn remove
+  "Given a root and a key, delete the entire doc dir"
+  [root key]
+  (binding [fs/*cwd* root]
+    (let [dir (fs/file key)]
+      (fs/delete-dir key))))

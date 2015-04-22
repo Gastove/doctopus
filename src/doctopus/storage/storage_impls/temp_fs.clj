@@ -2,7 +2,7 @@
   (:require [clojure.string :as str]
             [doctopus.files :as files]
             [doctopus.files.storage-impls :refer :all]
-            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file]]
+            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
@@ -28,3 +28,7 @@
     (let [dir (fs/file key)
           rel-path-html-pairs (files/read-html dir)]
       (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))
+
+(defn remove-fn
+  [key]
+  (fs-impl/remove @temp-dir key))
