@@ -40,4 +40,4 @@
   2. We wrap that html in a function that returns itself, so we can Bidi"
   [key]
   (let [rel-path-html-pairs (files/read-html key)]
-    (into [] (map #([rel-path (fn [_] html)]) rel-path-html-pairs))))
+    (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs))))
