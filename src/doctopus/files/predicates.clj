@@ -36,4 +36,4 @@
 
 (defn html?
   [file-handle]
-  (is-type? file-handle #"(?i)html$"))
+  (is-type? file-handle #"(?i)html|htm$"))
