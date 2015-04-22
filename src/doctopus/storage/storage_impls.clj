@@ -1,4 +1,4 @@
-(ns doctopus.files.storage-impls)
+(ns doctopus.storage-impls)
 
 ;; ## Backend Implementations
 ;; A backend implementation needs to expose two functions: one for load, and one

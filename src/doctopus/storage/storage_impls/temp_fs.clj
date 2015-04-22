@@ -1,4 +1,4 @@
-(ns doctopus.files.storage-impls.temp-fs
+(ns doctopus.storage-impls.temp-fs
   (:require [me.raynes.fs :as fs]
             [doctopus.files.storage-impls :refer :all])
   (:import [doctopus.files.storage-impls.BackendImplementation]))

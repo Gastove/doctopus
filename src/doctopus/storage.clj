@@ -1,4 +1,4 @@
-(ns doctopus.files.storage
+(ns doctopus.storage
   "Defines how Doctopus speaks to different places it can store generated HTML")
 
 ;; ## Storage
