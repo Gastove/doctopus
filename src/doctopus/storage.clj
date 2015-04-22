@@ -15,30 +15,15 @@
 ;; Initial backends:
 ;; - Temporary filesystem (provides it's own directory)
 ;; - Permanent filesystem (needs a directory provided)
-;; - Amazon S3
+;; - Amazon S3 (maybe?)
 ;;
 ;; At time of writing, I'm thinking of loading and saving one Tentacle worth of
 ;; documents all at once.
-
-;; P. Sure I'm not using this
-;; Control atom for Backend functions.
-;;(def *backend* (atom "temp-fs"))
-;; (defn load-documents [k] (load-from-storage @*backend* k))
-;; (defn save-documents [k docs] (save-to-storage @*backend* k docs))
 
 (defprotocol DoctopusBackend
   (set-backend! [this backend])
   (load-from-storage [this k])
   (save-to-storage [this k v]))
-
-;; (defmulti set-backend!
-;;   "Makes sure the Backend gets set only to a valid instance of the Backend class"
-;;   class)
-
-;; (defmethod set-backend! doctopus.files.storage.Backend
-;;   [bkend]
-;;   ())
-;; (defmethod set-backend! :default)
 
 ;; The actual interface to a backend.
 (defrecord Backend
