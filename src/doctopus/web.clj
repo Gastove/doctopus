@@ -2,6 +2,7 @@
   (:require [bidi.ring :as bidi]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
@@ -34,16 +35,29 @@
       response
       (four-oh-four (:uri request)))))
 
-(defn serve-index
-  "Just returns our index.html, with the content-type set correctly"
-  [_]
-  (-> (slurp (io/resource "index.html"))
+(defn serve-html
+  "Just returns html, with the content-type set correctly"
+  [template]
+  (-> template
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
+(defn serve-index
+  [_]
+  (serve-html (templates/index)))
+
+(defn serve-add-head-form
+  [_]
+  (serve-html (templates/add-head)))
+
+(defn add-head
+  [_]
+  (serve-html "ADD A HEAD, DAWG"))
+
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""           {:get serve-index}
-                  "index.html" {:get serve-index}}])
+                  "index.html" {:get serve-index}
+                  "add-head"   {:get serve-add-head-form :post add-head}}])
 
 (def application-handlers
   (bidi/make-handler routes))
