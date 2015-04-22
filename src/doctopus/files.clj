@@ -11,10 +11,6 @@
             [doctopus.files.predicates :refer [markdown?]]
             [me.raynes.fs :as fs]))
 
-;; I think we've pretty much captured this by now? -- RMD Sun Mar 15 20:37:46 2015
-
-;; THIS IS TOTALLY DATABASS
-;; (pprint (fs/walk vector "/Users/rossdonaldson/Code/doctopus/src/"))
 
 (defn filter-the-docs
   "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
