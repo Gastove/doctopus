@@ -47,7 +47,8 @@
   [:#doctopus-heads] (enlive/content (map head-li (get-heads)))
   [:#doctopus-tentacles] (enlive/content (map tentacle-li (get-tentacles))))
 
-(deftemplate frame-template "templates/frame.html"
+(defsnippet frame-snippet "templates/frame.html"
+  [:#doctopus-iframe]
   [tentacle]
   [:#doctopus-index] (enlive/set-attr :href root-url)
   [:#doctopus-project] (enlive/do->
@@ -78,7 +79,7 @@
   "given a tentacle, returns a string of HTML suitable for serving an iframe
    with doctopus navigation"
   [tentacle]
-  (html (frame-template tentacle)))
+  (html (frame-snippet tentacle)))
 
 (defn index
   "returns an HTML string for main doctopus navigation"
