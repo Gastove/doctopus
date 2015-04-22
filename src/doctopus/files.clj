@@ -8,11 +8,11 @@
   temp (making temp dirs, moving around any output generated, cleaning
   up later)."
   (:require [clojure.string :as str]
-            [doctopus.files.predicates :refer [markdown?]]
+            [doctopus.files.predicates :refer [markdown? html?]]
             [me.raynes.fs :as fs]))
 
 
-(defn filter-the-docs
+(defn filter-files
   "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
   [path-listing doc-type-fn]
   (into [] (for [[path directory files] path-listing
@@ -22,7 +22,7 @@
 
 
 (declare truncate-str)
-(defn assemble-the-results
+(defn assemble-file-filter-results
   "More stuff"
   [doc-root path-and-files]
   (flatten (for [[path matched-files] path-and-files]
@@ -48,12 +48,12 @@
   [strang]
   (clojure.string/replace strang #"\.(\w+)$" ".html"))
 
-(defn walk-the-docs
+(defn walk-docs-dir
   "Walk the docs; currently only looks for Markdown Documents."
   [doc-root pred]
   (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
-        filtered-docs (filter-the-docs docs-all pred)
-        assembled-result (assemble-the-results doc-root filtered-docs)]
+        filtered-docs (filter-files docs-all pred)
+        assembled-result (assemble-file-filter-results doc-root filtered-docs)]
     assembled-result
     ))
 
@@ -76,17 +76,26 @@
 
 
 ;; This cool dood needs to be changed to use the new storage
-;; backend... eventually.
+;; backend... eventually. Or it needs to be removed? Unclear.
 (defn read-and-write-dir
   "Searches a source dir for all files that match a given predicate.
 
   Calls a provided function on each doc which will convert that doc to HTML.
 
-  Writes the result in to a target directory, preserving relative file structure
-  from the source-dir root."
+  Writes the result in to a target directory, preserving relative file
+  structure from the source-dir root."
   [src-dir target-dir type-pred html-fn]
-  (let [docs-to-htmlify (walk-the-docs src-dir type-pred)]
+  (let [docs-to-htmlify (walk-docs-dir src-dir type-pred)]
     (doseq [doc docs-to-htmlify
             :let [html-relpath-pair (htmlify doc src-dir html-fn)]]
       (write-doc html-relpath-pair target-dir)
       )))
+
+(defn read-html
+  "Reads a directory structure looking for html; returns the result as a vector
+  of relative path-html"
+  [src-dir]
+  (let [docs (walk-docs-dir src-dir html?)]
+    (into [] (for [doc docs
+           :let [html-relpath-pair (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
+               html-relpath-pair))))
