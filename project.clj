@@ -4,6 +4,7 @@
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.6.0"]
+                 [joda-time/joda-time "2.6"]
                  [markdown-clj "0.9.63"]
                  [me.raynes/fs "1.4.6"]
                  [http-kit "2.1.16"]
