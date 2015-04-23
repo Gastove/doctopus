@@ -14,7 +14,7 @@
 (defn- head-li
   [head]
   (let [head-name (:name head)]
-    (enlive/html [:li (linkify (str "/heads/" head-name) (:name head-name))])))
+    (enlive/html [:li (linkify (str "/heads/" head-name) head-name)])))
 
 (defn- head-option
   [head]
@@ -23,7 +23,8 @@
 
 (defn- tentacle-li
   [tentacle]
-  (enlive/html [:li (linkify (:root tentacle) (:name tentacle))]))
+  (let [tentacle-name (:name tentacle)]
+    (enlive/html [:li (linkify (str "/tentacles/" tentacle-name) tentacle-name)])))
 
 (deftemplate base-template "templates/base.html"
   [body]

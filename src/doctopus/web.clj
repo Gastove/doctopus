@@ -2,7 +2,7 @@
   (:require [bidi.ring :as bidi]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
-            [doctopus.doctopus :refer [load-routes bootstrap-heads list-tentacles]]
+            [doctopus.doctopus :refer [load-routes bootstrap-heads]]
             [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
