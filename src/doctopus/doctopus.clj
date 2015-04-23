@@ -24,6 +24,7 @@ talk about it either way. The idea is: start defining an Entity we can flesh out
 (defprotocol DoctopusMethods
   (bootstrap-heads [this])
   (load-routes [this])
+  (list-heads [this])
   (list-tentacles [this])
   (list-tentacles-by-head [this head]))
 
@@ -36,6 +37,7 @@ talk about it either way. The idea is: start defining an Entity we can flesh out
           head-names (map #(.getName %) dirs)
           heads (map #(h/Head. %) head-names)]
       (assoc this :heads (doall (map #(h/bootstrap-tentacles % heads-dir) heads)))))
+  (list-heads [this] (:heads this))
   (list-tentacles [this]
     (into [] (for [head (:heads this)
                    :let [tentacles (h/list-tentacles head)]]
