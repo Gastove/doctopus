@@ -1,6 +1,6 @@
-(ns doctopus.storage-impls
-  (:require [doctopus.storage-impls.temp-fs :as temp-fs-impl]
-            [doctopus.storage.storage-impls.permanent-fs :as perm-fs-impl]))
+(ns doctopus.storage.impls
+  (:require [doctopus.storage.impls.temp-fs :as temp-fs-impl]
+            [doctopus.storage.impls.permanent-fs :as perm-fs-impl]))
 
 ;; ## Backend Implementations
 ;; A backend implementation needs to expose two functions: one for load, and one

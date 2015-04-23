@@ -1,9 +1,9 @@
-(ns doctopus.storage.storage-impls.permanent-fs
+(ns doctopus.storage.impls.permanent-fs
   (:require [doctopus
              [configuration :refer [server-config]]
              [files :as files]]
             [me.raynes.fs :as fs]
-            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file] :as fs-impl]))
+            [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]))
 
 (def root (fs/file (:permanent-fs-root (server-config))))
 (if-not (fs/exists? root) (fs/mkdirs root))
@@ -25,4 +25,4 @@
 
 (defn remove-fn
   [key]
-  (fs-impl/remove root key))
+  (fs-impl/remove-html root key))

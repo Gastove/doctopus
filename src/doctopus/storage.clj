@@ -1,6 +1,6 @@
 (ns doctopus.storage
   "Defines how Doctopus speaks to different places it can store generated HTML"
-  (:require [doctopus.storage-impls :as storage-impls]))
+  (:require [doctopus.storage.impls :as storage-impls]))
 
 ;; ## Storage
 ;; Doctopus shouldn't really care _where_ it puts generated HTML; it

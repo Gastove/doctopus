@@ -1,6 +1,5 @@
-(ns doctopus.storage.storage-impls.fs-impl
-  (:require [doctopus.files.storage-impls :refer :all]
-            [me.raynes.fs :as fs]
+(ns doctopus.storage.impls.fs-impl
+  (:require [me.raynes.fs :as fs]
             [me.raynes.fs :as fs]))
 
 
@@ -23,7 +22,7 @@
       (fs/mkdirs (fs/parent file-handle))
       (spit file-handle data))))
 
-(defn remove
+(defn remove-html
   "Given a root and a key, delete the entire doc dir"
   [root key]
   (binding [fs/*cwd* root]

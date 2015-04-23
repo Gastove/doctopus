@@ -1,8 +1,7 @@
-(ns doctopus.storage-impls.temp-fs
+(ns doctopus.storage.impls.temp-fs
   (:require [clojure.string :as str]
             [doctopus.files :as files]
-            [doctopus.files.storage-impls :refer :all]
-            [doctopus.storage.storage-impls.fs-impl :refer [save-html-file] :as fs-impl]
+            [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
@@ -31,4 +30,4 @@
 
 (defn remove-fn
   [key]
-  (fs-impl/remove @temp-dir key))
+  (fs-impl/remove-html @temp-dir key))
