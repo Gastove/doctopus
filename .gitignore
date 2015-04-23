@@ -8,4 +8,6 @@ pom.xml.asc
 /.lein-*
 /.nrepl-port
 /docs
+*.swp
+*.swo
 /docs-tmp/
