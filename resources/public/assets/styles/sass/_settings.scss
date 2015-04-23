@@ -1,0 +1,32 @@
+/* Global box sizing */
+html {
+    box-sizing: border-box;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
+// Main Colors
+$base-color: #fbfbfb;
+$type-color: #666165;
+$link-color: #17d4e5;
+
+// Button colors
+$primary-color: #e517b2;
+$secondary-color: #6d17e5;
+$tertiary-color: #17d4e5;
+$important-color: #e517b2;
+
+/* Clear floats */
+%clearfix {
+
+    &:after {
+        clear: both;
+        content: " ";
+        display: table;
+    }
+}
+
+.hidden {
+    display: none;
+}

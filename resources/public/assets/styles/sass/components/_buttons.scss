@@ -1,0 +1,175 @@
+/* Mixins */
+@mixin button($background, $color) {
+    background:$background;
+    border:darken($background, 2%) 2px solid;
+    color:$color;
+}
+@mixin selected($background, $color) {
+    background:darken($background, 10%);
+    cursor:default;
+}
+
+/* Extend */
+%button {
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    outline: none;
+    padding: 4px 10px;
+    text-decoration: none;
+    -webkit-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out;
+}
+
+a.btn,
+button,
+input[type=submit] {
+    @include button($primary-color, #fff);
+    @extend %button;
+    &:hover {
+         @include button(lighten($primary-color, 10%), #fff);
+    }
+    &:active,
+    &.active {
+        @include button(darken($primary-color, 10%), #fff);
+    }
+    &.selected {
+        @include selected($primary-color, #fff);  
+    }
+}
+.btn.primary {
+    @include button($primary-color, #fff);
+    @extend %button;
+    &:hover {
+         @include button(lighten($primary-color, 10%), #fff);
+    }
+    &:active,
+    &.active {
+        @include button(darken($primary-color, 10%), #fff);
+    }
+    &.selected {
+        @include selected($primary-color, #fff);  
+    }
+}
+.btn.secondary {
+    @include button($secondary-color, #fff);
+    @extend %button;
+    &:hover {
+         @include button(lighten($secondary-color, 10%), #fff);
+    }
+    &:active,
+    &.active {
+        @include button(darken($secondary-color, 10%), #fff);
+    }
+    &.selected {
+        @include selected($secondary-color, #fff);  
+    }
+}
+.btn.tertiary {
+    @include button($tertiary-color, #939799);
+    @extend %button;
+    &:hover {
+         @include button(lighten($tertiary-color, 10%), #939799);
+    }
+    &:active,
+    &.active {
+        @include button(darken($tertiary-color, 10%), #939799);
+    }
+    &.selected {
+        @include selected($tertiary-color, #939799);  
+    }
+}
+.btn.important {
+    @include button($important-color, #fff);
+    @extend %button;
+    &:hover {
+         @include button(lighten($important-color, 10%), #fff);
+    }
+    &:active,
+    &.active {
+        @include button(darken($important-color, 10%), #fff);
+    }
+    &.selected {
+        @include selected($important-color, #fff);  
+    }
+}
+
+/* 26px */
+.btn.mini {
+    font-size:10px;
+    line-height:20px;
+    padding:1px 6px;
+}
+/* 30px */
+.btn.small {
+    font-size:12px;
+    line-height:22px;
+    padding:2px 6px;  
+}
+/* 34px */
+.btn.medium {
+    font-size:14px;
+    line-height:24px;
+    padding:3px 10px;
+}
+/* 38px */
+.btn.large {
+    font-size:16px;
+    line-height:26px;
+    padding:4px 20px;
+}
+.btn-group {
+    margin:0 0 10px;
+    @extend %clearfix;
+}
+.btn-group > .btn {
+    margin:0 5px 0 0;
+}
+.btn-bar {
+    margin:0 0 10px;
+    @extend %clearfix;
+}
+.btn-bar > .btn,
+.btn-bar > a {
+    float:left;
+    margin-left:-2px;
+    border-radius:0;
+}
+.btn-bar > .btn:first-child,
+.btn-bar > a:first-child {
+    border-radius:4px 0 0 4px;
+    margin:0;
+}
+.btn-bar > .btn:last-child,
+.btn-bar > a:last-child {
+    border-radius:0 4px 4px 0;
+}
+.btn-action {
+    border: #c4cacc 2px solid;
+    border-radius:4px;
+    color: #939799;
+    display:inline-block;
+    font-size:14px;
+    font-weight:bold;
+    line-height:22px;
+    outline:none;
+    padding:4px 10px;
+    text-decoration:none;
+    -webkit-transition:all .25s ease-in-out;
+    transition:all .25s ease-in-out;
+
+    &:hover {
+        background: #f3f4f5;
+        color: #939799;
+    }
+}
+
+.controls {
+
+    .btn-bar {
+        display: inline-block;
+        margin-right:10px;
+    }
+}
