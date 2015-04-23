@@ -9,7 +9,8 @@
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log]
+            [clojure.walk :refer [keywordize-keys]]))
 
 (defn wrap-error-page [handler]
   "Utility ring handler for when Stuff goes Sideways; returns a 500 and an error
@@ -61,10 +62,9 @@
 
 (defn add-tentacle
   [request]
-   (let [params (:form-params request)
-         tentacle-name (get params "name")
-         head-name (get params "head")]
-     (serve-html (str "ADD A TENTACLE: " tentacle-name " BELONGING TO: " head-name))))
+   (let [params (keywordize-keys (:form-params request))]
+     (serve-html
+      (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
 
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""             {:get serve-index}
