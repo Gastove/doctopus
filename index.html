@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html><head><meta charset="utf-8" content="text/html" http-equiv="Content-Type" /><meta content="FIXME: write description" name="description" /><style type="text/css">/**
+<html><head><meta charset="utf-8" content="text/html" http-equiv="Content-Type" /><meta content="An un-opinionated framework for docs on the wobs" name="description" /><style type="text/css">/**
  * SyntaxHighlighter
  * http://alexgorbatchev.com/SyntaxHighlighter
  *
@@ -2865,8 +2865,8 @@ net.brehaut.ClojureTools = (function (SH) {
     build_tree: build_tree
   };
 })(SyntaxHighlighter);
-</script><title>doctopus -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="http://example.com/FIXME">doctopus</a></h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>FIXME: write description</p>
-</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.6.0</td></tr><tr><td class="dep-name">markdown-clj</td><td class="dotted"><hr /></td><td class="dep-version">0.9.63</td></tr><tr><td class="dep-name">me.raynes/fs</td><td class="dotted"><hr /></td><td class="dep-version">1.4.6</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.16</td></tr><tr><td class="dep-name">jarohen/nomad</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">com.taoensso/timbre</td><td class="dotted"><hr /></td><td class="dep-version">3.4.0</td></tr><tr><td class="dep-name">ring/ring-defaults</td><td class="dotted"><hr /></td><td class="dep-version">0.1.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">ring/ring-devel</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">bidi</td><td class="dotted"><hr /></td><td class="dep-version">1.18.10</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#doctopus.configuration">doctopus.configuration</a></li><li><a href="#doctopus.core">doctopus.core</a></li><li><a href="#doctopus.doctopus">doctopus.doctopus</a></li><li><a href="#doctopus.doctopus.head">doctopus.doctopus.head</a></li><li><a href="#doctopus.doctopus.tentacle">doctopus.doctopus.tentacle</a></li><li><a href="#doctopus.files">doctopus.files</a></li><li><a href="#doctopus.files.predicates">doctopus.files.predicates</a></li><li><a href="#doctopus.markdown">doctopus.markdown</a></li><li><a href="#doctopus.web">doctopus.web</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.configuration" name="doctopus.configuration"><h1 class="project-name">doctopus.configuration</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</script><title>doctopus -- Marginalia</title></head><body><table><tr><td class="docs"><div class="header"><h1 class="project-name"><a href="http://github.com/Gastove/doctopus">doctopus</a></h1><h2 class="project-version">0.1.0-SNAPSHOT</h2><br /><p>An un-opinionated framework for docs on the wobs</p>
+</div><div class="dependencies"><h3>dependencies</h3><table><tr><td class="dep-name">org.clojure/clojure</td><td class="dotted"><hr /></td><td class="dep-version">1.6.0</td></tr><tr><td class="dep-name">joda-time/joda-time</td><td class="dotted"><hr /></td><td class="dep-version">2.6</td></tr><tr><td class="dep-name">markdown-clj</td><td class="dotted"><hr /></td><td class="dep-version">0.9.63</td></tr><tr><td class="dep-name">me.raynes/fs</td><td class="dotted"><hr /></td><td class="dep-version">1.4.6</td></tr><tr><td class="dep-name">http-kit</td><td class="dotted"><hr /></td><td class="dep-version">2.1.16</td></tr><tr><td class="dep-name">jarohen/nomad</td><td class="dotted"><hr /></td><td class="dep-version">0.7.0</td></tr><tr><td class="dep-name">com.taoensso/timbre</td><td class="dotted"><hr /></td><td class="dep-version">3.4.0</td></tr><tr><td class="dep-name">ring/ring-defaults</td><td class="dotted"><hr /></td><td class="dep-version">0.1.4</td></tr><tr><td class="dep-name">ring/ring-core</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">ring/ring-devel</td><td class="dotted"><hr /></td><td class="dep-version">1.3.2</td></tr><tr><td class="dep-name">bidi</td><td class="dotted"><hr /></td><td class="dep-version">1.18.10</td></tr><tr><td class="dep-name">enlive</td><td class="dotted"><hr /></td><td class="dep-version">1.1.5</td></tr></table></div></td><td class="codes" style="text-align: center; vertical-align: middle;color: #666;padding-right:20px"><br /><br /><br />(this space intentionally left almost blank)</td></tr><tr><td class="docs"><div class="toc"><a name="toc"><h3>namespaces</h3></a><ul><li><a href="#doctopus.configuration">doctopus.configuration</a></li><li><a href="#doctopus.core">doctopus.core</a></li><li><a href="#doctopus.doctopus">doctopus.doctopus</a></li><li><a href="#doctopus.doctopus.head">doctopus.doctopus.head</a></li><li><a href="#doctopus.doctopus.tentacle">doctopus.doctopus.tentacle</a></li><li><a href="#doctopus.files">doctopus.files</a></li><li><a href="#doctopus.files.predicates">doctopus.files.predicates</a></li><li><a href="#doctopus.markdown">doctopus.markdown</a></li><li><a href="#doctopus.shell">doctopus.shell</a></li><li><a href="#doctopus.storage">doctopus.storage</a></li><li><a href="#doctopus.storage.impls">doctopus.storage.impls</a></li><li><a href="#doctopus.storage.impls.fs-impl">doctopus.storage.impls.fs-impl</a></li><li><a href="#doctopus.storage.impls.permanent-fs">doctopus.storage.impls.permanent-fs</a></li><li><a href="#doctopus.storage.impls.temp-fs">doctopus.storage.impls.temp-fs</a></li><li><a href="#doctopus.template">doctopus.template</a></li><li><a href="#doctopus.web">doctopus.web</a></li></ul></div></td><td class="codes">&nbsp;</td></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.configuration" name="doctopus.configuration"><h1 class="project-name">doctopus.configuration</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns doctopus.configuration
   (:require [nomad :refer [defconfig]]
             [clojure.java.io :as io]))</pre></td></tr><tr><td class="docs">
@@ -2949,19 +2949,16 @@ articulate just <em>why</em> yet.</p>
   up later).</p>
 </td><td class="codes"><pre class="brush: clojure">(ns doctopus.files
   (:require [clojure.string :as str]
-            [doctopus.files.predicates :refer [markdown?]]
-            [me.raynes.fs :as fs]))</pre></td></tr><tr><td class="docs"><p>I think we've pretty much captured this by now? -- RMD Sun Mar 15 20:37:46 2015</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>THIS IS TOTALLY DATABASS
-(pprint (fs/walk vector "/Users/rossdonaldson/Code/doctopus/src/"))</p>
-</td><td class="codes"></td></tr><tr><td class="docs"><p>Vector Triple of (path, directories, files), and function that filters relevant doc-types</p>
-</td><td class="codes"><pre class="brush: clojure">(defn filter-the-docs
+            [doctopus.files.predicates :refer [markdown? html?]]
+            [me.raynes.fs :as fs]))</pre></td></tr><tr><td class="docs"><p>Vector Triple of (path, directories, files), and function that filters relevant doc-types</p>
+</td><td class="codes"><pre class="brush: clojure">(defn filter-files
   [path-listing doc-type-fn]
   (into [] (for [[path directory files] path-listing
                  :let [found-files (filter doc-type-fn files)]
                  :when (not-empty found-files)]
              [path found-files])))</pre></td></tr><tr><td class="docs"><p>More stuff</p>
 </td><td class="codes"><pre class="brush: clojure">(declare truncate-str)
-(defn assemble-the-results
+(defn assemble-file-filter-results
   [doc-root path-and-files]
   (flatten (for [[path matched-files] path-and-files]
              (for [matched-file matched-files]
@@ -2980,11 +2977,11 @@ articulate just <em>why</em> yet.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn set-ext
   [strang]
   (clojure.string/replace strang #&quot;\.(\w+)$&quot; &quot;.html&quot;))</pre></td></tr><tr><td class="docs"><p>Walk the docs; currently only looks for Markdown Documents.</p>
-</td><td class="codes"><pre class="brush: clojure">(defn walk-the-docs
+</td><td class="codes"><pre class="brush: clojure">(defn walk-docs-dir
   [doc-root pred]
   (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
-        filtered-docs (filter-the-docs docs-all pred)
-        assembled-result (assemble-the-results doc-root filtered-docs)]
+        filtered-docs (filter-files docs-all pred)
+        assembled-result (assemble-file-filter-results doc-root filtered-docs)]
     assembled-result))</pre></td></tr><tr><td class="docs"><p>Ingests a path. Turns the contents in to html, truncates the path, returns
   the pair.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn htmlify
@@ -3002,19 +2999,32 @@ articulate just <em>why</em> yet.</p>
 
 <p>  Calls a provided function on each doc which will convert that doc to HTML.</p>
 
-<p>  Writes the result in to a target directory, preserving relative file structure
-  from the source-dir root.</p>
+<p>  Writes the result in to a target directory, preserving relative file
+  structure from the source-dir root.</p>
+
+<p>This cool dood needs to be changed to use the new storage
+backend... eventually. Or it needs to be removed? Unclear.</p>
 </td><td class="codes"><pre class="brush: clojure">(defn read-and-write-dir
   [src-dir target-dir type-pred html-fn]
-  (let [docs-to-htmlify (walk-the-docs src-dir type-pred)]
+  (let [docs-to-htmlify (walk-docs-dir src-dir type-pred)]
     (doseq [doc docs-to-htmlify
             :let [html-relpath-pair (htmlify doc src-dir html-fn)]]
-                                        ;(println &quot;Here's one&quot;)
-                                        ;(println html-relpath-pair)
-      (write-doc html-relpath-pair target-dir))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.files.predicates" name="doctopus.files.predicates"><h1 class="project-name">doctopus.files.predicates</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>We've got a loooot of filtering to do.</p>
+      (write-doc html-relpath-pair target-dir))))</pre></td></tr><tr><td class="docs"><p>Reads a directory structure looking for html; returns the result as a vector
+  of relative path-html</p>
+</td><td class="codes"><pre class="brush: clojure">(defn read-html
+  [src-dir]
+  (let [docs (walk-docs-dir src-dir html?)]
+    (into [] (for [doc docs
+           :let [[html rel-path] (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
+               [rel-path html]))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.files.predicates" name="doctopus.files.predicates"><h1 class="project-name">doctopus.files.predicates</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>We've got a loooot of filtering to do.</p>
 
 <p>  Like, a lot.</p>
-</td><td class="codes"><pre class="brush: clojure">(ns doctopus.files.predicates)</pre></td></tr><tr><td class="docs"><p>Returns true if the type of the file matches the type given.</p>
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.files.predicates)</pre></td></tr><tr><td class="docs"><h3>The `is-type' Multimethod</h3>
+
+<p>Dispatches on the type of an object which represents a file; returns a string
+representation of the fully qualified path of that file, suitable for
+regexing</p>
+</td><td class="codes"></td></tr><tr><td class="docs"><p>Returns true if the type of the file matches the type regex provided.</p>
 </td><td class="codes"><pre class="brush: clojure">(defmulti is-type?
   (fn [fobj regex] (class fobj)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod is-type? java.lang.String
@@ -3024,13 +3034,20 @@ articulate just <em>why</em> yet.</p>
     false))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defmethod is-type? java.io.File
   [file-handle type-regex]
-  (is-type? (.getPath file-handle) type-regex))</pre></td></tr><tr><td class="docs"><p>returns true only for type files.</p>
+  (is-type? (.getPath file-handle) type-regex))</pre></td></tr><tr><td class="docs"><h3>File Predicates</h3>
+
+<p>Used for checking that an object representing a file -- whether it's a String
+or a java.io.File -- has a particular extension</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn markdown?
   [file-handle]
-  (is-type? file-handle #&quot;(?i)md|markdown|mdown$&quot;))</pre></td></tr><tr><td class="docs"><p>returns true only for type files.</p>
+  (is-type? file-handle #&quot;(?i)md|markdown|mdown$&quot;))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn restructured-text?
   [file-handle]
-  (is-type? #&quot;(?i)rst|rest$&quot; (.getPath file-handle)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.markdown" name="doctopus.markdown"><h1 class="project-name">doctopus.markdown</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  (is-type? file-handle #&quot;(?i)rst|rest$&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn html?
+  [file-handle]
+  (is-type? file-handle #&quot;(?i)html|htm$&quot;))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.markdown" name="doctopus.markdown"><h1 class="project-name">doctopus.markdown</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns doctopus.markdown
   (:require [markdown.core :as md]))</pre></td></tr><tr><td class="docs"><p>Read a file and parse the contents from markdown to html</p>
 </td><td class="codes"><pre class="brush: clojure">(defn parse-mardown-file
@@ -3039,18 +3056,270 @@ articulate just <em>why</em> yet.</p>
   (let [text-string (slurp file)]
     (md/md-to-html-string text-string)))</pre></td></tr><tr><td class="docs"><p>Parse a file and write the output string to a new file</p>
 </td><td class="codes"><pre class="brush: clojure">(defn parse-to-file
-  [source-file destination-root])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.web" name="doctopus.web"><h1 class="project-name">doctopus.web</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+  [source-file destination-root])</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.shell" name="doctopus.shell"><h1 class="project-name">doctopus.shell</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.shell
+    (:require [clojure.java.shell :as sh]))</pre></td></tr><tr><td class="docs"><p>This is a function that we use to shell out to a configured command
+to build the HTML for a given project.</p>
+
+<p>e.g. cd /to/dir; make html</p>
+
+<p>Args:
+    command: string, something that is within the $PATH of a shell.
+    args: a list of strings.
+    root-dir: string, path to the directory where the <code>command</code> should be run.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn make-html
+    ([command]
+        (sh/sh command))
+    ([command args]
+        (apply sh/sh (cons command args)))
+    ([command args root-dir]
+        (apply sh/sh (cons command (conj args :dir root-dir)))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.storage" name="doctopus.storage"><h1 class="project-name">doctopus.storage</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs"><p>Defines how Doctopus speaks to different places it can store generated HTML</p>
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.storage
+  (:require [doctopus.storage.impls :as storage-impls]))</pre></td></tr><tr><td class="docs"><h2>Storage</h2>
+
+<p>Doctopus shouldn't really care <em>where</em> it puts generated HTML; it
+just needs a consistent interface. Thus, the Backend: a way of
+generalizing and controlling where Doctopus tries to get and put Stuff.</p>
+
+<p>As a first pass, the backend will be defined by an atom which
+contains the current Backend instance; functions in this NS will
+work against that atom. This means a Doctopus will have a single Backend; we
+can potentially expand this later.</p>
+
+<p>Initial backends:
+- Temporary filesystem (provides it's own directory)
+- Permanent filesystem (needs a directory provided)
+- Amazon S3 (maybe?)</p>
+
+<p>At time of writing, I'm thinking of loading and saving one Tentacle worth of
+documents all at once.</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defprotocol DoctopusBackend
+  (set-backend! [this backend])
+  (load-from-storage [this k])
+  (save-to-storage [this k v])
+  (remove-from-storage [this k]))</pre></td></tr><tr><td class="docs"><p>The actual interface to a backend.</p>
+</td><td class="codes"><pre class="brush: clojure">(defrecord Backend
+    [backend available-backends]
+  DoctopusBackend
+  (set-backend! [this backend]
+    (if (contains? (this :available-backends) backend)
+      (assoc this :backend backend)
+      (throw (java.lang.RuntimeException.
+              (str &quot;Cannot use declared storage backend: &quot; backend)))))
+  (load-from-storage [this k]
+    (let [load-fn (get-in this [:backend :load-fn])]
+      (load-fn k)))
+  (save-to-storage [this k v]
+    (let [save-fn (get-in this [:backend :save-fn])]
+      (save-fn k v)))
+  (remove-from-storage [this k]
+    (let [remove-fn (get-in this [:backend :remove-fn])]
+      (remove-fn k))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def available-backends {:temp-fs storage-impls/temp-fs-backend
+                         :perm-fs storage-impls/permanent-fs-backend})</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def backend (Backend. storage-impls/temp-fs-backend available-backends))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.storage.impls" name="doctopus.storage.impls"><h1 class="project-name">doctopus.storage.impls</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.storage.impls
+  (:require [doctopus.storage.impls.temp-fs :as temp-fs-impl]
+            [doctopus.storage.impls.permanent-fs :as perm-fs-impl]))</pre></td></tr><tr><td class="docs"><h2>Backend Implementations</h2>
+
+<p>A backend implementation needs to expose two functions: one for load, and one
+for save.</p>
+
+<h3>Save</h3>
+
+<p>A save function needs to receive a "key" and a vector of path-html pairs, and
+store each piece correctly in the given backend _such that it can easily be
+looked up by the same key_. How should it store? However it likes. Whatever
+makes it easiest to implement the load function.</p>
+
+<h3>Load</h3>
+
+<p>The load function should be able to take a "key", and return a list of all
+the paths for that key, plus a function that will load the data at the end of
+each path. e.g.:
+[["/"    root-fn]
+ ["/foo" foo-fn]]</p>
+</td><td class="codes"></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defrecord BackendImplementation [name load-fn save-fn remove-fn])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def temp-fs-backend (BackendImplementation. &quot;temp-fs&quot;
+                                             temp-fs-impl/load-fn
+                                             temp-fs-impl/save-fn
+                                             temp-fs-impl/remove-fn))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def permanent-fs-backend (BackendImplementation. &quot;permanent-fs&quot;
+                                                  perm-fs-impl/load-fn
+                                                  perm-fs-impl/save-fn
+                                                  perm-fs-impl/remove-fn))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.storage.impls.fs-impl" name="doctopus.storage.impls.fs-impl"><h1 class="project-name">doctopus.storage.impls.fs-impl</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.storage.impls.fs-impl
+  (:require [me.raynes.fs :as fs]
+            [me.raynes.fs :as fs]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- load-html-file
+  [root rel-path]
+  (let [html-re #&quot;\.html$&quot;
+        assure-suffix #(if (re-find html-re rel-path) rel-path (str rel-path &quot;.html&quot;))
+        file-handle (fs/file root rel-path)]
+    (slurp file-handle)))</pre></td></tr><tr><td class="docs"><p>Expects a key, a relative path, and the data to write. `Key' is
+  assumed to be the name of a particular documentation set, and
+  becomes the primary subdirectory in the filesystem.</p>
+</td><td class="codes"><pre class="brush: clojure">(defn save-html-file
+  [root key rel-path data]
+  (binding [fs/*cwd* root]
+    (let [assure-relativity #(if (re-find #&quot;^/&quot; %) (subs % 1) %)
+          file-handle (fs/file key (assure-relativity rel-path))]
+      (fs/mkdirs (fs/parent file-handle))
+      (spit file-handle data))))</pre></td></tr><tr><td class="docs"><p>Given a root and a key, delete the entire doc dir</p>
+</td><td class="codes"><pre class="brush: clojure">(defn remove-html
+  [root key]
+  (binding [fs/*cwd* root]
+    (let [dir (fs/file key)]
+      (fs/delete-dir key))))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.storage.impls.permanent-fs" name="doctopus.storage.impls.permanent-fs"><h1 class="project-name">doctopus.storage.impls.permanent-fs</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.storage.impls.permanent-fs
+  (:require [doctopus
+             [configuration :refer [server-config]]
+             [files :as files]]
+            [me.raynes.fs :as fs]
+            [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def root (fs/file (:permanent-fs-root (server-config))))
+(if-not (fs/exists? root) (fs/mkdirs root))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn save-fn
+  [key path-html-pairs]
+  (doseq [[path html] path-html-pairs] (save-html-file root key path html)))</pre></td></tr><tr><td class="docs"><p>This is as Version 1 a way of doing this as I can think of:</p>
+
+<ol>
+<li>We load html</li>
+<li>We wrap that html in a function that returns itself, so we can Bidi</li>
+</ol>
+</td><td class="codes"><pre class="brush: clojure">(defn load-fn
+  [key]
+  (binding [fs/*cwd* root]
+    (let [dir (fs/file key)
+          rel-path-html-pairs (files/read-html dir)]
+      (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn remove-fn
+  [key]
+  (fs-impl/remove-html root key))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.storage.impls.temp-fs" name="doctopus.storage.impls.temp-fs"><h1 class="project-name">doctopus.storage.impls.temp-fs</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.storage.impls.temp-fs
+  (:require [clojure.string :as str]
+            [doctopus.files :as files]
+            [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
+            [me.raynes.fs :as fs]))</pre></td></tr><tr><td class="docs"><p>The root of the temp filesystem. Each Thing will store its stuff
+within this directory</p>
+</td><td class="codes"><pre class="brush: clojure">(def temp-dir (atom (fs/temp-dir  &quot;doctopus-temp&quot;)))</pre></td></tr><tr><td class="docs"><p>Generates a new temp dir</p>
+</td><td class="codes"><pre class="brush: clojure">(defn regenerate-temp-dir
+  []
+  (swap! temp-dir fs/temp-dir &quot;doctopus-temp&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn save-fn
+  [key path-html-pairs]
+  (doseq [[path html] path-html-pairs] (save-html-file @temp-dir key path html)))</pre></td></tr><tr><td class="docs"><p>This is as Version 1 a way of doing this as I can think of:</p>
+
+<ol>
+<li>We load html</li>
+<li>We wrap that html in a function that returns itself, so we can Bidi</li>
+</ol>
+</td><td class="codes"><pre class="brush: clojure">(defn load-fn
+  [key]
+  (binding [fs/*cwd* @temp-dir]
+    (let [dir (fs/file key)
+          rel-path-html-pairs (files/read-html dir)]
+      (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn remove-fn
+  [key]
+  (fs-impl/remove-html @temp-dir key))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.template" name="doctopus.template"><h1 class="project-name">doctopus.template</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(ns doctopus.template
+  (:require [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+            [doctopus.configuration :refer [server-config]]
+            [ring.util.anti-forgery :as csrf]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-heads
+  []
+  [{:name &quot;lol&quot; :root &quot;lol&quot;} {:name &quot;topcat&quot; :root &quot;topcatdir&quot;}])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-tentacles
+  []
+  [{:name &quot;rofl&quot; :root &quot;rofl&quot; :head &quot;lol&quot;}
+   {:name &quot;lolcano&quot; :root &quot;mountsaintlol&quot; :head &quot;lol&quot;}
+   {:name &quot;heathcliff&quot; :root &quot;heathcliffdir&quot; :head &quot;topcat&quot;}])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn get-tentacles-by-head
+  [head]
+  (filter #(= (:head %1) head) (get-tentacles)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(def root-url (or (:root-url (server-config)) &quot;/&quot;))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- linkify
+  [href text]
+  [:a {:href href} text])</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- head-li
+  [head]
+  (enlive/html [:li (linkify (:root head) (:name head))]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- head-option
+  [head]
+  (let [head-name (:name head)]
+    (enlive/html [:option {:value head-name} head-name])))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- tentacle-li
+  [tentacle]
+  (enlive/html [:li (linkify (:root tentacle) (:name tentacle))]))</pre></td></tr><tr><td class="docs"><p>templates/base.html</p>
+</td><td class="codes"><pre class="brush: clojure">(deftemplate base-template 
+  [body]
+  [:body] (enlive/content body))</pre></td></tr><tr><td class="docs"><p>templates/add-head.html</p>
+</td><td class="codes"><pre class="brush: clojure">(defsnippet add-head-snippet 
+  [:form]
+  []
+  [:form] (enlive/set-attr :action &quot;/add-head&quot;)
+  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))</pre></td></tr><tr><td class="docs"><p>templates/add-tentacle.html</p>
+</td><td class="codes"><pre class="brush: clojure">(defsnippet add-tentacle-snippet 
+  [:form]
+  []
+  [:form] (enlive/set-attr :action &quot;/add-tentacle&quot;)
+  [:select] (enlive/content (map head-option (get-heads)))
+  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))</pre></td></tr><tr><td class="docs"><p>templates/index.html</p>
+</td><td class="codes"><pre class="brush: clojure">(defsnippet index-snippet 
+  [:#doctopus-main]
+  []
+  [:#doctopus-heads] (enlive/content (map head-li (get-heads)))
+  [:#doctopus-tentacles] (enlive/content (map tentacle-li (get-tentacles))))</pre></td></tr><tr><td class="docs"><p>templates/frame.html</p>
+</td><td class="codes"><pre class="brush: clojure">(defsnippet frame-snippet 
+  [:#doctopus-iframe]
+  [tentacle]
+  [:#doctopus-index] (enlive/set-attr :href root-url)
+  [:#doctopus-project] (enlive/do-&gt;
+                        (enlive/set-attr :href (:config-url tentacle))
+                        (enlive/content
+                         (str &quot;To &quot; (:name tentacle) &quot; config&quot;))))</pre></td></tr><tr><td class="docs"><p>constructs an iframe element with relevant src attribute</p>
+</td><td class="codes"><pre class="brush: clojure">(defn- iframe-html
+  [tentacle]
+  (enlive/html [:iframe {:src (str (:root tentacle) &quot;/frame.html&quot;)}]))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn- prepend-frame
+  [main frame]
+  (enlive/sniptest main [:body] (enlive/prepend frame)))</pre></td></tr><tr><td class="docs"><p>given a string of HTML and a tentacle, returns a string with a Doctopus
+   iframe inserted into its <body></p>
+</td><td class="codes"><pre class="brush: clojure">(defn add-frame
+  [html-str tentacle]
+  (apply str (prepend-frame html-str (iframe-html tentacle))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn html
+  [body]
+  (apply str (base-template body)))</pre></td></tr><tr><td class="docs"><p>given a tentacle, returns a string of HTML suitable for serving an iframe
+   with doctopus navigation</p>
+</td><td class="codes"><pre class="brush: clojure">(defn project-frame
+  [tentacle]
+  (html (frame-snippet tentacle)))</pre></td></tr><tr><td class="docs"><p>returns an HTML string for main doctopus navigation</p>
+</td><td class="codes"><pre class="brush: clojure">(defn index
+  []
+  (html (index-snippet)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-head
+  []
+  (html (add-head-snippet)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-tentacle
+  []
+  (html (add-tentacle-snippet)))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr><tr><td class="docs"><div class="docs-header"><a class="anchor" href="#doctopus.web" name="doctopus.web"><h1 class="project-name">doctopus.web</h1><a class="toc-link" href="#toc">toc</a></a></div></td><td class="codes" /></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(ns doctopus.web
   (:require [bidi.ring :as bidi]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
             [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log]))</pre></td></tr><tr><td class="docs">
+            [taoensso.timbre :as log]
+            [clojure.walk :refer [keywordize-keys]]))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn wrap-error-page [handler]
   &quot;Utility ring handler for when Stuff goes Sideways; returns a 500 and an error
   page&quot;
@@ -3071,14 +3340,34 @@ articulate just <em>why</em> yet.</p>
   (fn [request]
     (if-let [response (handler request)]
       response
-      (four-oh-four (:uri request)))))</pre></td></tr><tr><td class="docs"><p>Just returns our index.html, with the content-type set correctly</p>
+      (four-oh-four (:uri request)))))</pre></td></tr><tr><td class="docs"><p>Just returns html, with the content-type set correctly</p>
+</td><td class="codes"><pre class="brush: clojure">(defn serve-html
+  [template]
+  (-&gt; template
+      (ring-response/response)
+      (ring-response/content-type &quot;text/html&quot;)))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(defn serve-index
   [_]
-  (-&gt; (slurp (io/resource &quot;index.html&quot;))
-      (ring-response/response)
-      (ring-response/content-type &quot;text/html&quot;)))</pre></td></tr><tr><td class="docs"><p>Bidi routes are defined as nested sets of ""</p>
-</td><td class="codes"><pre class="brush: clojure">(def routes [&quot;/&quot; {           {:get serve-index}
-                  &quot;index.html&quot; {:get serve-index}}])</pre></td></tr><tr><td class="docs">
+  (serve-html (templates/index)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn serve-add-head-form
+  [_]
+  (serve-html (templates/add-head)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn serve-add-tentacle-form
+  [_]
+  (serve-html (templates/add-tentacle)))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-head
+  [request]
+   (let [head-name (get (:form-params request) &quot;name&quot;)]
+     (serve-html (str &quot;ADD A HEAD: &quot; head-name))))</pre></td></tr><tr><td class="docs">
+</td><td class="codes"><pre class="brush: clojure">(defn add-tentacle
+  [request]
+   (let [params (keywordize-keys (:form-params request))]
+     (serve-html
+      (str &quot;ADD A TENTACLE: &quot; (:name params) &quot; BELONGING TO: &quot; (:head params)))))</pre></td></tr><tr><td class="docs"><p>Bidi routes are defined as nested sets of ""</p>
+</td><td class="codes"><pre class="brush: clojure">(def routes [&quot;/&quot; {             {:get serve-index}
+                  &quot;index.html&quot;   {:get serve-index}
+                  &quot;add-head&quot;     {:get serve-add-head-form :post add-head}
+                  &quot;add-tentacle&quot; {:get serve-add-tentacle-form :post add-tentacle}}])</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def application-handlers
   (bidi/make-handler routes))</pre></td></tr><tr><td class="docs">
 </td><td class="codes"><pre class="brush: clojure">(def application
@@ -3095,7 +3384,7 @@ resources/configuration.edn</p>
   []
   (let [{:keys [port]} (server-config)]
     (log/info &quot;Starting HTTP server on port&quot; port)
-    (server/run-server application {:port port})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_doctopus.configuration">doctopus.configuration</li><li class="floating-toc-li" id="floating-toc_doctopus.core">doctopus.core</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus">doctopus.doctopus</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus.head">doctopus.doctopus.head</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus.tentacle">doctopus.doctopus.tentacle</li><li class="floating-toc-li" id="floating-toc_doctopus.files">doctopus.files</li><li class="floating-toc-li" id="floating-toc_doctopus.files.predicates">doctopus.files.predicates</li><li class="floating-toc-li" id="floating-toc_doctopus.markdown">doctopus.markdown</li><li class="floating-toc-li" id="floating-toc_doctopus.web">doctopus.web</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
+    (server/run-server application {:port port})))</pre></td></tr><tr><td class="spacer docs">&nbsp;</td><td class="codes" /></tr></table><div class="footer">Generated by <a href="https://github.com/gdeer81/marginalia">Marginalia</a>.&nbsp;&nbsp;Syntax highlighting provided by Alex Gorbatchev's <a href="http://alexgorbatchev.com/SyntaxHighlighter/">SyntaxHighlighter</a><div id="floating-toc"><ul><li class="floating-toc-li" id="floating-toc_doctopus.configuration">doctopus.configuration</li><li class="floating-toc-li" id="floating-toc_doctopus.core">doctopus.core</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus">doctopus.doctopus</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus.head">doctopus.doctopus.head</li><li class="floating-toc-li" id="floating-toc_doctopus.doctopus.tentacle">doctopus.doctopus.tentacle</li><li class="floating-toc-li" id="floating-toc_doctopus.files">doctopus.files</li><li class="floating-toc-li" id="floating-toc_doctopus.files.predicates">doctopus.files.predicates</li><li class="floating-toc-li" id="floating-toc_doctopus.markdown">doctopus.markdown</li><li class="floating-toc-li" id="floating-toc_doctopus.shell">doctopus.shell</li><li class="floating-toc-li" id="floating-toc_doctopus.storage">doctopus.storage</li><li class="floating-toc-li" id="floating-toc_doctopus.storage.impls">doctopus.storage.impls</li><li class="floating-toc-li" id="floating-toc_doctopus.storage.impls.fs-impl">doctopus.storage.impls.fs-impl</li><li class="floating-toc-li" id="floating-toc_doctopus.storage.impls.permanent-fs">doctopus.storage.impls.permanent-fs</li><li class="floating-toc-li" id="floating-toc_doctopus.storage.impls.temp-fs">doctopus.storage.impls.temp-fs</li><li class="floating-toc-li" id="floating-toc_doctopus.template">doctopus.template</li><li class="floating-toc-li" id="floating-toc_doctopus.web">doctopus.web</li></ul></div></div><script type="text/javascript">SyntaxHighlighter.defaults['gutter'] = false;
 SyntaxHighlighter.all();
 
 // hackity hack
