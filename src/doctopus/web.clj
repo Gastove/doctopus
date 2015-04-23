@@ -45,9 +45,12 @@
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
+;; Let's start bootstrapping!
+(def doctopus (bootstrap-heads (Doctopus. (server-config))))
+
 (defn serve-index
   [_]
-  (serve-html (templates/index)))
+  (serve-html (templates/index doctopus)))
 
 (defn serve-add-head-form
   [_]
@@ -68,15 +71,13 @@
      (serve-html
       (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
 
-;; Let's start bootstrapping!
-(def doctopus (bootstrap-heads (Doctopus. (server-config))))
-
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""             {:get serve-index}
                   "index.html"   {:get serve-index}
                   "add-head"     {:get serve-add-head-form :post add-head}
-                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}
-             "/docs" (load-routes doctopus)])
+                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
+                  "docs/"        [(load-routes doctopus)]}
+             ])
 
 (def application-handlers
   (bidi/make-handler routes))
