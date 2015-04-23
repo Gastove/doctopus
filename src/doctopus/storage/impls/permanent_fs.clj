@@ -35,7 +35,7 @@
   [key]
   (let [file-handle (binding [fs/*cwd* root] (fs/file key))
         file-name (.getPath file-handle)]
-    [key (bidi-ring/->Files {:dir file-name})]))
+    [(str key "/") (bidi-ring/->Files {:dir file-name})]))
 
 (defn remove-fn
   [key]
