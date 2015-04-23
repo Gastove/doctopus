@@ -1,5 +1,5 @@
 (ns doctopus.web
-  (:require [bidi.ring :as bidi]
+  (:require [bidi.ring :as bidi :refer [->Resources]]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
             [doctopus.template :as templates]
@@ -68,6 +68,7 @@
 
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""             {:get serve-index}
+                  "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}])
