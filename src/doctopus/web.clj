@@ -48,8 +48,6 @@
 ;; Let's start bootstrapping!
 (def doctopus (bootstrap-heads (Doctopus. (server-config))))
 
-(println (list-tentacles doctopus))
-
 (defn serve-index
   [_]
   (serve-html (templates/index doctopus)))
@@ -77,8 +75,9 @@
 (def routes ["/" {""             {:get serve-index}
                   "index.html"   {:get serve-index}
                   "add-head"     {:get serve-add-head-form :post add-head}
-                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}
-             "/docs" (load-routes doctopus)])
+                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
+                  "docs/"        [(load-routes doctopus)]}
+             ])
 
 (def application-handlers
   (bidi/make-handler routes))

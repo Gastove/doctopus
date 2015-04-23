@@ -1,5 +1,6 @@
 (ns doctopus.template
-  (:require [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+  (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
+   [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles]]
             [ring.util.anti-forgery :as csrf]))
@@ -93,4 +94,3 @@
 (defn add-tentacle
   []
   (html (add-tentacle-snippet)))
-
