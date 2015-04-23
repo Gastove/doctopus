@@ -68,7 +68,7 @@
 
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""             {:get serve-index}
-                  "assets"       (->Resources {:prefix "assets"})
+                  "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}])
