@@ -1,0 +1,5 @@
+{:src-root "/tmp/doctopus"
+ :output-root "/tmp/doctopus/docs"
+ :html-command "lein"
+ :html-args ["marg" "-f" "index.html"]
+ :name "doctopus"}
