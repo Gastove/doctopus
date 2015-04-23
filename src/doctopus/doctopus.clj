@@ -15,19 +15,28 @@ articulate just _why_ yet.
 
   I think: Doctopus has several Heads, which each have many Tentacles. I think."
   (:require [doctopus.doctopus.head :as h]
-            [doctopus.doctopus.tentacle :as t]))
+            [doctopus.doctopus.tentacle :as t]
+            [me.raynes.fs :as fs])
+  (:import [doctopus.doctopus.head Head]))
 
 
 ;; Here there be Peculiar Metaphors for Information Dissemination
 (defprotocol DoctopusMethods
+  (bootstrap-heads [this])
   (list-tentacles [this])
   (list-tentacles-by-head [this head]))
 
 (defrecord Doctopus
-    [heads]
+    [configuration]
   DoctopusMethods
+  (bootstrap-heads [this]
+    (let [heads-dir (:heads-dir configuration)
+          dirs (fs/list-dir heads-dir)
+          head-names (map #(.getName %) dirs)
+          heads (map #(h/Head. %) head-names)]
+      (assoc this :heads (doall (map #(h/bootstrap-tentacles % heads-dir) heads)))))
   (list-tentacles [this]
-    (into {} (for [head (:heads this)
+    (into [] (for [head (:heads this)
                    :let [tentacles (h/list-tentacles head)]]
                [head tentacles])))
   (list-tentacles-by-head [this head]
