@@ -1,5 +1,6 @@
 (ns doctopus.template
-  (:require [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+  (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
+   [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [ring.util.anti-forgery :as csrf]))
 
@@ -55,9 +56,9 @@
 
 (defsnippet index-snippet "templates/index.html"
   [:#doctopus-main]
-  []
-  [:#doctopus-heads] (enlive/content (map head-li (get-heads)))
-  [:#doctopus-tentacles] (enlive/content (map tentacle-li (get-tentacles))))
+  [doctopus]
+  [:#doctopus-heads] (enlive/content (map head-li (list-heads doctopus)))
+  [:#doctopus-tentacles] (enlive/content (map tentacle-li (list-tentacles doctopus))))
 
 (defsnippet frame-snippet "templates/frame.html"
   [:#doctopus-iframe]
@@ -95,8 +96,8 @@
 
 (defn index
   "returns an HTML string for main doctopus navigation"
-  []
-  (html (index-snippet)))
+  [doctopus]
+  (html (index-snippet doctopus)))
 
 (defn add-head
   []
@@ -105,4 +106,3 @@
 (defn add-tentacle
   []
   (html (add-tentacle-snippet)))
-
