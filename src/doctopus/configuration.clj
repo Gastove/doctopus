@@ -35,7 +35,7 @@
   (io/delete-file (make-head-filename head-name)))
 
 (defn save-tentacle!
-  "given a Doctopus Head map, save it to disk as an edn file in resources/"
+  "given a Doctopus Tentacle map, save it to disk as an edn file in resources/"
   [doctopus-tentacle]
   (let [tentacle-name (:name doctopus-tentacle)]
     (save-to-disk! (make-tentacle-filename tentacle-name) doctopus-tentacle)))
