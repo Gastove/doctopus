@@ -6,7 +6,8 @@
 ;; TENTACLES
 (defprotocol TentacleMethods
   (generate-html [this])
-  (save-build-output [this]))
+  (save-build-output [this])
+  (routes [this]))
 
 (defrecord Tentacle
     [name html-command html-args src-root output-root]
@@ -16,7 +17,9 @@
       (apply make-html [html-command html-args src-root])))
   (save-build-output [this]
     (let [{:keys [name output-root]} this])
-    (save-to-storage backend name output-root)))
+    (save-to-storage backend name output-root))
+  (routes [this]
+    (load-from-storage backend (:name this))))
 
 
 ;; ### Tentacle Config Spec

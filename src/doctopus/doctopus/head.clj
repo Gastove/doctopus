@@ -1,13 +1,14 @@
 (ns doctopus.doctopus.head
   (:require [clojure.edn :as edn]
             [me.raynes.fs :as fs]
-            [doctopus.doctopus.tentacle :refer [map->Tentacle]]))
+            [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]))
 
 
 ;; Head
 (defprotocol HeadMethods
   (bootstrap-tentacles [this root])
-  (list-tentacles [this]))
+  (list-tentacles [this])
+  (load-tentacle-routes [this]))
 
 (defrecord Head
     [name]
@@ -20,4 +21,7 @@
                              (edn/read-string strang))
           tentacles (map #(map->Tentacle %) tentacle-configs)]
       (assoc this :tentacles tentacles)))
-  (list-tentacles [this] (:tentacles this)))
+  (list-tentacles [this] (:tentacles this))
+  (load-tentacle-routes [this]
+    (into [] (for [tentacle (:tentacles this)]
+               (t/routes tentacle)))))
