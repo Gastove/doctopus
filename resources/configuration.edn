@@ -1,2 +1,4 @@
-{:nomad/hosts {"engine" {:env :development}}
- :port 8080}
+{:nomad/hosts {"engine" {:env :development
+                         :permanent-fs-root "/home/gastove/Code/doctopus/docs-tmp"}}
+ :port 8080
+ }

@@ -10,3 +10,4 @@ pom.xml.asc
 /docs
 *.swp
 *.swo
+/docs-tmp/
