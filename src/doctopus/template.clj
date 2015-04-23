@@ -2,21 +2,8 @@
   (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
    [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.doctopus :refer [list-heads list-tentacles]]
             [ring.util.anti-forgery :as csrf]))
-
-(defn get-heads
-  []
-  [{:name "lol" :root "lol"} {:name "topcat" :root "topcatdir"}])
-
-(defn get-tentacles
-  []
-  [{:name "rofl" :root "rofl" :head "lol"}
-   {:name "lolcano" :root "mountsaintlol" :head "lol"}
-   {:name "heathcliff" :root "heathcliffdir" :head "topcat"}])
-
-(defn get-tentacles-by-head
-  [head]
-  (filter #(= (:head %1) head) (get-tentacles)))
 
 (def root-url (or (:root-url (server-config)) "/"))
 
@@ -26,7 +13,8 @@
 
 (defn- head-li
   [head]
-  (enlive/html [:li (linkify (:root head) (:name head))]))
+  (let [head-name (:name head)]
+    (enlive/html [:li (linkify (str "/heads/" head-name) head-name)])))
 
 (defn- head-option
   [head]
@@ -35,7 +23,8 @@
 
 (defn- tentacle-li
   [tentacle]
-  (enlive/html [:li (linkify (:root tentacle) (:name tentacle))]))
+  (let [tentacle-name (:name tentacle)]
+    (enlive/html [:li (linkify (str "/tentacles/" tentacle-name) tentacle-name)])))
 
 (deftemplate base-template "templates/base.html"
   [body]
@@ -49,9 +38,9 @@
 
 (defsnippet add-tentacle-snippet "templates/add-tentacle.html"
   [:form]
-  []
+  [doctopus]
   [:form] (enlive/set-attr :action "/add-tentacle")
-  [:select] (enlive/content (map head-option (get-heads)))
+  [:select] (enlive/content (map head-option (list-heads doctopus)))
   [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
 
 (defsnippet index-snippet "templates/index.html"
