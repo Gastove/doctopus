@@ -1,5 +1,5 @@
-{:nomad/hosts {"engine" {:env :development
-                         :permanent-fs-root "/home/gastove/Code/doctopus/docs-tmp"}}
+{:nomad/hosts {"Jesse-Keane.local" {:env :development
+                         :permanent-fs-root "/Users/jessekeane/Projects/UA/doctopus/docs-tmp"}}
  :port 8080
  :heads-dir "self/heads"
  }
