@@ -17,9 +17,6 @@ Args:
     ([command args]
         (apply sh/sh (cons command args)))
     ([command args root-dir]
-     (println command)
-     (println args)
-     (println root-dir)
         (apply sh/sh (cons command (conj args :dir root-dir)))))
 
 (defn git-clone
