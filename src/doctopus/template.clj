@@ -2,7 +2,7 @@
   (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
    [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
-            [doctopus.doctopus :refer [list-heads list-tentacles]]
+            [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
             [ring.util.anti-forgery :as csrf]))
 
@@ -26,6 +26,12 @@
   [tentacle]
   (let [tentacle-name (:name tentacle)]
     (enlive/html [:li (linkify (get-html-entrypoint tentacle) tentacle-name)])))
+
+(defsnippet head-snippet "templates/head.html"
+  [:#doctopus-main]
+  [head-name doctopus]
+  [:#doctopus-head-name] (enlive/content head-name)
+  [:#doctopus-tentacles] (enlive/content (map tentacle-li (flatten (list-tentacles-by-head doctopus head-name)))))
 
 (deftemplate base-template "templates/base.html"
   [body]
@@ -81,6 +87,10 @@
   "returns an HTML string for main doctopus navigation"
   [doctopus]
   (html (index-snippet doctopus)))
+
+(defn head-page
+  [head-name doctopus]
+  (html (head-snippet head-name doctopus)))
 
 (defn add-head
   []
