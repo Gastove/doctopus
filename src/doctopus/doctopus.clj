@@ -45,6 +45,10 @@ talk about it either way. The idea is: start defining an Entity we can flesh out
   (list-tentacles-by-head [this head]
     {head (h/list-tentacles (:heads this))})
   (load-routes [this]
-    (into {} (for [head (:heads this)
-           :let [route-map (h/load-tentacle-routes head)]]
-               ["/" route-map]))))
+    ;; You may be wondering, "what the hell is going on here". And that's a
+    ;; great question! The answer is: we need to make sure that what's returned
+    ;; is a map from the key "/" to a map of the form {tentacle-name
+    ;; tentacle-routes}. This is not the prettiest, but it does just that.
+    {"/" (apply merge (flatten (into [] (for [head (:heads this)
+                                  :let [route-map (h/load-tentacle-routes head)]]
+                              [route-map]))))}))

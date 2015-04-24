@@ -1,0 +1,7 @@
+{:output-root "docs/_build/html"
+ :html-command "make"
+ :html-args ["-C" "docs" "html"]
+ :name "warp9"
+ :source-control :git
+ :source-location "ssh://git@atlassian.prod.urbanairship.com:2222/cd/warp9.git"
+ :entry-point "index.html"}
