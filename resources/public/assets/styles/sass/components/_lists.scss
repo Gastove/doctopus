@@ -1,0 +1,35 @@
+ul, li {
+    list-style: none;
+    padding: 0;
+}
+dl {
+    
+    dt {
+        font-weight: bold;
+    }
+    dd {
+
+    }
+}
+
+ul {
+    border-top: #ccc 1px solid;
+    // margin: 0;
+
+    li {
+        border-bottom: #ccc 1px solid;
+        margin: 0;
+    }
+
+    a {
+        color: #999197;
+        font-size: 14px;
+        line-height: 20px;
+        font-weight: 600;
+        display: block;
+        padding: 10px;
+    }
+    a:hover {
+        background: rgba(23,212,229,.2);
+    }
+}

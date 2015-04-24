@@ -1,0 +1,99 @@
+/* 1280 */
+.row {
+    margin: 0 auto;
+    width: 100%;
+    @extend %clearfix;
+}
+.col {
+    float: left;
+    margin-left: 1.5625%;
+    min-height: 1px;
+    position: relative;
+
+    &.one {
+        width: 6.640625%;
+    }
+    &.two {
+        width: 14.84375%;
+    }
+    &.three {
+        width: 23.046875%;
+    }
+    &.four {
+        width: 31.25%;
+    }
+    &.five {
+        width: 39.453125%;
+    }
+    &.six {
+        width: 47.65625%;
+    }
+    &.seven {
+        width: 55.859375%;
+    }
+    &.eight {
+        width: 64.0625%;
+    }
+    &.nine {
+        width: 72.265625%;
+    }
+    &.ten {
+        width: 80.46875%;
+    }
+    &.eleven {
+        width: 88.671875%;
+    }
+    &.twelve {
+        margin-left: 1.5625%; 
+        width: 96.875%;
+    }
+    &.offset-1 {
+        margin-left: 9.765625%;
+    }
+    &.offset-2 {
+        margin-left: 17.96875%;
+    }
+    &.offset-3 {
+        margin-left: 26.171875%;
+    }
+    &.offset-4 {
+        margin-left: 34.375%;
+    }
+    &.offset-5 {
+        margin-left: 42.578125%;
+    }
+    &.offset-6 {
+        margin-left: 50.78125%;
+    }
+    &.offset-7 {
+        margin-left: 58.984375%;
+    }
+    &.offset-8 {
+        margin-left: 67.1875%;
+    }
+    &.offset-9 {
+        margin-left: 75.390625%;
+    }
+    &.offset-10 {
+        margin-left: 83.59375%;
+    }
+    &.offset-11 {
+        margin-left: 91.796875%;
+    }
+}
+
+#grid:target {
+   
+    &:after {
+        background: url(../images/grid.png);
+        bottom: 0;
+        content: " ";
+        display: block;
+        left: 0;
+        position: absolute;
+        right: 0;
+        top: 0;
+        z-index: 9999;
+    }
+}
+

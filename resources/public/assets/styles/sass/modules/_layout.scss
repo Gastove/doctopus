@@ -1,0 +1,45 @@
+// Layout
+
+header {
+    background: #333032;
+    padding: 20px;
+    width: 100%;
+}
+.logo {
+    background: url(/assets/images/doctopus-logo.png);
+    background-size: 250px 50px;
+    height: 50px;
+    width: 250px;
+    text-indent: 100%;
+    overflow: hidden;
+    white-space: nowrap;
+    margin: 0;
+}
+main,
+.main {
+    padding: 20px;
+    @extend %clearfix;
+}
+.module {
+    background: #fff;
+    box-shadow: rgba(0,0,0,.1) 0 1px 3px;
+    margin: 0 0 20px;
+    padding: 20px;
+    border-radius: 2px;
+}
+
+.sub-header {
+    position: relative;
+
+    h2 {
+        font-weight: 400;
+    }
+    .sub-header-actions {
+        position: absolute;
+        right: 0;
+        top: 50%;
+        -webkit-transform: translateY(-50%);
+        -ms-transform: translateY(-50%);
+        transform: translateY(-50%);
+    }
+}
