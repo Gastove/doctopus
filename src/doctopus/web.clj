@@ -4,10 +4,10 @@
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [load-routes bootstrap-heads]]
             [doctopus.template :as templates]
+            [doctopus.files.predicates :refer [html?]]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
-            [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
             [taoensso.timbre :as log]
@@ -52,6 +52,10 @@
   [_]
   (serve-html (templates/index doctopus)))
 
+(defn serve-iframe
+  [_]
+  (serve-html (templates/project-frame)))
+
 (defn serve-add-head-form
   [_]
   (serve-html (templates/add-head)))
@@ -75,6 +79,7 @@
 (def routes ["/" {""             {:get serve-index}
                   "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
+                  "frame.html"   {:get serve-iframe}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
                   "docs/"         [(load-routes doctopus)]}])
@@ -87,17 +92,20 @@
 (def application-handlers
   (bidi/make-handler routes))
 
-(defn wrap-test
+(defn wrap-iframe-transform
   [handler]
   (fn [request]
     (let [response (handler request)
+          file (:body response)
           tentacle-name (get-tentacle-from-uri (:uri request))]
-      (if tentacle-name (assoc response :body (templates/add-frame (:body response) {:name tentacle-name})) response))))
+      (if (and tentacle-name file (html? file))
+        (assoc response :body (templates/add-frame (slurp file)))
+        response))))
 
 (def application
   (-> (wrap-defaults application-handlers site-defaults)
+      (wrap-iframe-transform)
       (wrap-route-not-found)
-      (wrap-test)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
          wrap-error-page

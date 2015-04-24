@@ -51,37 +51,33 @@
 
 (defsnippet frame-snippet "templates/frame.html"
   [:#doctopus-iframe]
-  [tentacle]
-  [:#doctopus-index] (enlive/set-attr :href root-url)
-  [:#doctopus-project] (enlive/do->
-                        (enlive/set-attr :href (:config-url tentacle))
-                        (enlive/content
-                         (str "To " (:name tentacle) " config"))))
+  []
+  [:#doctopus-index] (enlive/set-attr :href root-url))
 
 (defn- iframe-html
   "constructs an iframe element with relevant src attribute"
-  [tentacle]
-  (enlive/html [:iframe {:src (str (:root tentacle) "/frame.html")}]))
+  []
+  (enlive/html [:iframe {:src "/frame.html" :width "100%" :height "50" :frameBorder "0"}]))
 
 (defn- prepend-frame
   [main frame]
-  (enlive/sniptest main [:body] (enlive/prepend frame)))
+  (enlive/sniptest main [[:body enlive/first-of-type]] (enlive/prepend frame)))
 
 (defn add-frame
   "given a string of HTML and a tentacle, returns a string with a Doctopus
-   iframe inserted into its <body>"
-  [html-str tentacle]
-  (apply str (prepend-frame html-str (iframe-html tentacle))))
+   iframe inserted into its body"
+  [html-str]
+  (apply str (prepend-frame html-str (iframe-html))))
 
 (defn html
   [body]
   (apply str (base-template body)))
 
 (defn project-frame
-  "given a tentacle, returns a string of HTML suitable for serving an iframe
-   with doctopus navigation"
-  [tentacle]
-  (html (frame-snippet tentacle)))
+  "returns a string of HTML suitable for serving an iframe with doctopus
+   navigation"
+  []
+  (html (frame-snippet)))
 
 (defn index
   "returns an HTML string for main doctopus navigation"

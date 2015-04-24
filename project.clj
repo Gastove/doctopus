@@ -7,7 +7,7 @@
                  [joda-time/joda-time "2.6"]
                  [markdown-clj "0.9.63"]
                  [me.raynes/fs "1.4.6"]
-                 [http-kit "2.1.16"]
+                 [http-kit "2.1.19"]
                  [jarohen/nomad "0.7.0"]
                  [com.taoensso/timbre "3.4.0"]
                  [ring/ring-defaults "0.1.4"]
