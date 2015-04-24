@@ -36,7 +36,7 @@
 (deftemplate base-template "templates/base.html"
   [body]
   [:h1] (enlive/wrap :a)
-  [[:a enlive/first-of-type]] (enlive/set-attr :href "/")
+  [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
   [:body] (enlive/content body))
 
 (defsnippet add-head-snippet "templates/add-head.html"
