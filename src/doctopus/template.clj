@@ -3,6 +3,7 @@
    [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles]]
+            [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
             [ring.util.anti-forgery :as csrf]))
 
 (def root-url (or (:root-url (server-config)) "/"))
@@ -24,7 +25,7 @@
 (defn- tentacle-li
   [tentacle]
   (let [tentacle-name (:name tentacle)]
-    (enlive/html [:li (linkify (str "/docs/" tentacle-name "/index.html") tentacle-name)])))
+    (enlive/html [:li (linkify (get-html-entrypoint tentacle) tentacle-name)])))
 
 (deftemplate base-template "templates/base.html"
   [body]
