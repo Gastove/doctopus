@@ -1,0 +1,6 @@
+{:output-root "docs/_build/html"
+ :html-command "make"
+ :html-args ["-C" "docs" "html"]
+ :name "hubble"
+ :source-control :git
+ :source-location "ssh://git@atlassian.prod.urbanairship.com:2222/cd/hubble.git"}
