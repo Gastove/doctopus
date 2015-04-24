@@ -21,15 +21,6 @@
       (and (fs/exists? result)
            (fs/readable? result)))))
 
-;; This might be totally deprecated.
-;; (defn load-fn
-;;   "Uh."
-;;   [key]
-;;   (binding [fs/*cwd* root]
-;;     (let [dir (fs/file key)
-;;           rel-path-html-pairs (files/read-html dir)]
-;;       (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))
-
 (defn load-fn
   "Returns the routes this serves"
   [key]

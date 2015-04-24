@@ -17,4 +17,13 @@ Args:
     ([command args]
         (apply sh/sh (cons command args)))
     ([command args root-dir]
+     (println command)
+     (println args)
+     (println root-dir)
         (apply sh/sh (cons command (conj args :dir root-dir)))))
+
+(defn git-clone
+  [repo dest]
+  (let [res (sh/sh "git" "clone" repo dest)
+        status (:exit res)]
+    (= 0 status)))
