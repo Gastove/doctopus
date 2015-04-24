@@ -1,3 +1,5 @@
-{:nomad/environments {"dev" {:nomad/private-file #nomad/file "resources/configuration-local.edn"}
+{:nomad/environments {"dev" {:nomad/private-file #nomad/file "resources/configuration-local.edn"
+                             :heads-dir "resources/self/heads"
+                             :port 8080}
                       "production" {:heads-dir "resources/self/heads"
                                     :port 8080}}}
