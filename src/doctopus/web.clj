@@ -62,7 +62,7 @@
 
 (defn serve-add-tentacle-form
   [_]
-  (serve-html (templates/add-tentacle)))
+  (serve-html (templates/add-tentacle doctopus)))
 
 (defn add-head
   [request]

@@ -28,6 +28,8 @@
 
 (deftemplate base-template "templates/base.html"
   [body]
+  [:h1] (enlive/wrap :a)
+  [[:a enlive/first-of-type]] (enlive/set-attr :href "/")
   [:body] (enlive/content body))
 
 (defsnippet add-head-snippet "templates/add-head.html"
@@ -49,15 +51,10 @@
   [:#doctopus-heads] (enlive/content (map head-li (list-heads doctopus)))
   [:#doctopus-tentacles] (enlive/content (map tentacle-li (flatten (list-tentacles doctopus)))))
 
-(defsnippet frame-snippet "templates/frame.html"
-  [:#doctopus-iframe]
-  []
-  [:#doctopus-index] (enlive/set-attr :href root-url))
-
 (defn- iframe-html
   "constructs an iframe element with relevant src attribute"
   []
-  (enlive/html [:iframe {:src "/frame.html" :width "100%" :height "50" :frameBorder "0"}]))
+  (enlive/html [:iframe {:src "/frame.html" :width "100%" :height "90" :frameBorder "0"}]))
 
 (defn- prepend-frame
   [main frame]
@@ -77,7 +74,7 @@
   "returns a string of HTML suitable for serving an iframe with doctopus
    navigation"
   []
-  (html (frame-snippet)))
+  (base-template ""))
 
 (defn index
   "returns an HTML string for main doctopus navigation"
@@ -89,5 +86,5 @@
   (html (add-head-snippet)))
 
 (defn add-tentacle
-  []
-  (html (add-tentacle-snippet)))
+  [doctopus]
+  (html (add-tentacle-snippet doctopus)))
