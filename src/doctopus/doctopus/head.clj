@@ -24,5 +24,5 @@
       (assoc this :tentacles tentacles)))
   (list-tentacles [this] (:tentacles this))
   (load-tentacle-routes [this]
-    (into [] (for [tentacle (:tentacles this)]
+    (into {} (for [tentacle (:tentacles this)]
                (t/routes tentacle)))))
