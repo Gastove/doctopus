@@ -47,4 +47,4 @@ talk about it either way. The idea is: start defining an Entity we can flesh out
   (load-routes [this]
     (into {} (for [head (:heads this)
            :let [route-map (h/load-tentacle-routes head)]]
-               [(str (:name head) "/") route-map]))))
+               ["/" route-map]))))

@@ -3,4 +3,5 @@
  :html-args ["-C" "docs" "html"]
  :name "hubble"
  :source-control :git
- :source-location "ssh://git@atlassian.prod.urbanairship.com:2222/cd/hubble.git"}
+ :source-location "ssh://git@atlassian.prod.urbanairship.com:2222/cd/hubble.git"
+ :entry-point "index.html"}

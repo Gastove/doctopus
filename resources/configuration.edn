@@ -1,7 +1,3 @@
-{:nomad/hosts {"Jesse-Keane.local" {:env :development
-                                    :permanent-fs-root "/Users/jessekeane/Projects/UA/doctopus/docs-tmp"}
-               "engine" {:env :development
-                         :permanent-fs-root "/home/gastove/Code/doctopus/docs-tmp/"}}
- :port 8080
- :heads-dir "resources/self/heads"
- }
+{:nomad/environments {"dev" {:nomad/private-file #nomad/file "resources/configuration-local.edn"}
+                      "production" {:heads-dir "resources/self/heads"
+                                    :port 8080}}}

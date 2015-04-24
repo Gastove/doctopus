@@ -26,7 +26,9 @@
   [key]
   (let [file-handle (binding [fs/*cwd* root] (fs/file key))
         file-name (str (.getPath file-handle) "/")]
-    [key {"/" (bidi-ring/->Files {:dir file-name})}]))
+    (if (fs/exists? file-handle)
+      [key {"/" (bidi-ring/->Files {:dir file-name})}]
+      nil)))
 
 (defn remove-fn
   [key]
