@@ -40,8 +40,8 @@
 
 (defn serve-html
   "Just returns html, with the content-type set correctly"
-  [template]
-  (-> template
+  [html]
+  (-> html
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
@@ -78,12 +78,25 @@
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
                   "docs/"         [(load-routes doctopus)]}])
 
+(defn- get-tentacle-from-uri
+  [request-uri]
+  (let [pieces (re-find #"/docs/([^/]+)/.+" request-uri)]
+    (if pieces (second pieces) nil)))
+
 (def application-handlers
   (bidi/make-handler routes))
+
+(defn wrap-test
+  [handler]
+  (fn [request]
+    (let [response (handler request)
+          tentacle-name (get-tentacle-from-uri (:uri request))]
+      (if tentacle-name (assoc response :body (templates/add-frame (:body response) {:name tentacle-name})) response))))
 
 (def application
   (-> (wrap-defaults application-handlers site-defaults)
       (wrap-route-not-found)
+      (wrap-test)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
          wrap-error-page
