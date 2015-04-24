@@ -24,7 +24,7 @@
 (defn- tentacle-li
   [tentacle]
   (let [tentacle-name (:name tentacle)]
-    (enlive/html [:li (linkify (str "/tentacles/" tentacle-name) tentacle-name)])))
+    (enlive/html [:li (linkify (str "/docs/" tentacle-name "/index.html") tentacle-name)])))
 
 (deftemplate base-template "templates/base.html"
   [body]
@@ -47,7 +47,7 @@
   [:#doctopus-main]
   [doctopus]
   [:#doctopus-heads] (enlive/content (map head-li (list-heads doctopus)))
-  [:#doctopus-tentacles] (enlive/content (map tentacle-li (list-tentacles doctopus))))
+  [:#doctopus-tentacles] (enlive/content (map tentacle-li (flatten (list-tentacles doctopus)))))
 
 (defsnippet frame-snippet "templates/frame.html"
   [:#doctopus-iframe]
