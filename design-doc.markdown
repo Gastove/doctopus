@@ -89,3 +89,9 @@ vector of vectors or a vector of maps or what-have-you.
 
 
 
+# Workflow
+
+1. [Optional] git clone a repo
+2. make html from repo -- shell
+3. Store html someplace you can find it again -- Tentacle. 
+4. bootstrap http server -- load and serve html

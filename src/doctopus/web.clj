@@ -2,6 +2,7 @@
   (:require [bidi.ring :as bidi :refer [->Resources]]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.doctopus :refer [load-routes bootstrap-heads]]
             [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
@@ -10,7 +11,8 @@
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
             [taoensso.timbre :as log]
-            [clojure.walk :refer [keywordize-keys]]))
+            [clojure.walk :refer [keywordize-keys]])
+  (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page [handler]
   "Utility ring handler for when Stuff goes Sideways; returns a 500 and an error
@@ -43,9 +45,12 @@
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
+;; Let's start bootstrapping!
+(def doctopus (bootstrap-heads (Doctopus. (server-config))))
+
 (defn serve-index
   [_]
-  (serve-html (templates/index)))
+  (serve-html (templates/index doctopus)))
 
 (defn serve-add-head-form
   [_]
@@ -71,7 +76,8 @@
                   "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
                   "add-head"     {:get serve-add-head-form :post add-head}
-                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}}])
+                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
+                  "docs/"         [(load-routes doctopus)]}])
 
 (def application-handlers
   (bidi/make-handler routes))

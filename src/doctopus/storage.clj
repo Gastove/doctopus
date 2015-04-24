@@ -48,4 +48,4 @@
 (def available-backends {:temp-fs storage-impls/temp-fs-backend
                          :perm-fs storage-impls/permanent-fs-backend})
 
-(def backend (Backend. storage-impls/temp-fs-backend available-backends))
+(def backend (Backend. storage-impls/permanent-fs-backend available-backends))
