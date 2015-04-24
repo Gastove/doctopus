@@ -82,7 +82,7 @@
                   "frame.html"   {:get serve-iframe}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
-                  "docs/"         [(load-routes doctopus)]}])
+                  "docs/"        (load-routes doctopus)}])
 
 (defn- get-tentacle-from-uri
   [request-uri]
