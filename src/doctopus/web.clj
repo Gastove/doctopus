@@ -2,7 +2,7 @@
   (:require [bidi.ring :as bidi :refer [->Resources]]
             [clojure.java.io :as io]
             [doctopus.configuration :refer [server-config]]
-            [doctopus.doctopus :refer [load-routes bootstrap-heads]]
+            [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.template :as templates]
             [doctopus.files.predicates :refer [html?]]
             [org.httpkit.server :as server]
@@ -69,6 +69,15 @@
    (let [head-name (get (:form-params request) "name")]
      (serve-html (str "ADD A HEAD: " head-name))))
 
+(defn serve-head
+  [request]
+  (let [head-name (get-in request [:params :head-name])]
+    (serve-html (templates/head-page head-name doctopus))))
+
+(defn serve-all-heads
+  [_]
+  (println "yep"))
+
 (defn add-tentacle
   [request]
    (let [params (keywordize-keys (:form-params request))]
@@ -80,6 +89,8 @@
                   "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
                   "frame.html"   {:get serve-iframe}
+                  "heads/"       {""     {:get serve-all-heads}
+                                  [:head-name]  {:get serve-head}}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
                   "docs"         (load-routes doctopus)}])
