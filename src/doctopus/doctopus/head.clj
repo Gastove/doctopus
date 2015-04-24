@@ -20,6 +20,7 @@
                                  :let [strang (slurp tf)]]
                              (edn/read-string strang))
           tentacles (map #(map->Tentacle %) tentacle-configs)]
+      (map t/generate-html tentacles)
       (assoc this :tentacles tentacles)))
   (list-tentacles [this] (:tentacles this))
   (load-tentacle-routes [this]
