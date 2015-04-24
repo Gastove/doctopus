@@ -10,6 +10,7 @@
 
 ;; TENTACLES
 (defprotocol TentacleMethods
+  (load-html [this])
   (generate-html [this])
   (save-build-output [this dir])
   (routes [this]))
@@ -17,7 +18,12 @@
 (defrecord Tentacle
     [name html-command html-args output-root source-location]
   TentacleMethods
+  (load-html [this]
+    (if (nil? (load-from-storage backend (:name this)))
+      (generate-html this)
+      (log/info "Found html for" (:name this))))
   (generate-html [this]
+    (log/info "Generating HTML for" (:name this))
     (let [{:keys [html-command html-args source-location output-root]} this
           target-dir (fs/temp-dir "doctopus-clone")
           success? (get-source source-location (.getPath target-dir))]
