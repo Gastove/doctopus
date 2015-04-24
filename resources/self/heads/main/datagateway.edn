@@ -1,0 +1,7 @@
+{:output-root "docs/_build/html"
+ :html-command "make"
+ :html-args ["-C" "docs" "html"]
+ :name "data-gateway"
+ :source-control :git
+ :source-location "ssh://git@atlassian.prod.urbanairship.com:2222/cd/data-gateway.git"
+ :entry-point "index.html"}
