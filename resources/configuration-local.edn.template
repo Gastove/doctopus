@@ -1,0 +1,6 @@
+;; Configuration templace
+;; Copy this file and rename the copy configuration-local.edn
+;; Anything in here will supercede whatever is in configuration.edn
+
+{:env :development ;; sets a development environment
+ :permanent-fs-root "change me to where you want doctopus to write"}

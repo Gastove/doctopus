@@ -11,7 +11,7 @@ generating that HTML, and serving it on the Internet. Or, if you like, it's like
 RTD without the RST dependence. Also: it's trivial to host. (Not everything
 should be public, y'know?)
 
-It's also... a work in progress. Like.... very in progress. Go easy on it. 
+It's also... a work in progress. Like.... very in progress. Go easy on it.
 
 ## Installation
 
@@ -20,8 +20,22 @@ This bit is simple, as long as you've got [lein](http://leiningen.org/) 2+ and g
 ```bash
         > git clone doctopus
         > cd doctopus
-        > lein run
+        > lein deps
 ```
+
+This'll get everything you need downloaded. Now you have a choice:
+
+### Local Configs
+
+You'll want to mosey on over to the `resources` directory and make a
+`configuration-local.edn` by copying the template. Get a value or two configured
+in there and you'll be good to go to get the whole thing spun up:
+
+```bash
+        > NOMAD_ENV=DEV lein run
+```
+
+(You can, of course, set `NOMAD_ENV` in the `rc` file of your choice.)
 
 ## Usage
 

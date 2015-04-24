@@ -11,3 +11,4 @@ pom.xml.asc
 *.swp
 *.swo
 /docs-tmp/
+/resources/configuration-local.edn
