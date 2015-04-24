@@ -43,11 +43,3 @@
     (str/join "/" ["" "docs" (:name this) (:entry-point this)]))
   (routes [this]
     (load-from-storage backend (:name this))))
-
-
-;; ### Tentacle Config Spec
-(def one-tentacle (map->Tentacle {:src-root "/tmp/doctopus"
-                                  :output-root "/tmp/doctopus/docs"
-                                  :html-command "lein"
-                                  :html-args ["marg" "-f" "index.html"]
-                                  :name "doctopus"}))
