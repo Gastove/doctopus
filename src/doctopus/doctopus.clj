@@ -43,7 +43,7 @@ talk about it either way. The idea is: start defining an Entity we can flesh out
                    :let [tentacles (h/list-tentacles head)]]
                [tentacles])))
   (list-tentacles-by-head [this head]
-    {head (h/list-tentacles (:heads this))})
+    (map h/list-tentacles (filter #(= head (:name %)) (:heads this))))
   (load-routes [this]
     (into {} (for [head (:heads this)
            :let [route-map (h/load-tentacle-routes head)]]
