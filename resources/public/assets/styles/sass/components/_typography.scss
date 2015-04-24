@@ -1,0 +1,43 @@
+/* Type */
+h1, h2, h3, h4, h5, h6 {
+    line-height: 1;
+    font-weight: lighter;
+    text-rendering: optimizeLegibility;
+}
+h1 {
+    font-size: 1.75em; /* 28px */    
+    margin: 0 0 0.71428571428571em;
+}
+h2 {
+    font-size: 1.5em; /* 24px */
+    margin: 0 0 0.83333333333333em;
+}
+h3 {
+    font-size: 1.25em; /* 20px */
+    margin: 0 0 1em;
+}
+h4 {
+    font-size: 1.125em; /* 18px */
+}
+h5 {
+    font-size: 1em; /* 16px */
+}
+h6 {
+    font-size: .875em; /* 14px */
+}
+p, ul, ol, dl, table, figcaption {
+    font-size: .875em;  /* 14px */
+    margin: 0 0 1.42857142857143em;
+}
+ul p, ol p, table p, ul ul, ol ol, ul ol, ol ul {
+    font-size: 1em; /* 14px / 14px */
+}
+strong {
+    font-weight: bold;
+}
+em { 
+    font-style: italic;
+}
+small {
+    font-size: .85714285714286em;  /* 12px / 14px */
+}

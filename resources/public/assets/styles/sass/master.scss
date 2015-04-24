@@ -1,0 +1,41 @@
+@import
+    'settings',
+
+    'third-party/normalize',
+
+    'components/grid',
+    'components/typography',
+    'components/lists',
+    'components/buttons',
+    'components/forms',
+
+    'modules/layout',
+    'modules/navigation';
+
+html {
+    height: 100%;
+}
+body {
+    background: $base-color;
+    color: $type-color;
+    font: 100%/1.5 "proxima-nova-soft", Helvetica, Arial, sans-serif;
+    height: 100%;
+    min-width: 1024px;
+    -webkit-font-smoothing: antialiased;
+}
+a {
+    color: $link-color;
+    text-decoration: none;
+
+    a:hover,
+    a:active {
+        color: lighten($link-color, 10%);
+    }
+}
+
+figure > img {
+    display: block;
+    margin: 0 auto;
+    max-width: 100%;
+}
+
