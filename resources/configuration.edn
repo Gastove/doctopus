@@ -2,4 +2,7 @@
                              :heads-dir "resources/self/heads"
                              :port 8080}
                       "production" {:heads-dir "resources/self/heads"
-                                    :port 8080}}}
+                                    :port 8080}
+                      "travis" {:heads-dir "resources/self/heads"
+                                :permanent-fs-root "~/"}}
+ }

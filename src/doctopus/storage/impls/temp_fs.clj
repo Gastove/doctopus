@@ -2,7 +2,8 @@
   (:require [clojure.string :as str]
             [doctopus.files :as files]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
-            [me.raynes.fs :as fs]))
+            [me.raynes.fs :as fs]
+            [bidi.ring :as bidi-ring]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
 ;; within this directory
@@ -14,19 +15,22 @@
   (swap! temp-dir fs/temp-dir "doctopus-temp"))
 
 (defn save-fn
-  [key path-html-pairs]
-  (doseq [[path html] path-html-pairs] (save-html-file @temp-dir key path html)))
+  "Save a dir of html stuff by moving it in to the current temp root"
+  [key src-dir]
+  (binding [fs/*cwd* @temp-dir]
+    (let [target-dir (fs/file key)
+          result (fs/copy-dir src-dir target-dir)]
+      (and (fs/exists? result)
+           (fs/readable? result)))))
 
 (defn load-fn
-  "This is as Version 1 a way of doing this as I can think of:
-
-  1. We load html
-  2. We wrap that html in a function that returns itself, so we can Bidi"
+  "Returns the routes this serves"
   [key]
-  (binding [fs/*cwd* @temp-dir]
-    (let [dir (fs/file key)
-          rel-path-html-pairs (files/read-html dir)]
-      (into [] (map (fn [[rel-path html]] [rel-path (fn [_] html)]) rel-path-html-pairs)))))
+  (let [file-handle (binding [fs/*cwd* @temp-dir] (fs/file key))
+        file-name (str (.getPath file-handle) "/")]
+    (if (fs/exists? file-handle)
+      [key {"/" (bidi-ring/->Files {:dir file-name})}]
+      nil)))
 
 (defn remove-fn
   [key]
