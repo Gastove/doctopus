@@ -10,5 +10,6 @@
     (is (set-backend! backend :temp-fs)
         "Can we set the backend to a differen't implementation?")
     (is (set-backend! backend default-backend)
-        "And can we set it back to the default"))
-  )
+        "And can we set it back to the default")
+    (is (thrown? java.lang.RuntimeException (set-backend! backend :HOODYBOO))
+        "Explode on an unsupported backend.")))
