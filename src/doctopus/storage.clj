@@ -21,7 +21,6 @@
 ;; documents all at once.
 
 (defprotocol DoctopusBackend
-  (set-backend! [this backend])
   (get-key-from-backend [this k])
   (load-from-storage [this k])
   (save-to-storage [this k v])
@@ -31,11 +30,6 @@
 (defrecord Backend
     [backend available-backends]
   DoctopusBackend
-  (set-backend! [this backend-key]
-    (if-let [new-backend (backend-key (:available-backends this))]
-      (swap! (:backend this) (fn [_] new-backend))
-      (throw (java.lang.RuntimeException.
-              (str "Cannot use declared storage backend: " (name backend))))))
   (get-key-from-backend [this k]
     (let [retrieved-backend (deref (:backend this))]
       (k retrieved-backend)))
@@ -56,3 +50,9 @@
 
 (def default-backend :permanent-fs)
 (def backend (Backend. (atom (default-backend available-backends)) available-backends))
+
+(defn set-backend! [backend-key]
+  (if-let [new-backend (backend-key (:available-backends backend))]
+    (swap! (:backend backend) (fn [_] new-backend))
+    (throw (java.lang.RuntimeException.
+            (str "Cannot use declared storage backend: " (name backend-key))))))

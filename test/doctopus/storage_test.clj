@@ -5,11 +5,13 @@
 
 (deftest storage
   (testing "Can we swap backends?"
-    (is (= default-backend (get-key-from-backend backend :name))
-        "Are we using the default backend?")
-    (is (set-backend! backend :temp-fs)
+    (is (set-backend! :temp-fs)
         "Can we set the backend to a differen't implementation?")
-    (is (set-backend! backend default-backend)
+    (is (set-backend! default-backend)
         "And can we set it back to the default")
+    (is (set-backend! default-backend)
+        "Setting should be idempotent -- setting the same backend twice shouldn't matter")
     (is (thrown? java.lang.RuntimeException (set-backend! backend :HOODYBOO))
-        "Explode on an unsupported backend.")))
+        "Explode on an unsupported backend.")
+    ;; Make sure we exit on the default
+    (set-backend! default-backend)))
