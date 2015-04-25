@@ -54,5 +54,5 @@
                   storage-impls/permanent-fs-backend]]
     (into {} (for [b backends] [(:name b) b]))))
 
-(def default-backend :perm-fs)
-(def backend (Backend. default-backend available-backends))
+(def default-backend :permanent-fs)
+(def backend (Backend. (atom (default-backend available-backends)) available-backends))
