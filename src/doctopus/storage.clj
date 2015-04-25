@@ -45,7 +45,10 @@
     (let [remove-fn (get-in this [:backend :remove-fn])]
       (remove-fn k))))
 
-(def available-backends {:temp-fs storage-impls/temp-fs-backend
-                         :perm-fs storage-impls/permanent-fs-backend})
+(def available-backends
+  (let [backends [storage-impls/temp-fs-backend
+                  storage-impls/permanent-fs-backend]]
+    (into {} (for [b backends] [(:name b) b]))))
 
-(def backend (Backend. storage-impls/permanent-fs-backend available-backends))
+(def default-backend :perm-fs)
+(def backend (Backend. default-backend available-backends))
