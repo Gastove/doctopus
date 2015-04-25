@@ -15,11 +15,35 @@
 
 ;; TENTACLES
 (defprotocol TentacleMethods
-  (load-html [this])
+  (load-html [this] "Makes sure the HTML has been generated for this tentacle")
   (generate-html [this])
   (save-build-output [this dir])
   (get-html-entrypoint [this])
   (routes [this]))
+
+;; #### "Try, report, return"-ing
+;; I've found myself doing a lot of this:
+;; (if (do-a-thing-that-returns-something-or-nil)
+;;     (do (log the result) true)
+;;     (do (log the failure) nil))
+
+(defn report-success
+  [msg]
+  (log/info msg)
+  true)
+
+(defn report-error
+  [msg]
+  (log/error msg)
+  nil)
+
+(defn check-and-report
+  [result noun success-msg fail-msg]
+  (let [success-tpl "Success: %s for %s"
+        error-tpl   "Couldn't %s for %s"]
+    (if result
+      (report-success (format success-tpl noun success-msg))
+      (report-error (format error-tpl noun fail-msg)))))
 
 (defrecord Tentacle
     [name html-command html-args output-root source-location entry-point]
