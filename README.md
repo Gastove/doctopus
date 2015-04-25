@@ -1,4 +1,6 @@
-# doctopus
+# Doctopus
+
+[![Build Status](https://travis-ci.org/Gastove/doctopus.svg?branch=master)](https://travis-ci.org/Gastove/doctopus)
 
 Read The Docs is a terrific project... as long as you want to use
 Sphinx. In our day-to-day as coders, we might write all manner of things -- Java
