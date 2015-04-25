@@ -22,6 +22,7 @@
 
 (defprotocol DoctopusBackend
   (set-backend! [this backend])
+  (get-key-from-backend [this k])
   (load-from-storage [this k])
   (save-to-storage [this k v])
   (remove-from-storage [this k]))
@@ -30,19 +31,22 @@
 (defrecord Backend
     [backend available-backends]
   DoctopusBackend
-  (set-backend! [this backend]
-    (if (contains? (this :available-backends) backend)
-      (assoc this :backend backend)
+  (set-backend! [this backend-key]
+    (if-let [new-backend (backend-key (:available-backends this))]
+      (swap! (:backend this) (fn [_] new-backend))
       (throw (java.lang.RuntimeException.
-              (str "Cannot use declared storage backend: " backend)))))
+              (str "Cannot use declared storage backend: " (name backend))))))
+  (get-key-from-backend [this k]
+    (let [retrieved-backend (deref (:backend this))]
+      (k retrieved-backend)))
   (load-from-storage [this k]
-    (let [load-fn (get-in this [:backend :load-fn])]
+    (let [load-fn (get-key-from-backend this :load-fn)]
       (load-fn k)))
   (save-to-storage [this k v]
-    (let [save-fn (get-in this [:backend :save-fn])]
+    (let [save-fn (get-key-from-backend this :save-fn)]
       (save-fn k v)))
   (remove-from-storage [this k]
-    (let [remove-fn (get-in this [:backend :remove-fn])]
+    (let [remove-fn (get-key-from-backend this :remove-fn)]
       (remove-fn k))))
 
 (def available-backends
