@@ -1,4 +1,6 @@
 (ns doctopus.doctopus.tentacle
+  "A `Tentacle' defines a single unit of documentation -- one 'source' worth,
+  and all the configs required to build it."
   (:require [clojure.string :as str]
             [doctopus.shell :refer [make-html git-clone]]
             [doctopus.storage :refer [save-to-storage load-from-storage backend]]
@@ -6,6 +8,8 @@
             [taoensso.timbre :as log]))
 
 (defn- get-source
+  "We may eventually support more ways of getting source! Would be nice. Not
+  today."
   [sc-location dest]
   (git-clone sc-location dest))
 
