@@ -2,5 +2,4 @@ language: clojure
 lein: lein2
 jdk:
   - oraclejdk7
-  - oraclejdk6
 env: NOMAD_ENV=travis
