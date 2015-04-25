@@ -1,6 +1,8 @@
 (ns doctopus.storage-test
-  (:require [doctopus.storage :refer :all]
-            [clojure.test :refer :all]))
+  (:require [clojure.java.io :as io]
+            [clojure.test :refer :all]
+            [doctopus.storage :refer :all]
+            [me.raynes.fs :as fs]))
 
 
 (deftest storage
@@ -15,3 +17,16 @@
         "Explode on an unsupported backend.")
     ;; Make sure we exit on the default
     (set-backend! default-backend)))
+
+;; ### Testing Storage Implementations
+;; Fundamentally, they all have to do the same thing. So, let's just test them
+;; all in a big, smashing go.
+(deftest storage-impls
+  (doseq [[kw impl] available-backends]
+    (testing (str "For backend: " (name kw))
+      (let [k "testing-testing-onetwothree"
+            v (io/resource "test")]
+        (set-backend! kw)
+        (is (true? (save-to-storage backend k v)) "Can we save to this backend?")
+        (is (not= nil (load-from-storage backend k)) "Can we load from this backend?")
+        (is (remove-from-storage backend k))))))
