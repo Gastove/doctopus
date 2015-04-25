@@ -61,12 +61,13 @@
         (do (binding [fs/*cwd* target-dir]
               (let [html-dir (fs/file output-root)]
                 (apply make-html [html-command html-args (.getPath target-dir)])
-                (save-build-output this html-dir)
-                (log/info "Generated HTML for" name))))
-        (log/error "Couldn't clone source! Argggggg!"))))
+                (check-and-report
+                 (save-build-output this html-dir) name "generated HTML" "generate HTML"))))
+        (report-error "Couldn't clone source! Argggggg!"))))
   (save-build-output [this dir]
-    (let [{:keys [name]} this])
-    (save-to-storage backend name dir))
+    (let [{:keys [name]} this]
+      (check-and-report
+       (save-to-storage backend name dir) name "saved HTML" "save HTML")))
   (get-html-entrypoint [this]
     (str/join "/" ["" "docs" (:name this) (:entry-point this)]))
   (routes [this]
