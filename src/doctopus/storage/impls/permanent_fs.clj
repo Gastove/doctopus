@@ -6,8 +6,6 @@
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]))
 
-;; TODO: this does not actually work the way we need it to! Neat! --RMD
-
 (def root (fs/file (:permanent-fs-root (server-config))))
 (if-not (fs/exists? root) (fs/mkdirs root))
 
