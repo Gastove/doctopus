@@ -23,5 +23,6 @@
   (testing "Can we bootstrap a Head's tentacles?"
     (let [new-head (bootstrap-tentacles test-head (io/resource "test/heads"))]
       (is (not (nil? (:tentacles new-head))) "Should have tentacles now")
+      (is (= "test" (:name new-head)) "Name should be the same")
       (is (= "doctopus-test" (get-tentacle-name-from-test-head new-head)))
       (is (= one-tentacle (first (:tentacles new-head)))))))
