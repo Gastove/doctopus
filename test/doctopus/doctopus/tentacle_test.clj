@@ -6,6 +6,7 @@
             [doctopus.doctopus.tentacle :refer :all]
             [doctopus.storage :as storage]
             [doctopus.storage.impls.temp-fs :as temp-fs]
+            [doctopus.test-utilities :as utils]
             [me.raynes.fs :as fs]))
 
 (def test-map-props
@@ -24,4 +25,5 @@
             "There should be some HTML in a known location"))))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
-      (is (= loaded-entrypoint "/docs/doctopus-test/index.html")))))
+      (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
+  (utils/clean-up-test-html "doctopus-test"))

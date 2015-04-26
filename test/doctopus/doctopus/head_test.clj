@@ -3,7 +3,9 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.doctopus.head :refer :all]
-            [doctopus.doctopus.tentacle :as t])
+            [doctopus.doctopus.tentacle :as t]
+            [doctopus.storage :as storage]
+            [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus.head Head]))
 
 (def test-head (Head. "test"))
@@ -12,6 +14,8 @@
   (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn"))))
 
 (def one-tentacle (t/map->Tentacle test-tentacle-props))
+
+(storage/set-backend! :temp-fs)
 
 (defn get-tentacle-name-from-test-head
   [test-head]
@@ -25,4 +29,5 @@
       (is (not (nil? (:tentacles new-head))) "Should have tentacles now")
       (is (= "test" (:name new-head)) "Name should be the same")
       (is (= "doctopus-test" (get-tentacle-name-from-test-head new-head)))
-      (is (= one-tentacle (first (:tentacles new-head)))))))
+      (is (= one-tentacle (first (:tentacles new-head)))))
+    (utils/clean-up-test-html "doctopus-test")))
