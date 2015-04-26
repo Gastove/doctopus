@@ -1,6 +1,6 @@
 (ns doctopus.template
   (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
-   [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+            [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
@@ -99,8 +99,8 @@
   (base-template ""))
 
 (defn add-frame
-  "given a string of HTML and a tentacle, returns a string with a Doctopus
-   iframe inserted into its body"
+  "given a string of HTML, returns a string with a Doctopus iframe inserted into
+   its body"
   [html-str]
   (apply str (prepend-frame html-str (iframe-html))))
 
