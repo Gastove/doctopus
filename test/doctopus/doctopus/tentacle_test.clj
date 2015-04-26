@@ -9,8 +9,7 @@
             [me.raynes.fs :as fs]))
 
 (def test-map-props
-  (let [base-map (edn/read-string (slurp (io/resource "self/heads/main/doctopus.edn")))]
-    (assoc base-map :name "doctopus-test")))
+  (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn"))))
 
 (def one-tentacle (map->Tentacle test-map-props))
 
