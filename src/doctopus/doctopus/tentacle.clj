@@ -13,14 +13,6 @@
   [sc-location dest]
   (git-clone sc-location dest))
 
-;; TENTACLES
-(defprotocol TentacleMethods
-  (load-html [this] "Makes sure the HTML has been generated for this tentacle")
-  (generate-html [this])
-  (save-build-output [this dir])
-  (get-html-entrypoint [this])
-  (routes [this]))
-
 ;; #### "Try, report, return"-ing
 ;; I've found myself doing a lot of this:
 ;; (if (do-a-thing-that-returns-something-or-nil)
@@ -44,6 +36,14 @@
     (if result
       (report-success (format success-tpl success-msg noun))
       (report-error (format error-tpl fail-msg noun)))))
+
+;; TENTACLES
+(defprotocol TentacleMethods
+  (load-html [this] "Makes sure the HTML has been generated for this tentacle")
+  (generate-html [this subs-map])
+  (save-build-output [this dir])
+  (get-html-entrypoint [this])
+  (routes [this]))
 
 (defrecord Tentacle
     [name html-command html-args output-root source-location entry-point]
