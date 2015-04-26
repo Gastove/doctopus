@@ -1,7 +1,8 @@
 (ns doctopus.doctopus
   "A Doctopus represents the entire, wriggling, living creature that is your
   documentation. A Doctopus is a singluar abstraction -- at time of writing, you
-  can only have one. A Doctopus contains all of the configuration necessary for your docs to make it to the web.
+  can only have one. A Doctopus contains all of the configuration necessary for
+  your docs to make it to the web.
 
   Each Doctopus will have one or more Heads, which represent a logical grouping
   of docs, and some number of Tentacles -- individual sources of documentation
