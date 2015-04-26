@@ -77,7 +77,7 @@
 
 (defn serve-all-heads
   [_]
-  (println "yep"))
+  (serve-html (templates/heads-list doctopus)))
 
 (defn add-tentacle
   [request]
@@ -87,10 +87,11 @@
 
 ;; Bidi routes are defined as nested sets of ""
 (def routes ["/" {""             {:get serve-index}
-                  "assets"       (->Resources {:prefix "public/assets"})
                   "index.html"   {:get serve-index}
+                  "assets"       (->Resources {:prefix "public/assets"})
                   "frame.html"   {:get serve-iframe}
-                  "heads/"       {""     {:get serve-all-heads}
+                  "heads"        {"/"           {:get serve-all-heads}
+                                  ""            {:get serve-all-heads}
                                   [:head-name]  {:get serve-head}}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
