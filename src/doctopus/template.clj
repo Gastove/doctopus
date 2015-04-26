@@ -1,29 +1,29 @@
 (ns doctopus.template
   (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
-   [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+            [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
             [ring.util.anti-forgery :as csrf]))
 
-(defn- make-anchor
+(defn make-anchor
   "given a uri and text, construct an anchor element"
   [href text]
   [:a {:href href} text])
 
-(defn- head-li
+(defn head-li
   "constructs a list item with head link"
   [head]
   (let [head-name (:name head)]
     (enlive/html [:li (make-anchor (str "/heads/" head-name) head-name)])))
 
-(defn- head-option
+(defn head-option
   "constructs an option element with head"
   [head]
   (let [head-name (:name head)]
     (enlive/html [:option {:value head-name} head-name])))
 
-(defn- tentacle-li
+(defn tentacle-li
   "constructs a list item with tentacle link"
   [tentacle]
   (let [tentacle-name (:name tentacle)]
@@ -99,8 +99,8 @@
   (base-template ""))
 
 (defn add-frame
-  "given a string of HTML and a tentacle, returns a string with a Doctopus
-   iframe inserted into its body"
+  "given a string of HTML, returns a string with a Doctopus iframe inserted into
+   its body"
   [html-str]
   (apply str (prepend-frame html-str (iframe-html))))
 
