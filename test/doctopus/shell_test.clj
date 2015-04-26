@@ -31,3 +31,12 @@
           "Can we split a single vector?")
       (is (= vec-o-vecs-expected (injest-shell-vector input-vector))
           "When we injest a vector, does it split correctly *and* preserve order?"))))
+
+(deftest substitutions-test
+  (let [input-vec ["do" "re" "mi"]
+        expected-vec ["do" "penguin" "mi"]
+        substitutions-map {"re" "penguin"}]
+    (is (= expected-vec (perform-substitutions! substitutions-map input-vec))
+        "Should swap 're' for 'penguin")
+    (is (= input-vec (perform-substitutions! {"nope!" "you should never see me"} input-vec))
+        "Shouldn't change a thing.")))
