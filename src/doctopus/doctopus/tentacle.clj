@@ -42,8 +42,8 @@
   (let [success-tpl "Success: %s for %s"
         error-tpl   "Couldn't %s for %s"]
     (if result
-      (report-success (format success-tpl noun success-msg))
-      (report-error (format error-tpl noun fail-msg)))))
+      (report-success (format success-tpl success-msg noun))
+      (report-error (format error-tpl fail-msg noun)))))
 
 (defrecord Tentacle
     [name html-command html-args output-root source-location entry-point]
