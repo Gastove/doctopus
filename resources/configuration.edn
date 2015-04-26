@@ -1,8 +1,11 @@
 {:nomad/environments {"dev" {:nomad/private-file #nomad/file "resources/configuration-local.edn"
                              :heads-dir "resources/self/heads"
+                             :ip 0.0.0.0
                              :port 8080}
                       "production" {:heads-dir "resources/self/heads"
-                                    :port 8080}
+                                    :port 8080
+                                    :ip 0.0.0.0}
                       "travis" {:heads-dir "resources/self/heads"
-                                :permanent-fs-root "~/"}}
+                                :permanent-fs-root "~/"
+                                :ip 8080}}
  }
