@@ -32,9 +32,9 @@
       (assoc this :heads (doall (map #(h/bootstrap-tentacles % heads-dir) heads)))))
   (list-heads [this] (:heads this))
   (list-tentacles [this]
-    (into [] (for [head (:heads this)
-                   :let [tentacles (h/list-tentacles head)]]
-               [tentacles])))
+    (into [] (flatten (for [head (:heads this)
+                    :let [tentacles (h/list-tentacles head)]]
+                tentacles))))
   (list-tentacles-by-head [this head]
     (map h/list-tentacles (filter #(= head (:name %)) (:heads this))))
   (load-routes [this]
