@@ -14,9 +14,10 @@
             [clojure.walk :refer [keywordize-keys]])
   (:import [doctopus.doctopus Doctopus]))
 
-(defn wrap-error-page [handler]
+(defn wrap-error-page
   "Utility ring handler for when Stuff goes Sideways; returns a 500 and an error
   page"
+  [handler]
   (fn [req]
     (try (handler req)
          (catch Exception e
