@@ -1,7 +1,10 @@
 (ns doctopus.doctopus.head
   (:require [clojure.edn :as edn]
-            [me.raynes.fs :as fs]
-            [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]))
+            [clojure.string :as str]
+            [doctopus.configuration :refer [server-config]]
+            [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]
+            [doctopus.shell :as sh]
+            [me.raynes.fs :as fs]))
 
 (defn perform-substitutions!
   [subs-map cmd-vec]
@@ -43,7 +46,7 @@
 
 ;; Head
 (defprotocol HeadMethods
-  (bootstrap-tentacles [this root])
+  (bootstrap-tentacles [this root] [this root subs-map])
   (list-tentacles [this])
   (load-tentacle-routes [this]))
 
@@ -51,11 +54,14 @@
     [name]
   HeadMethods
   (bootstrap-tentacles [this root]
+    (bootstrap-tentacles this root {}))
+  (bootstrap-tentacles [this root subs-map]
     (let [tentacles-root (binding [fs/*cwd* root] (fs/file (:name this)))
           tentacle-files (fs/list-dir tentacles-root)
           tentacle-configs (for [tf tentacle-files
-                                 :let [strang (slurp tf)]]
-                             (edn/read-string strang))
+                                 :let [strang (slurp tf)
+                                       unparsed-map (edn/read-string strang)]]
+                             (parse-tentacle-config-map unparsed-map subs-map))
           tentacles (map #(map->Tentacle %) tentacle-configs)]
       (doseq [tentacle tentacles] (t/load-html tentacle))
       (assoc this :tentacles tentacles)))
