@@ -46,8 +46,14 @@
       (ring-response/response)
       (ring-response/content-type "text/html")))
 
+;; A map from string-to-look-for to value-to-sub-with, representing global
+;; configuration values that Heads will use to parse commands for their
+;; tentacles. Currently hard-coded; could eventually be moved to config files if
+;; we can every think of a reason why we'd want that.
+(def substitutions {"$URL_ROOT"  (:ip (server-config))})
+
 ;; Let's start bootstrapping!
-(def doctopus (bootstrap-heads (Doctopus. (server-config))))
+(def doctopus (bootstrap-heads (Doctopus. (server-config) substitutions)))
 
 (defn serve-index
   [_]
