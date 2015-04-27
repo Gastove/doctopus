@@ -12,7 +12,6 @@
             [me.raynes.fs :as fs])
   (:import [doctopus.doctopus.head Head]))
 
-
 ;; Here there be Peculiar Metaphors for Information Dissemination
 (defprotocol DoctopusMethods
   (bootstrap-heads [this])
@@ -22,14 +21,15 @@
   (list-tentacles-by-head [this head]))
 
 (defrecord Doctopus
-    [configuration]
+    [configuration substitutions]
   DoctopusMethods
   (bootstrap-heads [this]
     (let [heads-dir (:heads-dir configuration)
           dirs (fs/list-dir heads-dir)
           head-names (map #(.getName %) dirs)
           heads (map #(h/Head. %) head-names)]
-      (assoc this :heads (doall (map #(h/bootstrap-tentacles % heads-dir) heads)))))
+      (assoc this :heads
+             (doall (map #(h/bootstrap-tentacles % heads-dir substitutions) heads)))))
   (list-heads [this] (:heads this))
   (list-tentacles [this]
     (into [] (flatten (for [head (:heads this)

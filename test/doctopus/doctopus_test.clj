@@ -15,7 +15,7 @@
 ;; mechanism we're about to change in a major (and good) way, so I'm not super
 ;; inclined to mess with it until we get a Database and we can stop returning
 ;; new Doctopi/Heads every time there's a state change :/ - RMD
-(def stunt-doctopus (bootstrap-heads (Doctopus. doctopus-test-configs)))
+(def stunt-doctopus (bootstrap-heads (Doctopus. doctopus-test-configs {})))
 
 (storage/set-backend! :temp-fs)
 
