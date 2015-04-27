@@ -31,3 +31,24 @@
       (is (= "doctopus-test" (get-tentacle-name-from-test-head new-head)))
       (is (= one-tentacle (first (:tentacles new-head)))))
     (utils/clean-up-test-html "doctopus-test")))
+
+(deftest injest-shell-strings-test
+  (let [input-string "make -C docs/ html"
+        input-vector ["npm i"
+                       "node bin/mop.js"]
+        single-vec-expected ["make" "-C" "docs/" "html"]
+        vec-o-vecs-expected [["npm" "i"]
+                             ["node" "bin/mop.js"]]]
+    (testing "Can we correctly split strings?"
+      (is (= (split input-string) single-vec-expected)
+          "Can we split a single vector?")
+      (is (= vec-o-vecs-expected (injest-shell-strings input-vector))
+          "When we injest a vector, does it split correctly *and* preserve order?"))))
+
+(deftest substitutions-test
+  (let [input-vec ["do" "re" "mi"]
+        expected-vec ["do" "penguin" "mi"]
+        substitutions-map {"re" "penguin"}]
+    (is (= expected-vec (perform-substitutions! substitutions-map input-vec))
+        "Should swap 're' for 'penguin")
+    (is (= input-vec (perform-substitutions! {"nope!" "you should never see me"} input-vec))
