@@ -4,7 +4,8 @@
              [configuration :refer [server-config]]
              [files :as files]]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
-            [me.raynes.fs :as fs]))
+            [me.raynes.fs :as fs]
+            [taoensso.timbre :as log]))
 
 (def root (fs/file (:permanent-fs-root (server-config))))
 (if-not (fs/exists? root) (fs/mkdirs root))
@@ -30,4 +31,5 @@
 
 (defn remove-fn
   [key]
+  (log/info "Removing" key "from" root)
   (fs-impl/remove-html root key))

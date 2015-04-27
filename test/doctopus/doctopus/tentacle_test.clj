@@ -3,14 +3,16 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.configuration :as cfg]
+            [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
             [doctopus.storage :as storage]
             [doctopus.storage.impls.temp-fs :as temp-fs]
+            [doctopus.test-utilities :as utils]
             [me.raynes.fs :as fs]))
 
 (def test-map-props
-  (let [base-map (edn/read-string (slurp (io/resource "self/heads/main/doctopus.edn")))]
-    (assoc base-map :name "doctopus-test")))
+  (h/parse-tentacle-config-map
+   (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn")))))
 
 (def one-tentacle (map->Tentacle test-map-props))
 
@@ -25,4 +27,5 @@
             "There should be some HTML in a known location"))))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
-      (is (= loaded-entrypoint "/docs/doctopus-test/index.html")))))
+      (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
+  (utils/clean-up-test-html "doctopus-test"))
