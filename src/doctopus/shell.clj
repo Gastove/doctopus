@@ -20,6 +20,12 @@
   ([command args root-dir]
    (apply sh/sh (cons command (conj args :dir root-dir)))))
 
+(defn make-html-from-vec
+  [cmd-vec working-dir]
+  (doseq [cmd cmd-vec
+          :let [full-cmd (conj cmd :dir working-dir)]]
+    (apply sh/sh full-cmd)))
+
 (defn git-clone
   [repo dest]
   (let [res (sh/sh "git" "clone" repo dest)
