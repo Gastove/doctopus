@@ -8,6 +8,8 @@
   (:import [doctopus.doctopus Doctopus]
            [doctopus.doctopus.head Head]))
 
+(storage/set-backend! :temp-fs)
+
 (def doctopus-test-configs
   {:heads-dir (io/resource "test/heads")})
 
@@ -16,8 +18,6 @@
 ;; inclined to mess with it until we get a Database and we can stop returning
 ;; new Doctopi/Heads every time there's a state change :/ - RMD
 (def stunt-doctopus (bootstrap-heads (Doctopus. doctopus-test-configs {})))
-
-(storage/set-backend! :temp-fs)
 
 (deftest doctopus-test
   (testing "Can we list heads?"
