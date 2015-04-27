@@ -2,7 +2,7 @@
   "A `Tentacle' defines a single unit of documentation -- one 'source' worth,
   and all the configs required to build it."
   (:require [clojure.string :as str]
-            [doctopus.shell :refer [make-html git-clone]]
+            [doctopus.shell :refer [make-html-from-vec git-clone]]
             [doctopus.storage :refer [save-to-storage load-from-storage backend]]
             [me.raynes.fs :as fs]
             [taoensso.timbre :as log]))
@@ -40,13 +40,13 @@
 ;; TENTACLES
 (defprotocol TentacleMethods
   (load-html [this] "Makes sure the HTML has been generated for this tentacle")
-  (generate-html [this subs-map])
+  (generate-html [this])
   (save-build-output [this dir])
   (get-html-entrypoint [this])
   (routes [this]))
 
 (defrecord Tentacle
-    [name html-command html-args output-root source-location entry-point]
+    [name html-commands output-root source-location entry-point]
   TentacleMethods
   (load-html [this]
     (if (nil? (load-from-storage backend (:name this)))
@@ -54,13 +54,14 @@
       (log/info "Found html for" (:name this))))
   (generate-html [this]
     (log/info "Generating HTML for" (:name this))
-    (let [{:keys [html-command html-args source-location output-root]} this
+    (let [{:keys [html-commands source-location output-root]} this
           target-dir (fs/temp-dir "doctopus-clone")
           success? (get-source source-location (.getPath target-dir))]
       (if success?
         (do (binding [fs/*cwd* target-dir]
               (let [html-dir (fs/file output-root)]
-                (apply make-html [html-command html-args (.getPath target-dir)])
+                (log/debug "HTML commands is:" html-commands)
+                (make-html-from-vec html-commands target-dir)
                 (check-and-report
                  (save-build-output this html-dir) name "generated HTML" "generate HTML"))))
         (report-error "Couldn't clone source! Argggggg!"))))
