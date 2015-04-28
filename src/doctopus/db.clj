@@ -20,6 +20,14 @@
     (if (:created new-fields) new-fields
       (assoc new-fields :created now-string))))
 
+(defn- ->kebab-keys
+  [fields]
+  (transform-keys ->kebab-case-keyword fields))
+
+(defn- ->snake-keys
+  [fields]
+  (transform-keys ->snake_case_keyword fields))
+
 (defdb db (sqlite3
            (select-keys (:database (server-config)) [:db :user :password])))
 
@@ -30,8 +38,8 @@
             (if html-commands
               (assoc tentacle :html-commands (string/join "\n" html-commands))
               tentacle)))
-  (prepare #(transform-keys ->snake_case_keyword %))
-  (transform #(transform-keys ->kebab-case-keyword %))
+  (prepare ->snake-keys)
+  (transform ->kebab-keys)
   (transform (fn [{html-commands :html-commands :as tentacle}]
               (if html-commands
                 (assoc tentacle :html-commands (split-lines html-commands))
@@ -40,8 +48,8 @@
 (defentity heads
   (pk :name)
   (prepare add-date-fields)
-  (prepare #(transform-keys ->snake_case_keyword %))
-  (transform #(transform-keys ->kebab-case-keyword %))
+  (prepare ->snake-keys)
+  (transform ->kebab-keys)
   (has-many tentacles {:fk :head_name}))
 
 (defn get-tentacle
