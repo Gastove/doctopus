@@ -2,15 +2,21 @@
   (:require [korma.db :refer [defdb sqlite3]]
             [clojure.string :as string :refer [split-lines]]
             [korma.core :refer :all]
-            [clj-time.format :as time-format]
+            [clj-time.format :refer [formatters unparse]]
             [clj-time.core :as clj-time]
             [doctopus.configuration :refer [server-config]]))
 
-(def standard-datetime (time-format/formatters :basic-date-time))
-
 (defn- now
   []
-  (time-format/unparse standard-datetime (clj-time/now)))
+  "returns a string for now in format YYYY-MM-DDTHH:MM:SS.XXXZ"
+  (unparse (formatters :date-time) (clj-time/now)))
+
+(defn- add-date-fields
+  [fields]
+  (let [now-string (now)
+        new-fields (assoc fields :updated now-string)]
+    (if (:created new-fields) new-fields
+      (assoc new-fields :created now-string))))
 
 (defdb db (sqlite3
            (select-keys (:database (server-config)) [:db :user :password])))
@@ -31,13 +37,6 @@
   (pk :name)
   (prepare add-date-fields)
   (has-many tentacles {:fk :head_name}))
-
-(defn- add-date-fields
-  [fields]
-  (let [now-string (now)
-        new-fields (assoc fields :updated now-string)]
-    (if (:created new-fields) new-fields
-      (assoc new-fields :created now-string))))
 
 (defn get-tentacle
   [name]
