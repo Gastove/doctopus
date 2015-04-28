@@ -14,11 +14,11 @@
   (unparse (formatters :date-time) (clj-time/now)))
 
 (defn- add-date-fields
-  [fields]
-  (let [now-string (now)
-        new-fields (assoc fields :updated now-string)]
+  ([fields] (add-date-fields fields (now)))
+  ([fields now-string]
+  (let [new-fields (assoc fields :updated now-string)]
     (if (:created new-fields) new-fields
-      (assoc new-fields :created now-string))))
+      (assoc new-fields :created now-string)))))
 
 (defn- ->kebab-keys
   [fields]
