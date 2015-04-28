@@ -28,7 +28,7 @@
   [fields]
   (transform-keys ->snake_case_keyword fields))
 
-(defdb db (sqlite3
+(defdb main (sqlite3
            (select-keys (:database (server-config)) [:db :user :password])))
 
 (defentity tentacles
