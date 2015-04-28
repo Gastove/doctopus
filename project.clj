@@ -15,7 +15,10 @@
                  [ring/ring-devel "1.3.2"]
                  [bidi "1.18.10"]
                  [enlive "1.1.5"]
-                 [ring/ring-mock "0.2.0"]]
+                 [ring/ring-mock "0.2.0"]
+                 [korma "0.4.0"]
+                 [org.xerial/sqlite-jdbc "3.7.15-M1"]
+                 [clj-time "0.9.0"]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
