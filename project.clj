@@ -18,7 +18,8 @@
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.0"]
                  [org.xerial/sqlite-jdbc "3.7.15-M1"]
-                 [clj-time "0.9.0"]]
+                 [clj-time "0.9.0"]
+                 [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"

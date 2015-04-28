@@ -4,6 +4,8 @@
             [korma.core :refer :all]
             [clj-time.format :refer [formatters unparse]]
             [clj-time.core :as clj-time]
+            [camel-snake-kebab.core :refer [->snake_case_keyword ->kebab-case-keyword]]
+            [camel-snake-kebab.extras :refer [transform-keys]]
             [doctopus.configuration :refer [server-config]]))
 
 (defn- now
@@ -24,18 +26,22 @@
 (defentity tentacles
   (pk :name)
   (prepare add-date-fields)
-  (prepare (fn [{html-commands :html_commands :as tentacle}]
+  (prepare (fn [{html-commands :html-commands :as tentacle}]
             (if html-commands
-              (assoc tentacle :html_commands (string/join "\n" html-commands))
+              (assoc tentacle :html-commands (string/join "\n" html-commands))
               tentacle)))
-  (transform (fn [{html-commands :html_commands :as tentacle}]
+  (prepare #(transform-keys ->snake_case_keyword %))
+  (transform #(transform-keys ->kebab-case-keyword %))
+  (transform (fn [{html-commands :html-commands :as tentacle}]
               (if html-commands
-                (assoc tentacle :html_commands (split-lines html-commands))
+                (assoc tentacle :html-commands (split-lines html-commands))
                 tentacle))))
 
 (defentity heads
   (pk :name)
   (prepare add-date-fields)
+  (prepare #(transform-keys ->snake_case_keyword %))
+  (transform #(transform-keys ->kebab-case-keyword %))
   (has-many tentacles {:fk :head_name}))
 
 (defn get-tentacle
