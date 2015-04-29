@@ -1,11 +1,13 @@
 (ns doctopus.db.schema
   (:require [clojure.java.jdbc :as sql]
+            [taoensso.timbre :as log]
             [doctopus.configuration :refer [server-config]]))
 
 (defn- get-subname
+  "pull database options out of the local config"
   []
-  (let [{hostname :hostname port :port db :db} (:database (server-config))]
-    (str "//" (or hostname "localhost") ":" (or port "5432") "/"
+  (let [{host :host port :port db :db} (:database (server-config))]
+    (str "//" (or host "localhost") ":" (or port "5432") "/"
          (or db "doctopus"))))
 
 (def db-spec {:classname "org.postgresql.Driver"
@@ -15,6 +17,7 @@
               :password (:password (:database (server-config)))})
 
 (defn table-created?
+  "check our database for a table"
   [table-name]
   (-> (sql/query db-spec [(str "select count(*) from information_schema.tables "
                            "where table_name='" table-name "'")])
@@ -37,14 +40,18 @@
    [:updated "varchar(50)" "NOT NULL"]])
 
 (defn- create-table!
+  "creates a table with a given name and schema"
   [table-name table-schema]
+  (log/info "creating" table-name "table")
   (sql/db-do-commands db-spec
                       (apply sql/create-table-ddl
                        (cons (keyword table-name) table-schema))))
 
 (defn bootstrap
+  "checks for the presence of tables and creates them if necessary"
   []
   (do
-   (when (not (table-created? "heads")) (create-table! "heads" head-schema))
+   (when (not (table-created? "heads"))
+     (create-table! "heads" head-schema))
    (when (not (table-created? "tentacles"))
      (create-table! "tentacles" tentacle-schema))))

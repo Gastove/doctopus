@@ -10,10 +10,11 @@
 
 (defn- now
   []
-  "returns a string for now in format YYYY-MM-DDTHH:MM:SS.XXXZ"
+  "returns a string for 'now' in SQL Timestamp format"
   (to-sql-time (clj-time/now)))
 
 (defn- add-date-fields
+  "adds created and updated fields to a map with given time"
   ([fields] (add-date-fields fields (now)))
   ([fields now-string]
   (let [new-fields (assoc fields :updated now-string)]
@@ -21,10 +22,12 @@
       (assoc new-fields :created now-string)))))
 
 (defn- ->kebab-keys
+  "converts all keys in a map to kebab-case keywords"
   [fields]
   (transform-keys ->kebab-case-keyword fields))
 
 (defn- ->snake-keys
+  "converts all keys in a map to snake-case keywords"
   [fields]
   (transform-keys ->snake_case_keyword fields))
 
