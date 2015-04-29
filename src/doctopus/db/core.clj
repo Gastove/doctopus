@@ -1,5 +1,5 @@
-(ns doctopus.db
-  (:require [korma.db :refer [defdb sqlite3]]
+(ns doctopus.db.core
+  (:require [korma.db :refer [defdb postgres]]
             [clojure.string :as string :refer [split-lines]]
             [korma.core :refer :all]
             [clj-time.format :refer [formatters unparse]]
@@ -28,8 +28,9 @@
   [fields]
   (transform-keys ->snake_case_keyword fields))
 
-(defdb main (sqlite3
-           (select-keys (:database (server-config)) [:db :user :password])))
+(defdb main (postgres
+           (select-keys (:database (server-config))
+                        [:db :user :password :host :port])))
 
 (defentity tentacles
   (pk :name)

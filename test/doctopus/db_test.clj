@@ -1,5 +1,5 @@
-(ns doctopus.db-test
-  (:require [doctopus.db :refer :all]
+(ns doctopus.db.core-test
+  (:require [doctopus.db.core :refer :all]
             [clojure.test :refer :all]))
 
 (deftest db
