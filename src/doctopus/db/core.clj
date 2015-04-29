@@ -2,7 +2,7 @@
   (:require [korma.db :refer [defdb postgres]]
             [clojure.string :as string :refer [split-lines]]
             [korma.core :refer :all]
-            [clj-time.format :refer [formatters unparse]]
+            [clj-time.coerce :refer [to-sql-time]]
             [clj-time.core :as clj-time]
             [camel-snake-kebab.core :refer [->snake_case_keyword ->kebab-case-keyword]]
             [camel-snake-kebab.extras :refer [transform-keys]]
@@ -11,7 +11,7 @@
 (defn- now
   []
   "returns a string for now in format YYYY-MM-DDTHH:MM:SS.XXXZ"
-  (unparse (formatters :date-time) (clj-time/now)))
+  (to-sql-time (clj-time/now)))
 
 (defn- add-date-fields
   ([fields] (add-date-fields fields (now)))

@@ -5,7 +5,7 @@
 (defn- get-subname
   []
   (let [{hostname :hostname port :port db :db} (:database (server-config))]
-    (str "//" (or hostname "127.0.0.1") ":" (or port "5432") "/"
+    (str "//" (or hostname "localhost") ":" (or port "5432") "/"
          (or db "doctopus"))))
 
 (def db-spec {:classname "org.postgresql.Driver"
@@ -38,8 +38,8 @@
 
 (defn- create-table!
   [table-name table-schema]
-  (apply sql/db-do-commands db-spec
-                      (sql/create-table-ddl
+  (sql/db-do-commands db-spec
+                      (apply sql/create-table-ddl
                        (cons (keyword table-name) table-schema))))
 
 (defn bootstrap
