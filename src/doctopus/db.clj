@@ -56,7 +56,17 @@
   (prepare add-date-fields)
   (prepare ->snake-keys)
   (transform ->kebab-keys)
-  (has-many tentacles {:fk :head_name}))
+  (has-many head-tentacle-mappings {:fk :head_name})
+  ;; (has-many tentacles {:fk :head_name})
+  )
+
+(defentity head-tentacle-mappings
+  (fk :head-name)
+  (fk :tentacle-name)
+  (prepare ->snake-keys)
+  (transform ->kebab-keys)
+  (has-one heads {:fk :name})
+  (has-one tentacles {:fk :name}))
 
 (defn get-tentacle
   [name]
@@ -67,6 +77,11 @@
 (defn get-all-tentacles
   []
   (select tentacles))
+
+(defn get-tentacles-for-head
+  [head]
+  (select tentacles
+          (where {:head-name (:name head)})))
 
 (defn save-tentacle!
   [tentacle]
