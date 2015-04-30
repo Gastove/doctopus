@@ -17,9 +17,9 @@
   "adds created and updated fields to a map with given time"
   ([fields] (add-date-fields fields (now)))
   ([fields now-string]
-  (let [new-fields (assoc fields :updated now-string)]
-    (if (:created new-fields) new-fields
-      (assoc new-fields :created now-string)))))
+   (let [new-fields (assoc fields :updated now-string)]
+     (if (:created new-fields) new-fields
+         (assoc new-fields :created now-string)))))
 
 (defn- ->kebab-keys
   "converts all keys in a map to kebab-case keywords"
@@ -32,22 +32,23 @@
   (transform-keys ->snake_case_keyword fields))
 
 (defdb main (postgres
-           (select-keys (:database (server-config))
-                        [:db :user :password :host :port])))
+             (select-keys (:database (server-config))
+                          [:db :user :password :host :port])))
 
 (defentity tentacles
   (pk :name)
+  (has-many head-tentacle-mappings)
   (prepare add-date-fields)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
-            (if html-commands
-              (assoc tentacle :html-commands (string/join "\n" html-commands))
-              tentacle)))
+             (if html-commands
+               (assoc tentacle :html-commands (string/join "\n" html-commands))
+               tentacle)))
   (prepare ->snake-keys)
   (transform ->kebab-keys)
   (transform (fn [{html-commands :html-commands :as tentacle}]
-              (if html-commands
-                (assoc tentacle :html-commands (split-lines html-commands))
-                tentacle))))
+               (if html-commands
+                 (assoc tentacle :html-commands (split-lines html-commands))
+                 tentacle))))
 
 
 (defentity heads
