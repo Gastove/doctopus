@@ -30,7 +30,7 @@
 
 (def tentacle-schema
   [[:name "varchar(50)" "PRIMARY KEY"]
-   [:head_name "varchar(50)"]
+;   [:head_name "varchar(50)"]
    [:output_root "varchar(50)"]
    [:html_commands "varchar(250)"]
    [:source_control "varchar(50)"]
@@ -38,6 +38,10 @@
    [:entry_point "varchar(50)"]
    [:created "varchar(50)" "NOT NULL"]
    [:updated "varchar(50)" "NOT NULL"]])
+
+(def head-tentacle-schema
+  [[:head-name "varchar(50)" "FOREIGN KEY"]
+   [:tentacle-name "varchar(50)" "FOREIGN KEY"]])
 
 (defn- create-table!
   "creates a table with a given name and schema"
@@ -50,8 +54,9 @@
 (defn bootstrap
   "checks for the presence of tables and creates them if necessary"
   []
-  (do
-   (when (not (table-created? "heads"))
-     (create-table! "heads" head-schema))
-   (when (not (table-created? "tentacles"))
-     (create-table! "tentacles" tentacle-schema))))
+  (let [assure {"heads" head-schema
+                "tentacles" tentacle-schema
+                "head_tentacle_mappings" head-tentacle-schema}]
+    (doseq [[table-name schema] assure]
+      (when (not (table-created? table-name))
+        (create-table! "heads" schema)))))
