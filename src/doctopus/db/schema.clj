@@ -5,14 +5,13 @@
 
 (defn- get-subname
   "pull database options out of the local config"
-  []
-  (let [{host :host port :port db :db} (:database (server-config))]
-    (str "//" (or host "localhost") ":" (or port "5432") "/"
-         (or db "doctopus"))))
+  [{:keys [host port db] :or {host "localhost" port 5432 db "doctopus"}}]
+    (let [tpl "//%s:%d/%s"]
+      (format tpl host port db)))
 
 (def db-spec {:classname "org.postgresql.Driver"
               :subprotocol "postgresql"
-              :subname (get-subname)
+              :subname (get-subname (:database (server-config)))
               :user (:user (:database (server-config)))
               :password (:password (:database (server-config)))})
 
@@ -25,7 +24,7 @@
 
 (def head-schema
   [[:name :varchar "PRIMARY KEY"]
-   [:created :timestamp "NOT NULL"]
+   [:created :timestamp "NOT NULL DEFAULT NOW()"]
    [:updated :timestamp "NOT NULL"]])
 
 (def tentacle-schema
@@ -36,8 +35,8 @@
    [:source_control "varchar(50)"]
    [:source_location "varchar(250)"]
    [:entry_point "varchar(50)"]
-   [:created "varchar(50)" "NOT NULL"]
-   [:updated "varchar(50)" "NOT NULL"]])
+   [:created :timestamp "NOT NULL DEFAULT NOW()"]
+   [:updated :timestamp "NOT NULL"]])
 
 (defn- create-table!
   "creates a table with a given name and schema"

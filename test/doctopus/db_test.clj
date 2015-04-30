@@ -1,5 +1,6 @@
 (ns doctopus.db-test
   (:require [doctopus.db.core :refer :all]
+            [doctopus.db.schema :refer :all]
             [clojure.test :refer :all]))
 
 (deftest db
@@ -17,9 +18,16 @@
     (is (= (#'doctopus.db.core/->snake-keys
             {:key-name "lol" :another-key "heh" :untouched_key "laffo"})
            {:key_name "lol" :another_key "heh" :untouched_key "laffo"})))
-  (testing "add-date-fields adds updated and created fields"
-    (is (= (#'doctopus.db.core/add-date-fields {} "right-now")
-           {:updated "right-now" :created "right-now"})))
-  (testing "add-date-fields does not updated created if present"
-    (is (= (#'doctopus.db.core/add-date-fields {:created "earlier"} "right-now")
-           {:updated "right-now" :created "earlier"}))))
+  (testing "add-updated adds updated and created fields"
+    (is (= (#'doctopus.db.core/add-updated {} "right-now")
+           {:updated "right-now"}))))
+
+(deftest schema
+  (testing "get-subname fills in defaults"
+    (is (= (#'doctopus.db.schema/get-subname {}) "//localhost:5432/doctopus"))
+    (is (= (#'doctopus.db.schema/get-subname {:host "meow"})
+           "//meow:5432/doctopus"))
+    (is (= (#'doctopus.db.schema/get-subname {:host "meow" :db "cats"})
+           "//meow:5432/cats"))
+    (is (= (#'doctopus.db.schema/get-subname {:host "meow" :db "cats" :port 31})
+           "//meow:31/cats"))))

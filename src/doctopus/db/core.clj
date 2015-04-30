@@ -13,13 +13,10 @@
   "returns a string for 'now' in SQL Timestamp format"
   (to-sql-time (clj-time/now)))
 
-(defn- add-date-fields
-  "adds created and updated fields to a map with given time"
-  ([fields] (add-date-fields fields (now)))
-  ([fields now-string]
-  (let [new-fields (assoc fields :updated now-string)]
-    (if (:created new-fields) new-fields
-      (assoc new-fields :created now-string)))))
+(defn- add-updated
+  "adds updated field to a map with given time"
+  ([fields] (add-updated fields (now)))
+  ([fields now-string] (assoc fields :updated now-string)))
 
 (defn- ->kebab-keys
   "converts all keys in a map to kebab-case keywords"
@@ -37,7 +34,7 @@
 
 (defentity tentacles
   (pk :name)
-  (prepare add-date-fields)
+  (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
             (if html-commands
               (assoc tentacle :html-commands (string/join "\n" html-commands))
@@ -51,7 +48,7 @@
 
 (defentity heads
   (pk :name)
-  (prepare add-date-fields)
+  (prepare add-updated)
   (prepare ->snake-keys)
   (transform ->kebab-keys)
   (has-many tentacles {:fk :head_name}))
