@@ -32,6 +32,7 @@
              (select-keys (:database (server-config))
                           [:db :user :password :host :port])))
 
+(declare head-tentacle-mappings)
 (defentity tentacles
   (pk :name)
   (has-many head-tentacle-mappings)
@@ -53,17 +54,24 @@
   (prepare add-updated)
   (prepare ->snake-keys)
   (transform ->kebab-keys)
-  (has-many head-tentacle-mappings {:fk :head_name})
-  ;; (has-many tentacles {:fk :head_name})
-  )
+  (has-many head-tentacle-mappings))
 
+
+;; ### Head <-> Tentacle Join Table
+;; Heads and Tentacles can share the notorious SQL many-to-many
+;; relationship. Further, having either a head or a tentacle record _on the
+;; database_ storing information about the other gets conceptually weird. Enter:
+;; the join table.
+;;
+;; Join tables capture many-to-many relationships by inserting themselves in the
+;; middle, effectively creating a one-to-many relationship between itself and
+;; both of the other tables you're attempting to look up. Getting from Heads to
+;; Tentacles (or vice-versa) is now a set of left-joins. Easy peasy!
 (defentity head-tentacle-mappings
-  (fk :head-name)
-  (fk :tentacle-name)
   (prepare ->snake-keys)
   (transform ->kebab-keys)
-  (has-one heads {:fk :name})
-  (has-one tentacles {:fk :name}))
+  (belongs-to heads)
+  (belongs-to tentacles))
 
 (defn get-tentacle
   [name]
