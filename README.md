@@ -28,8 +28,8 @@ git installed:
 
 This'll get almost everything you need downloaded.
 
-You will also need an instance of [Postgres](http://www.postgresql.org/)
-running somewhere with a fresh database to use.
+You will also need an instance of [Postgres](http://www.postgresql.org/) 9.3 or
+higher running somewhere with a fresh database to use.
 
 Now you have a choice:
 
