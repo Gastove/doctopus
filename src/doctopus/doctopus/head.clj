@@ -2,16 +2,20 @@
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.db :as db]
             [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]
             [doctopus.shell :as sh]
             [me.raynes.fs :as fs]))
 
 (defn perform-substitutions!
+  "Given a map of {<term to look for> <replacement>} and a vector of words,
+  returns a new vector with key replaced by val."
   [subs-map cmd-vec]
   (letfn [(substitute [word] (if (contains? subs-map word)
                                (subs-map word)
                                word))]
     (map substitute cmd-vec)))
+
 
 (defn split
   [string]
@@ -36,6 +40,7 @@
         (map split)
         (perform-substitutions! subs-map)
         (vec))))
+
 
 (defn parse-tentacle-config-map
   ([unparsed-cfgs] (parse-tentacle-config-map unparsed-cfgs {}))
