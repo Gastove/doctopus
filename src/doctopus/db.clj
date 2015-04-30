@@ -1,4 +1,4 @@
-(ns doctopus.db.core
+(ns doctopus.db
   (:require [korma.db :refer [defdb postgres]]
             [clojure.string :as string :refer [split-lines]]
             [korma.core :refer :all]
@@ -49,6 +49,7 @@
                 (assoc tentacle :html-commands (split-lines html-commands))
                 tentacle))))
 
+
 (defentity heads
   (pk :name)
   (prepare add-date-fields)
@@ -61,6 +62,10 @@
   (first (select tentacles
                  (where {:name name})
                  (limit 1))))
+
+(defn get-all-tentacles
+  []
+  (select tentacles))
 
 (defn save-tentacle!
   [tentacle]
@@ -82,13 +87,14 @@
   [name]
   (first (select heads
                  (where {:name name})
-                 (with tentacles)
+                 ;; (with tentacles)
                  (limit 1))))
 
 (defn get-all-heads
   []
   (select heads
-          (with tentacles)))
+          ;; (with tentacles)
+          ))
 
 (defn save-head!
   [head]
