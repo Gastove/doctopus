@@ -20,7 +20,7 @@
   "check our database for a table"
   [table-name]
   (-> (sql/query db-spec [(str "select count(*) from information_schema.tables "
-                           "where table_name='" table-name "'")])
+                               "where table_name='" table-name "'")])
       first :count pos?))
 
 (def head-schema
@@ -40,8 +40,8 @@
    [:updated :timestamp "NOT NULL"]])
 
 (def head-tentacle-schema
-  [[:head-name "varchar(50)" "FOREIGN KEY"]
-   [:tentacle-name "varchar(50)" "FOREIGN KEY"]])
+  [[:head_name "varchar(50) references heads(name)"]
+   [:tentacle_name "varchar(50) references tentacles(name)"]])
 
 (defn- create-table!
   "creates a table with a given name and schema"
