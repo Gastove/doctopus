@@ -1,13 +1,14 @@
 (ns doctopus.db.schema
   (:require [clojure.java.jdbc :as sql]
-            [taoensso.timbre :as log]
-            [doctopus.configuration :refer [server-config]]))
+            [clojure.string :as str]
+            [doctopus.configuration :refer [server-config]]
+            [taoensso.timbre :as log]))
 
 (defn- get-subname
   "pull database options out of the local config"
   [{:keys [host port db] :or {host "localhost" port 5432 db "doctopus"}}]
-    (let [tpl "//%s:%d/%s"]
-      (format tpl host port db)))
+  (let [tpl "//%s:%d/%s"]
+    (format tpl host port db)))
 
 (def db-spec {:classname "org.postgresql.Driver"
               :subprotocol "postgresql"
