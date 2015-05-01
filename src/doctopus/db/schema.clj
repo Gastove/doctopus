@@ -43,13 +43,22 @@
   [[:head_name "varchar(50) references heads(name)"]
    [:tentacle_name "varchar(50) references tentacles(name)"]])
 
+(defn do-sql-with-logging!
+  [sql-statement]
+  (try (sql/db-do-commands db-spec sql-statement)
+       (catch Exception e (log/error
+                           (->> ["Database error! Attempting to run query:"
+                                 sql-statement
+                                 "Hit exception:"
+                                 (with-out-str (sql/print-sql-exception-chain e))]
+                                (str/join \newline))))))
+
 (defn- create-table!
   "creates a table with a given name and schema"
   [table-name table-schema]
   (log/info "creating" table-name "table")
-  (sql/db-do-commands db-spec
-                      (apply sql/create-table-ddl
-                       (cons (keyword table-name) table-schema))))
+  (do-sql-with-logging! (apply sql/create-table-ddl
+                               (cons (keyword table-name) table-schema))))
 
 (defn bootstrap
   "checks for the presence of tables and creates them if necessary"
