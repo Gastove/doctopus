@@ -68,4 +68,4 @@
                 "head_tentacle_mappings" head-tentacle-schema}]
     (doseq [[table-name schema] assure]
       (when (not (table-created? table-name))
-        (create-table! "heads" schema)))))
+        (create-table! table-name schema)))))
