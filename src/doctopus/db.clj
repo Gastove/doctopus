@@ -100,9 +100,9 @@
           (where {:name (:name tentacle)})))
 
 (defn delete-tentacle!
-  [name]
+  [tentacle]
   (delete tentacles
-          (where {:name name})))
+          (where {:name (:name tentacle)})))
 
 (defn get-head
   [name]
@@ -129,6 +129,6 @@
           (where {:name (:name head)})))
 
 (defn delete-head!
-  [name]
+  [head]
   (delete heads
-          (where {:name name})))
+          (where {:name (:name head)})))
