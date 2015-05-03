@@ -25,9 +25,10 @@
 
 (defn table-created?
   "check our database for a table"
-  [table-name]
-  (-> (sql/query db-spec [(str "select count(*) from information_schema.tables "
-                               "where table_name='" table-name "'")])
+  [db-name table-name]
+  (-> (sql/query (build-db-spec-by-name db-name)
+                 [(str "select count(*) from information_schema.tables "
+                       "where table_name='" table-name "'")])
       first :count pos?))
 
 (def head-schema
