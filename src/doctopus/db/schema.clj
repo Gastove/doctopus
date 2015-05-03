@@ -47,8 +47,8 @@
    [:updated :timestamp "NOT NULL"]])
 
 (def head-tentacle-schema
-  [[:head_name "varchar(50) references heads(name)"]
-   [:tentacle_name "varchar(50) references tentacles(name)"]])
+  [[:head_name "varchar(50) references heads(name) on delete cascade"]
+   [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]])
 
 (defn do-sql-with-logging!
   [sql-statement]
