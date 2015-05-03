@@ -1,6 +1,8 @@
 (ns doctopus.test-utilities
   (:require [clojure.string :as str]
             [clojure.test :refer :all]
+            [doctopus.doctopus.head :refer [->Head]]
+            [doctopus.doctopus.tentacle :refer [map->Tentacle]]
             [doctopus.storage :refer [remove-from-storage backend]]
             [doctopus.test-utilities :refer :all])
   (:import [org.joda.time DateTime]
@@ -38,3 +40,15 @@
       (if (= (count acc) length)
         (apply str acc)
         (recur (conj acc (rand-nth candidate-chars)))))))
+
+(defmethod mock-data :tentacle
+  [_ _]
+  (map->Tentacle {:name (mock-data :string 10)
+                  :html-commands [(mock-data :string 10)]
+                  :output-root (mock-data :string 15)
+                  :source-location (mock-data :string 10)
+                  :entry-point (mock-data :string 10)}))
+
+(defmethod mock-data :head
+  [_ _]
+  (->Head (mock-data :string 18)))
