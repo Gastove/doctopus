@@ -10,11 +10,18 @@
   (let [tpl "//%s:%d/%s"]
     (format tpl host port db)))
 
-(def db-spec {:classname "org.postgresql.Driver"
-              :subprotocol "postgresql"
-              :subname (get-subname (:database (server-config)))
-              :user (:user (:database (server-config)))
-              :password (:password (:database (server-config)))})
+(defn build-db-spec
+  [{:keys [user password] :as cfg-map}]
+  {:classname "org.postgresql.Driver"
+   :subprotocol "postgresql"
+   :subname (get-subname cfg-map)
+   :user user
+   :password password})
+
+(defn build-db-spec-by-name
+  [db-name]
+  (let [db-map (get-in (server-config) [:database db-name])]
+    (build-db-spec db-map)))
 
 (defn table-created?
   "check our database for a table"
