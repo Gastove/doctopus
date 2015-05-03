@@ -38,7 +38,6 @@
 
 (def tentacle-schema
   [[:name "varchar(50)" "PRIMARY KEY"]
-;   [:head_name "varchar(50)"]
    [:output_root "varchar(50)"]
    [:html_commands "varchar(250)"]
    [:source_control "varchar(50)"]
