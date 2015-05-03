@@ -51,28 +51,32 @@
    [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]])
 
 (defn do-sql-with-logging!
-  [sql-statement]
-  (try (sql/db-do-commands db-spec sql-statement)
+  [sql-statement db-name]
+  (try (sql/db-do-commands (build-db-spec-by-name db-name) sql-statement)
        (catch Exception e (log/error
                            (->> ["Database error! Attempting to run query:"
                                  sql-statement
+                                 (str "Against database named: " db-name)
                                  "Hit exception:"
                                  (with-out-str (sql/print-sql-exception-chain e))]
                                 (str/join \newline))))))
 
 (defn- create-table!
   "creates a table with a given name and schema"
-  [table-name table-schema]
+  [db-name table-name table-schema]
   (log/info "creating" table-name "table")
   (do-sql-with-logging! (apply sql/create-table-ddl
-                               (cons (keyword table-name) table-schema))))
+                               (cons (keyword table-name) table-schema))
+                        db-name))
+
+(def table-name->schema {"heads" head-schema
+                         "tentacles" tentacle-schema
+                         "head_tentacle_mappings" head-tentacle-schema})
 
 (defn bootstrap
   "checks for the presence of tables and creates them if necessary"
-  []
-  (let [assure {"heads" head-schema
-                "tentacles" tentacle-schema
-                "head_tentacle_mappings" head-tentacle-schema}]
-    (doseq [[table-name schema] assure]
-      (when (not (table-created? table-name))
-        (create-table! table-name schema)))))
+  ([] (bootstrap :main))
+  ([db-name]
+   (doseq [[table-name schema] table-name->schema]
+     (when (not (table-created? db-name table-name))
+       (create-table! db-name table-name schema)))))
