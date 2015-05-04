@@ -65,10 +65,24 @@
     (testing "Can we save tentacles?"
       (doseq [tentacle mock-tentacles] (save-tentacle! tentacle))
       (is (= 5 (count (get-all-tentacles)))))
-    (testing "Can we save head-tentacle mappings?"
-      (doall (map #(create-mapping! % %2) mock-heads mock-tentacles))
-      (is (= 5 (count (get-all-mappings)))))
-    (doseq [head mock-heads
-            tentacle mock-tentacles]
-      (delete-head! head)
-      (delete-tentacle! tentacle))))
+
+    ;; For these next two tests, we'll want to be able to reference the first
+    ;; head and the first tentacle consistently and easily
+    (let [first-head (first mock-heads)
+          first-tent (first mock-tentacles)]
+      (testing "Can we save head-tentacle mappings?"
+        (doseq [tent mock-tentacles] (create-mapping! first-head tent))
+        (doseq [head mock-heads] (create-mapping! head first-tent))
+        ;; first-head and first-tentacle only need a single mapping
+        (is (= 9 (count (get-all-mappings)))))
+      (testing "Can we get the tentacles for a head, using the mapping?"
+        (is (= 5 (count (get-tentacles-for-head first-head)))))
+      (testing "Can we get the heads for a tentacle, using the mapping?"
+        (is (= 5 (count (get-heads-for-tentacle first-tent))))))
+    (testing "Can we delete heads and tentacles?"
+      (doall (for [head mock-heads] (delete-head! head)))
+      (doall (for [tent mock-tentacles] (delete-tentacle! tent)))
+      (is (= 0 (count (get-all-heads))))
+      (is (= 0 (count (get-all-tentacles)))))
+    (testing "Did the mappings table get updated correct?"
+      (is (= 0 (count (get-all-mappings)))))))
