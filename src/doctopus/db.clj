@@ -1,12 +1,13 @@
 (ns doctopus.db
-  (:require [korma.db :refer [defdb postgres]]
-            [clojure.string :as string :refer [split-lines]]
-            [korma.core :refer :all]
+  (:require [camel-snake-kebab.core :refer [->snake_case_keyword ->kebab-case-keyword]]
+            [camel-snake-kebab.extras :refer [transform-keys]]
             [clj-time.coerce :refer [to-sql-time]]
             [clj-time.core :as clj-time]
-            [camel-snake-kebab.core :refer [->snake_case_keyword ->kebab-case-keyword]]
-            [camel-snake-kebab.extras :refer [transform-keys]]
-            [doctopus.configuration :refer [server-config]]))
+            [clojure.string :as string :refer [split-lines]]
+            [doctopus.configuration :refer [server-config]]
+            [korma.core :refer :all]
+            [korma.db :refer [defdb postgres]]
+            [taoensso.timbre :as log]))
 
 (defn- now
   []
@@ -111,17 +112,20 @@
 
 (defn save-tentacle!
   [tentacle]
+  (log/info "Saving tentacle:" tentacle)
   (insert tentacles
           (values tentacle)))
 
 (defn update-tentacle!
   [tentacle]
+  (log/info "Updating tentacle" (:name tentacle) "with values:" tentacle)
   (update tentacles
           (set-fields tentacle)
           (where {:name (:name tentacle)})))
 
 (defn delete-tentacle!
   [tentacle]
+  (log/warn "Deleting tentacle:" tentacle "!")
   (delete tentacles
           (where {:name (:name tentacle)})))
 
@@ -142,17 +146,20 @@
 
 (defn save-head!
   [head]
+  (log/info "Saving head:" head)
   (insert heads
           (values head)))
 
 (defn update-head!
   [head]
+  (log/info "Updating head" (:name head) "with values" head)
   (update heads
           (set-fields head)
           (where {:name (:name head)})))
 
 (defn delete-head!
   [head]
+  (log/warn "Deleting head" head "!")
   (delete heads
           (where {:name (:name head)})))
 
@@ -164,8 +171,18 @@
                                  (where {:head_name head-name
                                          :tentacle_name tentacle-name}))]
     (if (empty? existing-mapping)
-      (insert head-tentacle-mappings
-              (values {:head-name head-name :tentacle-name tentacle-name})))))
+      (do
+        (log/info "Creating mapping from head" head-name "to tentacle" tentacle-name)
+        (insert head-tentacle-mappings
+                (values {:head-name head-name :tentacle-name tentacle-name})))
+      (log/info "Mapping from" head-name "to" tentacle-name "already exists"))))
+
+(defn remove-mapping!
+  [head tentacle]
+  (log/warn "Removing mapping between head" (:name head) "and tentacle" (:name tentacle))
+  (delete head-tentacle-mappings
+          (where {:head-name (:name head)
+                  :tentacle-name (:name tentacle)})))
 
 (defn get-all-mappings
   []
