@@ -48,7 +48,8 @@
 
 (def head-tentacle-schema
   [[:head_name "varchar(50) references heads(name) on delete cascade"]
-   [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]])
+   [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]
+   ["PRIMARY KEY(head_name, tentacle_name)"]])
 
 (defn do-sql-with-logging!
   [sql-statement db-name]
