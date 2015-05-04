@@ -52,25 +52,23 @@
 ;; Head
 (defprotocol HeadMethods
   (bootstrap-tentacles [this root] [this root subs-map])
-  (list-tentacles [this])
-  (load-tentacle-routes [this]))
+  (list-tentacles [this subs-map])
+  (load-tentacle-routes [this subs-map]))
 
 (defrecord Head
     [name]
   HeadMethods
+  (list-tentacles [this subs-map]
+    (let [tentacle-maps (db/get-tentacles-for-head this)
+          tentacle-configs (for [cfg-map tentacle-maps]
+                             (parse-tentacle-config-map cfg-map subs-map))
+          tentacles (map map->Tentacle tentacle-configs)]
+      (doall tentacles)))
   (bootstrap-tentacles [this root]
     (bootstrap-tentacles this root {}))
   (bootstrap-tentacles [this root subs-map]
-    (let [tentacles-root (binding [fs/*cwd* root] (fs/file (:name this)))
-          tentacle-files (fs/list-dir tentacles-root)
-          tentacle-configs (for [tf tentacle-files
-                                 :let [strang (slurp tf)
-                                       unparsed-map (edn/read-string strang)]]
-                             (parse-tentacle-config-map unparsed-map subs-map))
-          tentacles (map #(map->Tentacle %) tentacle-configs)]
-      (doseq [tentacle tentacles] (t/load-html tentacle))
-      (assoc this :tentacles tentacles)))
-  (list-tentacles [this] (:tentacles this))
-  (load-tentacle-routes [this]
-    (into {} (for [tentacle (:tentacles this)]
+    (let [tentacles (list-tentacles this subs-map)]
+      (doseq [tentacle tentacles] (t/load-html tentacle))))
+  (load-tentacle-routes [this subs-map]
+    (into {} (for [tentacle (list-tentacles this subs-map)]
                (t/routes tentacle)))))
