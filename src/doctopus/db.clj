@@ -110,18 +110,25 @@
   (select tentacles-by-head
           (where {:head_name (:name head)})))
 
-(defn save-tentacle!
+(defn create-tentacle!
   [tentacle]
-  (log/info "Saving tentacle:" tentacle)
+  (log/info "Creating new tentacle in the db:" tentacle)
   (insert tentacles
           (values tentacle)))
 
 (defn update-tentacle!
   [tentacle]
-  (log/info "Updating tentacle" (:name tentacle) "with values:" tentacle)
+  (log/info "Record found, updating tentacle:" (:name tentacle) "with values:" tentacle)
   (update tentacles
           (set-fields tentacle)
           (where {:name (:name tentacle)})))
+
+(defn save-tentacle!
+  [tentacle]
+  (log/info "Saving tentacle" tentacle)
+  (if-not (empty? (get-tentacle (:name tentacle)))
+    (update-tentacle! tentacle)
+    (create-tentacle! tentacle)))
 
 (defn delete-tentacle!
   [tentacle]
@@ -144,7 +151,7 @@
   (select heads-by-tentacle
           (where {:tentacle_name (:name tentacle)})))
 
-(defn save-head!
+(defn create-head!
   [head]
   (log/info "Saving head:" head)
   (insert heads
@@ -152,10 +159,16 @@
 
 (defn update-head!
   [head]
-  (log/info "Updating head" (:name head) "with values" head)
+  (log/info "Updating head:" (:name head) "with values" head)
   (update heads
           (set-fields head)
           (where {:name (:name head)})))
+
+(defn save-head!
+  [head]
+  (if-not (empty? (get-head (:name head)))
+    (update-head! head)
+    (create-head! head)))
 
 (defn delete-head!
   [head]
