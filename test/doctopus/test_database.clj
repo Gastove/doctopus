@@ -19,7 +19,7 @@
                 (select-keys (get-in (server-config) [:database :test])
                              [:db :user :password :host :port])))
 
-(defn- truncate!
+(defn truncate!
   [table-name]
   (let [sql-string (format "TRUNCATE %s CASCADE" table-name)]
     (do-sql-with-logging! sql-string :test)))
