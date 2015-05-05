@@ -18,8 +18,8 @@
 
 
 (defn split
-  [string]
-  (str/split string #" "))
+  [s]
+  (str/split s #" "))
 
 (defn injest-shell-strings
   "Takes a vector of shell commands, like:
