@@ -24,9 +24,13 @@
   (let [sql-string (format "TRUNCATE %s CASCADE" table-name)]
     (do-sql-with-logging! sql-string :test)))
 
+(defn obliterate!
+  []
+  (do-sql-with-logging! "DROP SCHEMA public CASCADE" :test)
+  (do-sql-with-logging! "CREATE  SCHEMA public" :test))
 
 (defn database-fixture
   [f]
   (bootstrap :test)
   (f)
-  (doseq [n (keys table-name->schema)] (truncate! n)))
+  (obliterate!))
