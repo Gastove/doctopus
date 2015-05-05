@@ -46,6 +46,7 @@
   (map->Tentacle {:name (mock-data :string 10)
                   :html-commands [(mock-data :string 10)]
                   :output-root (mock-data :string 15)
+                  :source-control "git"
                   :source-location (mock-data :string 10)
                   :entry-point (mock-data :string 10)}))
 
