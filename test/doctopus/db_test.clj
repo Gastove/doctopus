@@ -4,7 +4,7 @@
              [db :refer :all]
              [test-utilities :as utils]]
             [doctopus.db.schema :refer :all]
-            [doctopus.test-database :refer [database-fixture]]))
+            [doctopus.test-database :refer [database-fixture truncate!]]))
 
 (use-fixtures :once database-fixture)
 
@@ -38,16 +38,21 @@
            "//meow:31/cats"))))
 
 (deftest db-joins-and-lookups
+  ;; When we bootstrap the database, it finishes with some data in it. Gonna be
+  ;; easier if we just pave that fresh for these tests
+  (truncate! "heads")
+  (truncate! "tentacles")
+  (truncate! "head_tentacle_mappings")
   (let [tentacle-mocker #(utils/mock-data :tentacle nil)
         mock-tentacles (take 5 (repeatedly tentacle-mocker))
         head-mocker #(utils/mock-data :head nil)
         mock-heads (take 5 (repeatedly head-mocker))]
     (testing "Can we save heads?"
       (doseq [head mock-heads] (save-head! head))
-      (is (= 5 (count (get-all-heads)))))
+      (is (= 5 (count (get-all-heads))) "We should have 5 saved heads"))
     (testing "Can we save tentacles?"
       (doseq [tentacle mock-tentacles] (save-tentacle! tentacle))
-      (is (= 5 (count (get-all-tentacles)))))
+      (is (= 5 (count (get-all-tentacles))) "We should have 5 saved tentacles"))
 
     ;; For these next two tests, we'll want to be able to reference the first
     ;; head and the first tentacle consistently and easily
