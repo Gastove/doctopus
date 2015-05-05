@@ -70,14 +70,14 @@
                                (cons (keyword table-name) table-schema))
                         db-name))
 
-(def table-name->schema {"heads" head-schema
-                         "tentacles" tentacle-schema
-                         "head_tentacle_mappings" head-tentacle-schema})
+(def table-name-schema-pairs [["heads" head-schema]
+                              ["tentacles" tentacle-schema]
+                              ["head_tentacle_mappings" head-tentacle-schema]])
 
 (defn bootstrap
   "checks for the presence of tables and creates them if necessary"
   ([] (bootstrap :main))
   ([db-name]
-   (doseq [[table-name schema] table-name->schema]
+   (doseq [[table-name schema] table-name-schema-pairs]
      (when (not (table-created? db-name table-name))
        (create-table! db-name table-name schema)))))
