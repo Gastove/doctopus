@@ -13,8 +13,7 @@
   (do (log/error "Configuration couldn't be correctly loaded. Most"
               "often, this is caused by an unset NOMAD_ENV"
               "environment variable; make sure NOMAD_ENV=dev,"
-              "and try again.")
-      (System/exit 1)))
+              "and try again. Until then, behavior may be very odd")))
 
 (if-not (fs/exists? root) (fs/mkdirs root))
 
