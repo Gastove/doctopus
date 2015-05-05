@@ -1,27 +1,10 @@
 (ns doctopus.db-test
   (:require [clojure.test :refer :all]
-            [clojure.java.jdbc :as jdbc]
-            [doctopus.configuration :refer [server-config]]
-            [doctopus.db :refer :all]
+            [doctopus
+             [db :refer :all]
+             [test-utilities :as utils]]
             [doctopus.db.schema :refer :all]
-            [doctopus.test-utilities :as utils]
-            [korma.core :as sql]
-            [korma.db :refer [defdb postgres]]))
-
-(defdb test-db (postgres
-                (select-keys (get-in (server-config) [:database :test])
-                             [:db :user :password :host :port])))
-
-(defn- truncate!
-  [table-name]
-  (let [sql-string (format "TRUNCATE %s CASCADE" table-name)]
-    (do-sql-with-logging! sql-string :test)))
-
-(defn database-fixture
-  [f]
-  (bootstrap :test)
-  (f)
-  (doseq [n (keys table-name->schema)] (truncate! n)))
+            [doctopus.test-database :refer [database-fixture]]))
 
 (use-fixtures :once database-fixture)
 
