@@ -51,7 +51,7 @@
 
 ;; Head
 (defprotocol HeadMethods
-  (bootstrap-tentacles [this root] [this root subs-map])
+  (bootstrap-tentacles [this] [this subs-map])
   (list-tentacles [this subs-map])
   (load-tentacle-routes [this subs-map]))
 
@@ -64,9 +64,9 @@
                              (parse-tentacle-config-map cfg-map subs-map))
           tentacles (map map->Tentacle tentacle-configs)]
       (doall tentacles)))
-  (bootstrap-tentacles [this root]
-    (bootstrap-tentacles this root {}))
-  (bootstrap-tentacles [this root subs-map]
+  (bootstrap-tentacles [this]
+    (bootstrap-tentacles this {}))
+  (bootstrap-tentacles [this subs-map]
     (let [tentacles (list-tentacles this subs-map)]
       (doseq [tentacle tentacles] (t/load-html tentacle))))
   (load-tentacle-routes [this subs-map]
