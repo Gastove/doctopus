@@ -30,13 +30,13 @@
   (transform-keys ->snake_case_keyword fields))
 
 (defdb main (postgres
-             (select-keys (get-in (server-config) [:database :dev])
+             (select-keys (get-in (server-config) [:database :main])
                           [:db :user :password :host :port])))
 
 (declare head-tentacle-mappings)
 (defentity tentacles
   (pk :name)
-  (has-many head-tentacle-mappings)
+  (has-many head-tentacle-mappings {:fk :tentacle_name})
   (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
              (if html-commands
@@ -55,8 +55,7 @@
   (prepare add-updated)
   (prepare ->snake-keys)
   (transform ->kebab-keys)
-  (has-many head-tentacle-mappings))
-
+  (has-many head-tentacle-mappings {:fk :head_name}))
 
 ;; ### Head <-> Tentacle Join Table
 ;; Heads and Tentacles can share the notorious SQL many-to-many
@@ -75,26 +74,6 @@
   (belongs-to heads)
   (belongs-to tentacles))
 
-(defentity tentacles-by-head
-  (table (subselect head-tentacle-mappings
-                    (join tentacles (= :head_tentacle_mappings.tentacle_name :tentacles.name))
-                    (fields :head_tentacle_mappings.head_name
-                            :tentacles.name
-                            :tentacles.output_root
-                            :tentacles.html_commands
-                            :tentacles.source_control
-                            :tentacles.entry_point))
-         :tentacles_by_head)
-  ;; These don't seem to have any effect and I have no idea why.
-  (prepare ->snake-keys)
-  (transform ->kebab-keys))
-
-(defentity heads-by-tentacle
-  (table (subselect head-tentacle-mappings
-                    (join heads (= :head_tentacle_mappings.head_name :heads.name))
-                    (fields :head_tentacle_mappings.tentacle_name :heads.name))
-         :heads_by_tentacle))
-
 (defn get-tentacle
   [name]
   (first (select tentacles
@@ -107,8 +86,9 @@
 
 (defn get-tentacles-for-head
   [head]
-  (select tentacles-by-head
-          (where {:head_name (:name head)})))
+  (select tentacles
+          (with head-tentacle-mappings
+                (where {:head_name (:name head)}))))
 
 (defn create-tentacle!
   [tentacle]
@@ -148,8 +128,9 @@
 
 (defn get-heads-for-tentacle
   [tentacle]
-  (select heads-by-tentacle
-          (where {:tentacle_name (:name tentacle)})))
+  (select heads
+          (with head-tentacle-mappings
+                (where {:tentacle_name (:name tentacle)}))))
 
 (defn create-head!
   [head]
