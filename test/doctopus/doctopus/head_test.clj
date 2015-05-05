@@ -6,33 +6,22 @@
             [doctopus.doctopus.head :refer :all]
             [doctopus.doctopus.tentacle :as t]
             [doctopus.storage :as storage]
-            [doctopus.test-utilities :as utils]
-            [doctopus.test-database :refer [database-fixture]])
+            [doctopus.test-database :refer [database-fixture]]
+            [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus.head Head]))
 
 (use-fixtures :once database-fixture)
 
-(def test-head (Head. "test"))
-
-(def test-tentacle-props
-  (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn"))))
-
-(def one-tentacle (t/map->Tentacle test-tentacle-props))
-
 (storage/set-backend! :temp-fs)
 
-;; This test just needs re-writing -- doesn't do a damn thing we care about right
-;; now
-;; (deftest head-test
-;; (db/save-head! test-head)
-;; (db/save-tentacle! one-tentacle)
-;; (db/create-mapping! test-head one-tentacle)
-;;   (testing "Can we bootstrap a Head's tentacles?"
-;;     (let [tentacles (list-tentacles test-head {})]
-;;       (is (not (nil? tentacles)) "Should have tentacles now")
-;;       (is (= "doctopus-test" (:name (first tentacles))))
-;;       (is (= one-tentacle (first (tentacles)))))
-;;     (utils/clean-up-test-html "doctopus-test")))
+(deftest head-test
+  (testing "Can we bootstrap a Head's tentacles?"
+    (let [head (map->Head (db/get-head "main"))
+          tentacles (list-tentacles head {})]
+      (is (not (nil? tentacles)) "Should have tentacles now")
+      (is (= "doctopus" (:name (first tentacles)))
+          "Should have a tentacle with a known name"))
+    (utils/clean-up-test-html "doctopus-test")))
 
 (deftest injest-shell-strings-test
   (let [input-single-vec ["make -C docs/ html"]
