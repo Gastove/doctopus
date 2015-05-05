@@ -25,11 +25,8 @@
     [configuration substitutions]
   DoctopusMethods
   (bootstrap-heads [this]
-    (let [heads-dir (:heads-dir configuration)
-          dirs (fs/list-dir heads-dir)
-          head-names (map #(.getName %) dirs)
-          heads (map #(h/Head. %) head-names)]
-      (doall (map #(h/bootstrap-tentacles % heads-dir substitutions) heads))))
+    (let [heads (map h/map->Head (db/get-all-heads))]
+      (doall (map #(h/bootstrap-tentacles % substitutions) heads))))
   (list-heads [this] (doall (map h/map->Head (db/get-all-heads))))
   (list-tentacles [this]
     (into [] (flatten (for [head (list-heads this)
