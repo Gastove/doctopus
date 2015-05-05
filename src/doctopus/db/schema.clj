@@ -1,7 +1,12 @@
 (ns doctopus.db.schema
-  (:require [clojure.java.jdbc :as sql]
+  (:require [clojure.edn :as edn]
+            [clojure.java.io :as io]
+            [clojure.java.jdbc :as sql]
             [clojure.string :as str]
             [doctopus.configuration :refer [server-config]]
+            [doctopus.db :as db]
+            [doctopus.doctopus.head :as h]
+            [doctopus.doctopus.tentacle :as t]
             [taoensso.timbre :as log]))
 
 (defn- get-subname
@@ -74,10 +79,24 @@
                               ["tentacles" tentacle-schema]
                               ["head_tentacle_mappings" head-tentacle-schema]])
 
+(defn- load-doctopus
+  "On bootstrap, we want to create a Head, a Tentacle for Doctopus itself, and
+  map the two together"
+  []
+  (let [head (h/->Head "main")
+        tentacle-props-string (slurp (io/resource "self/heads/main/doctopus.edn"))
+        tentacle-raw-props (edn/read-string tentacle-props-string)
+        tentacle-parsed-props (h/parse-tentacle-config-map tentacle-raw-props)
+        tentacle (t/map->Tentacle tentacle-parsed-props)]
+    (db/save-head! head)
+    (db/save-tentacle! tentacle)
+    (db/create-mapping! head tentacle)))
+
 (defn bootstrap
   "checks for the presence of tables and creates them if necessary"
   ([] (bootstrap :main))
   ([db-name]
    (doseq [[table-name schema] table-name-schema-pairs]
      (when (not (table-created? db-name table-name))
-       (create-table! db-name table-name schema)))))
+       (create-table! db-name table-name schema)))
+   (load-doctopus)))
