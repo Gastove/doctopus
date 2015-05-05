@@ -1,6 +1,6 @@
 {:output-root "docs"
  :html-commands ["lein marg -f index.html"]
  :name "doctopus-test"
- :source-control :git
+ :source-control "git"
  :source-location "https://github.com/Gastove/doctopus.git"
  :entry-point "index.html"}
