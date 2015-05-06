@@ -8,7 +8,15 @@
             [taoensso.timbre :as log]))
 
 (def root (fs/file (:permanent-fs-root (server-config))))
+
+(if (nil? root)
+  (do (log/error "Configuration couldn't be correctly loaded. Most"
+              "often, this is caused by an unset NOMAD_ENV"
+              "environment variable; make sure NOMAD_ENV=dev,"
+              "and try again. Until then, behavior may be very odd")))
+
 (if-not (fs/exists? root) (fs/mkdirs root))
+
 
 (defn save-fn
   "Save a dir of html stuff by moving it in to the annointed dir in

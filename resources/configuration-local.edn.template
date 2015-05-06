@@ -3,4 +3,9 @@
 ;; Anything in here will supercede whatever is in configuration.edn
 
 {:env :development ;; sets a development environment
- :permanent-fs-root "change me to where you want doctopus to write"}
+ :permanent-fs-root "change me to where you want doctopus to write"
+ :database {:db "database name, defaults to doctopus"
+            :user "database username"
+            :password "database password"
+            :host "optional, defaults to localhost"
+            :port "optional, defaults to 5432"}}

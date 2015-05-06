@@ -15,8 +15,12 @@
                  [ring/ring-devel "1.3.2"]
                  [bidi "1.18.10"]
                  [enlive "1.1.5"]
-                 [ring/ring-mock "0.2.0"]
-                 [clojurewerkz/elastisch "2.2.0-beta3"]]
+                 [clojurewerkz/elastisch "2.2.0-beta3"]
+                 [korma "0.4.0"]
+                 [clj-time "0.9.0"]
+                 [postgresql/postgresql "8.4-702.jdbc4"]
+                 [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
+                 [ring/ring-mock "0.2.0"]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"

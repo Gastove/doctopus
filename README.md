@@ -4,8 +4,8 @@
 
 Read The Docs is a terrific project... as long as you want to use
 Sphinx. In our day-to-day as coders, we might write all manner of things -- Java
-with JavaDocs, folders full of `.markdwon`, custom JavaScript analyzers. They're
-all perfectly cabable of being typeset to HTML. It's time to make it a heck of a
+with JavaDocs, folders full of `.markdown`, custom JavaScript analyzers. They're
+all perfectly capable of being typeset to HTML. It's time to make it a heck of a
 lot easier to get them on the web.
 
 Doctopus is a framework for taking a project full of something-HTML-able,
@@ -17,7 +17,8 @@ It's also... a work in progress. Like.... very in progress. Go easy on it.
 
 ## Installation
 
-This bit is simple, as long as you've got [lein](http://leiningen.org/) 2+ and git installed:
+This bit is simple, as long as you've got [lein](http://leiningen.org/) 2+ and
+git installed:
 
 ```bash
         > git clone doctopus
@@ -25,7 +26,12 @@ This bit is simple, as long as you've got [lein](http://leiningen.org/) 2+ and g
         > lein deps
 ```
 
-This'll get everything you need downloaded. Now you have a choice:
+This'll get almost everything you need downloaded.
+
+You will also need an instance of [Postgres](http://www.postgresql.org/) 9.3 or
+higher running somewhere with a fresh database to use.
+
+Now you have a choice:
 
 ### Local Configs
 
@@ -42,7 +48,6 @@ in there and you'll be good to go to get the whole thing spun up:
 ## Usage
 
 Right now: you don't.
-
 
 ### Free-range TODO List and Known Improvements
 
