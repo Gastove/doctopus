@@ -2,15 +2,17 @@
 
 [![Build Status](https://travis-ci.org/Gastove/doctopus.svg?branch=master)](https://travis-ci.org/Gastove/doctopus)
 
-Read The Docs is a terrific project... as long as you want to use
-Sphinx. In our day-to-day as coders, we might write all manner of things -- Java
-with JavaDocs, folders full of `.markdown`, custom JavaScript analyzers. They're
-all perfectly capable of being typeset to HTML. It's time to make it a heck of a
-lot easier to get them on the web.
+Read The Docs is a terrific project... as long as you want to use Sphinx. But
+how often is that, really? In our day-to-day as documenters of technical
+projects, we might write all manner of things -- Java with JavaDocs, folders
+full of `markdown`, custom JavaScript analyzers, Scaladoc -- it's a big list of
+thingies. They're all perfectly capable of being typeset to HTML. It's time to
+make it a heck of a lot easier to get them on the web, in an orchestrated,
+easy-to-serve way.
 
 Doctopus is a framework for taking a project full of something-HTML-able,
 generating that HTML, and serving it on the Internet. Or, if you like, it's like
-RTD without the RST dependence. Also: it's trivial to host. (Not everything
+RTD without the RST dependency. Also: it's trivial to host. (Not everything
 should be public, y'know?)
 
 It's also... a work in progress. Like.... very in progress. Go easy on it.
@@ -28,10 +30,17 @@ git installed:
 
 This'll get almost everything you need downloaded.
 
-You will also need an instance of [Postgres](http://www.postgresql.org/) 9.3 or
-higher running somewhere with a fresh database to use.
+### External Dependencies and Services
 
-Now you have a choice:
+#### PostgreSQL
+You will need an instance of [Postgres](http://www.postgresql.org/) 9.3 or
+higher running somewhere with a fresh database to use. Get that spun up, log in,
+and get a little `CREATE DATABASE doctopus;` going. If you want to run the test
+suite, `CREATE DATABASE doctopus_test` is your friend. Note: these things are
+both configurable, if you really wanna (see below).
+
+
+## Project Configuration
 
 ### Local Configs
 
