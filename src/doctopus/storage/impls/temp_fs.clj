@@ -1,4 +1,7 @@
 (ns doctopus.storage.impls.temp-fs
+  "Very much like the permanent-fs implementation, but stores in the temporary
+  filesystem. Should go without saying, but: don't use this to store things
+  you'd like to make sure stay around."
   (:require [bidi.ring :as bidi-ring]
             [clojure.string :as str]
             [doctopus.files :as files]

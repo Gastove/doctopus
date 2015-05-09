@@ -4,8 +4,7 @@
             [doctopus.configuration :refer [server-config]]))
 
 (defn make-html
-  "This is a function that we use to shell out to a configured command
-  to build the HTML for a given project.
+  "Shell out a command in a specific dir.
 
   e.g. cd /to/dir; make html
 
@@ -21,12 +20,19 @@
    (apply sh/sh (cons command (conj args :dir root-dir)))))
 
 (defn make-html-from-vec
+  "Given a vector of vectors of shell commands, like:
+
+  [['do' 'one' 'thing]
+  ['do' 'the' 'next' 'thing]]
+
+  And a dir to execute them in, execute each one in turn."
   [cmd-vec working-dir]
   (doseq [cmd cmd-vec
           :let [full-cmd (conj cmd :dir working-dir)]]
     (apply sh/sh full-cmd)))
 
 (defn git-clone
+  "Clones a git repo to a known destination."
   [repo dest]
   (let [res (sh/sh "git" "clone" repo dest)
         status (:exit res)]

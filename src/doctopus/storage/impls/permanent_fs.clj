@@ -1,4 +1,7 @@
 (ns doctopus.storage.impls.permanent-fs
+  "Implements a kind of key/value storage on a machine's permanent filesystem,
+  given a root directory to write to. The sub-directories within the root are
+  the 'keys', their contents, the 'values'"
   (:require [bidi.ring :as bidi-ring]
             [doctopus
              [configuration :refer [server-config]]

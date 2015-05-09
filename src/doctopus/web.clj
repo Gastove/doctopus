@@ -26,6 +26,7 @@
             :body (slurp (io/resource "500.html"))}))))
 
 (defn four-oh-four
+  "Utility function for returning a 404"
   [route]
   (log/debug "404ing on route:" route)
   {:status 404
@@ -33,6 +34,7 @@
    :body (format "<h3>Could not find a page matching %s </h3>" route)})
 
 (defn wrap-route-not-found
+  "404 ring handler, makes sure we have a page to return, 404s otherwise"
   [handler]
   (fn [request]
     (if-let [response (handler request)]
@@ -52,7 +54,8 @@
 ;; we can every think of a reason why we'd want that.
 (def substitutions {"$URL_ROOT"  (:ip (server-config))})
 
-;; Let's start bootstrapping!
+;; A Doctopus is the living, breathing stack of documentation; every live server
+;; instance should have one-and-only-one of these.
 (def doctopus (bootstrap-heads (Doctopus. (server-config) substitutions)))
 
 (defn serve-index
@@ -91,7 +94,7 @@
      (serve-html
       (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
 
-;; Bidi routes are defined as nested sets of ""
+;; Routes, defined for the Bidi routing library.
 (def routes ["/" {""             {:get serve-index}
                   "index.html"   {:get serve-index}
                   "assets"       (->Resources {:prefix "public/assets"})
@@ -122,6 +125,8 @@
         response))))
 
 (def application
+  "The HTTP response and handling stack for Doctopus. Leans on the
+  `site-defaults' package for security and basic error handling."
   (-> (wrap-defaults application-handlers site-defaults)
       (wrap-iframe-transform)
       (wrap-route-not-found)
