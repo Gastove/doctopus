@@ -5,6 +5,7 @@
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.template :as templates]
             [doctopus.files.predicates :refer [html?]]
+            [doctopus.db.schema :as schema]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
