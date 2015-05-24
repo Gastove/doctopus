@@ -32,7 +32,7 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 |output<sub>root</sub>|varchar(50)| |This is where doctopus will|
 | | | |look for the output of html|
 | | | |generation.|
-|html<sub>commands</sub>|varchar(250)| | |
+|`html_commands`|varchar(250)| | |
 |source<sub>control</sub>|varchar(50)| |Which VCS to use|
 |source<sub>location</sub>|varchar(250)| |VCS URI to clone from|
 |entry<sub>point</sub>|varchar(50)| |HTML entrypoint for your app|
@@ -106,7 +106,7 @@ primary key(head<sub>name</sub>,tentacle<sub>name</sub>)
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 16:57
+Created: 2015-05-24 Sun 16:59
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
