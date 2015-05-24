@@ -53,7 +53,8 @@
 (def substitutions {"$URL_ROOT"  (:ip (server-config))})
 
 ;; Let's start bootstrapping!
-(def doctopus (bootstrap-heads (Doctopus. (server-config) substitutions)))
+(def doctopus (Doctopus. (server-config) substitutions))
+(bootstrap-heads doctopus)
 
 (defn serve-index
   [_]
