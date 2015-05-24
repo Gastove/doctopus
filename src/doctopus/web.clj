@@ -54,7 +54,6 @@
 
 ;; Let's start bootstrapping!
 (def doctopus (Doctopus. (server-config) substitutions))
-(bootstrap-heads doctopus)
 
 (defn serve-index
   [_]
@@ -139,5 +138,7 @@
   (let [{:keys [port]} (server-config)]
     (log/info "Checking DB is set up...")
     (schema/bootstrap)
+    (log/info "Bootstrapping heads")
+    (bootstrap-heads doctopus)
     (log/info "Starting HTTP server on port" port)
     (server/run-server application {:port port})))
