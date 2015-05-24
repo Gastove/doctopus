@@ -137,5 +137,7 @@
 (defn -main
   []
   (let [{:keys [port]} (server-config)]
+    (log/info "Checking DB is set up...")
+    (schema/bootstrap)
     (log/info "Starting HTTP server on port" port)
     (server/run-server application {:port port})))
