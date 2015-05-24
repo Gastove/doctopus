@@ -1,319 +1,113 @@
-# DATABASS<a id="sec-1" name="sec-1"></a>
+Table of Contents
+-----------------
 
-Doctopus leans heavily on Postgres &#x2013; currently for storing its configuration,
-but soon also for storing compiled HTML and resources.
+-   [1. DATABASS](#sec-1)
+-   [2. Schema](#sec-2)
+    -   [2.1. `heads`](#sec-2-1)
+    -   [2.2. `tentacles`](#sec-2-2)
+    -   [2.3. `head_tentacle_mappings`](#sec-2-3)
+    -   [2.4. `documents`](#sec-2-4)
 
-# Schema<a id="sec-2" name="sec-2"></a>
+1 DATABASS
+----------
 
-## `heads`<a id="sec-2-1" name="sec-2-1"></a>
+Doctopus leans heavily on Postgres – currently for storing its configuration, but soon also for storing compiled HTML and resources.
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+2 Schema
+--------
 
+### 2.1 `heads`
 
-<colgroup>
-<col  class="left" />
+|Column Name|Data Type|Spec|Comments|
+|:----------|:--------|:---|:-------|
+|name|varchar|"PRIMARY KEY"| |
+|created|timestamp|"NOT NULL DEFAULT NOW"| |
+|updated|timestamp|"NOT NULL"| |
 
-<col  class="left" />
+### 2.2 `tentacles`
 
-<col  class="left" />
+|Column Name|Data Type|Spec|Comments|
+|:----------|:--------|:---|:-------|
+|name|varchar(50)|"PRIMARY KEY"| |
+|output<sub>root</sub>|varchar(50)| |This is where doctopus will|
+| | | |look for the output of html|
+| | | |generation.|
+|html<sub>commands</sub>|varchar(250)| | |
+|source<sub>control</sub>|varchar(50)| |Which VCS to use|
+|source<sub>location</sub>|varchar(250)| |VCS URI to clone from|
+|entry<sub>point</sub>|varchar(50)| |HTML entrypoint for your app|
+|created|timestamp|"NOT NULL| |
+| | |DEFAULT NOW"| |
+|updated|timestamp|"NOT NULL"| |
 
-<col  class="left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="left">Column Name</th>
-<th scope="col" class="left">Data Type</th>
-<th scope="col" class="left">Spec</th>
-<th scope="col" class="left">Comments</th>
-</tr>
-</thead>
+### 2.3 `head_tentacle_mappings`
 
-<tbody>
-<tr>
-<td class="left">name</td>
-<td class="left">varchar</td>
-<td class="left">"PRIMARY KEY"</td>
-<td class="left">&#xa0;</td>
-</tr>
+This table creates mappings between `heads` and `tentacles`; it relies on Postgres to to enforce A) that both names exist, and B) that when a `head` or `tentacle` is deleted, its mappings must be deleted as well.
 
+Column Name
 
-<tr>
-<td class="left">created</td>
-<td class="left">timestamp</td>
-<td class="left">"NOT NULL DEFAULT NOW"</td>
-<td class="left">&#xa0;</td>
-</tr>
+Data Type
 
+Spec
 
-<tr>
-<td class="left">updated</td>
-<td class="left">timestamp</td>
-<td class="left">"NOT NULL"</td>
-<td class="left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
+Comments
 
-## `tentacles`<a id="sec-2-2" name="sec-2-2"></a>
+head<sub>name</sub>
 
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
+varchar(50)
 
+references heads(name)
 
-<colgroup>
-<col  class="left" />
+ 
 
-<col  class="left" />
+ 
 
-<col  class="left" />
+ 
 
-<col  class="left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="left">Column Name</th>
-<th scope="col" class="left">Data Type</th>
-<th scope="col" class="left">Spec</th>
-<th scope="col" class="left">Comments</th>
-</tr>
-</thead>
+on delete cascade
 
-<tbody>
-<tr>
-<td class="left">name</td>
-<td class="left">varchar(50)</td>
-<td class="left">"PRIMARY KEY"</td>
-<td class="left">&#xa0;</td>
-</tr>
+ 
 
+tentacle<sub>name</sub>
 
-<tr>
-<td class="left">output<sub>root</sub></td>
-<td class="left">varchar(50)</td>
-<td class="left">&#xa0;</td>
-<td class="left">This is where doctopus will</td>
-</tr>
+varchar(50)
 
+references tentacles(name)
 
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">look for the output of html</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">generation.</td>
-</tr>
-
-
-<tr>
-<td class="left">html<sub>commands</sub></td>
-<td class="left">varchar(250)</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">source<sub>control</sub></td>
-<td class="left">varchar(50)</td>
-<td class="left">&#xa0;</td>
-<td class="left">Which VCS to use</td>
-</tr>
-
-
-<tr>
-<td class="left">source<sub>location</sub></td>
-<td class="left">varchar(250)</td>
-<td class="left">&#xa0;</td>
-<td class="left">VCS URI to clone from</td>
-</tr>
-
-
-<tr>
-<td class="left">entry<sub>point</sub></td>
-<td class="left">varchar(50)</td>
-<td class="left">&#xa0;</td>
-<td class="left">HTML entrypoint for your app</td>
-</tr>
-
-
-<tr>
-<td class="left">created</td>
-<td class="left">timestamp</td>
-<td class="left">"NOT NULL</td>
-<td class="left">&#xa0;</td>
-</tr>
+ 
 
+ 
 
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">DEFAULT NOW"</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">updated</td>
-<td class="left">timestamp</td>
-<td class="left">"NOT NULL"</td>
-<td class="left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-## `head_tentacle_mappings`<a id="sec-2-3" name="sec-2-3"></a>
-
-This table creates mappings between `heads` and `tentacles`; it relies on Postgres
-to to enforce A) that both names exist, and B) that when a `head` or `tentacle` is
-deleted, its mappings must be deleted as well.
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="left">Column Name</th>
-<th scope="col" class="left">Data Type</th>
-<th scope="col" class="left">Spec</th>
-<th scope="col" class="left">Comments</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td class="left">head<sub>name</sub></td>
-<td class="left">varchar(50)</td>
-<td class="left">references heads(name)</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">on delete cascade</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">tentacle<sub>name</sub></td>
-<td class="left">varchar(50)</td>
-<td class="left">references tentacles(name)</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">on delete cascade</td>
-<td class="left">&#xa0;</td>
-</tr>
-</tbody>
-
-<tbody>
-<tr>
-<td class="left">Extra:</td>
-<td class="left">&#xa0;</td>
-<td class="left">primary key(head<sub>name</sub>,tentacle<sub>name</sub>)</td>
-<td class="left">&#xa0;</td>
-</tr>
-</tbody>
-</table>
-
-## `documents`<a id="sec-2-4" name="sec-2-4"></a>
-
-<table border="2" cellspacing="0" cellpadding="6" rules="groups" frame="hsides">
-
-
-<colgroup>
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-
-<col  class="left" />
-</colgroup>
-<thead>
-<tr>
-<th scope="col" class="left">Column Name</th>
-<th scope="col" class="left">Data Type</th>
-<th scope="col" class="left">Spec</th>
-<th scope="col" class="left">Comments</th>
-</tr>
-</thead>
-
-<tbody>
-<tr>
-<td class="left">name</td>
-<td class="left">varchar</td>
-<td class="left">PRIMARY KEY</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">uri</td>
-<td class="left">varchar</td>
-<td class="left">NOT NULL</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">body</td>
-<td class="left">text</td>
-<td class="left">NOT NULL</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">search<sub>vector</sub></td>
-<td class="left">ts<sub>vector</sub></td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-</tr>
-
-
-<tr>
-<td class="left">tentacle<sub>name</sub></td>
-<td class="left">varchar</td>
-<td class="left">references tentacles(name)</td>
-<td class="left">Foreign key; which</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">on delete cascade</td>
-<td class="left">`tentacle` does this</td>
-</tr>
-
-
-<tr>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">&#xa0;</td>
-<td class="left">belong to?</td>
-</tr>
-</tbody>
-</table>
+ 
+
+on delete cascade
+
+ 
+
+Extra:
+
+ 
+
+primary key(head<sub>name</sub>,tentacle<sub>name</sub>)
+
+ 
+
+### 2.4 `documents`
+
+|Column Name|Data Type|Spec|Comments|
+|:----------|:--------|:---|:-------|
+|name|varchar|PRIMARY KEY| |
+|uri|varchar|NOT NULL| |
+|body|text|NOT NULL| |
+|search<sub>vector</sub>|ts<sub>vector</sub>| | |
+|tentacle<sub>name</sub>|varchar|references tentacles(name)|Foreign key; which|
+| | |on delete cascade|`tentacle` does this|
+| | | |belong to?|
+
+Author: Ross Donaldson
+
+Created: 2015-05-24 Sun 16:57
+
+[Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
+
+[Validate](http://validator.w3.org/check?uri=referer)
