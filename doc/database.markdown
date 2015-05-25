@@ -29,15 +29,12 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
 |`name`|varchar(50)|"PRIMARY KEY"| |
-|`output_root`|varchar(50)| |This is where doctopus will|
-| | | |look for the output of html|
-| | | |generation.|
+|`output_root`|varchar(50)| |This is where doctopus will look for the output of html generation.|
 |`html_commands`|varchar(250)| | |
 |`source_control`|varchar(50)| |Which VCS to use|
 |`source_location`|varchar(250)| |VCS URI to clone from|
 |`entry_point`|varchar(50)| |HTML entrypoint for your app|
-|`created`|timestamp|"NOT NULL| |
-| | |DEFAULT NOW"| |
+|`created`|timestamp|"NOT NULL DEFAULT NOW"| |
 |`updated`|timestamp|"NOT NULL"| |
 
 ### 2.3 `head_tentacle_mappings`
@@ -56,15 +53,7 @@ Comments
 
 varchar(50)
 
-references heads(name)
-
- 
-
- 
-
- 
-
-on delete cascade
+references heads(name) on delete cascade
 
  
 
@@ -72,15 +61,7 @@ on delete cascade
 
 varchar(50)
 
-references tentacles(name)
-
- 
-
- 
-
- 
-
-on delete cascade
+references tentacles(name) on delete cascade
 
  
 
@@ -88,7 +69,7 @@ Extra:
 
  
 
-primary key(head<sub>name</sub>,tentacle<sub>name</sub>)
+primary key(`head_name`, `tentacle_name`)
 
  
 
@@ -100,13 +81,11 @@ primary key(head<sub>name</sub>,tentacle<sub>name</sub>)
 |`uri`|varchar|NOT NULL| |
 |`body`|text|NOT NULL| |
 |`search_vector`|ts<sub>vector</sub>| | |
-|`tentacle_name`|varchar|references tentacles(name)|Foreign key; which|
-| | |on delete cascade|`tentacle` does this|
-| | | |belong to?|
+|`tentacle_name`|varchar|references tentacles(name) on delete cascade|Foreign key; which `tentacle` does this belong to?|
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 17:09
+Created: 2015-05-24 Sun 17:12
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
