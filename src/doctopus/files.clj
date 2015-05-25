@@ -13,13 +13,13 @@
 
 
 (defn filter-files
-  "Vector Triple of (path, directories, files), and function that filters relevant doc-types"
+  "Vector Triple of (path, directories, files), and function that filters
+  relevant doc-types"
   [path-listing doc-type-fn]
   (into [] (for [[path directory files] path-listing
                  :let [found-files (filter doc-type-fn files)]
                  :when (not-empty found-files)]
              [path found-files])))
-
 
 (declare truncate-str)
 (defn assemble-file-filter-results
@@ -29,7 +29,7 @@
              (for [matched-file matched-files]
                (fs/file path matched-file)))))
 
-
+;; Yes yes yes. Super good.
 (defn truncate-str
   "Given a fully qualified root directory, correctly return the path, relative
   to a given root. I.E: given /foo/bar/baz and root baz, return /;
@@ -43,20 +43,23 @@
       "/"
       (last (clojure.string/split fq-path-string splitting-regex)))))
 
+;; Cannot remember why we did this.
 (defn set-ext
   "For a given file with extension foo.bar, set extension to .html"
   [strang]
   (clojure.string/replace strang #"\.(\w+)$" ".html"))
 
+;; Dig this.
 (defn walk-docs-dir
   "Walk the docs; currently only looks for Markdown Documents."
-  [doc-root pred]
-  (let [docs-all (fs/walk vector doc-root) ;; Triple of directory path, directory name, file name
-        filtered-docs (filter-files docs-all pred)
-        assembled-result (assemble-file-filter-results doc-root filtered-docs)]
-    assembled-result
-    ))
+  ([root] (walk-docs-dir root identity))
+  ([root pred]
+   (let [docs-all (fs/walk vector root) ;; Triple of directory path, directory name, file name
+         filtered-docs (filter-files docs-all pred)
+         assembled-result (assemble-file-filter-results root filtered-docs)]
+     assembled-result)))
 
+;; Almost certainly deprecated
 (defn htmlify
   "Ingests a path. Turns the contents in to html, truncates the path, returns
   the pair."
@@ -66,6 +69,7 @@
         htmlified-path (set-ext truncated-path)]
     [html htmlified-path]))
 
+;; Probably also deprecated? Or, part of the md parser?
 (defn write-doc
   "This is prooooooobably not how we wanna do this f'reals?"
   [[html rel-path] target-dir]
@@ -75,8 +79,9 @@
     (spit output-file html)))
 
 
-;; This cool dood needs to be changed to use the new storage
-;; backend... eventually. Or it needs to be removed? Unclear.
+;; This cool dood needs to be changed to use the new storage backend...
+;; eventually. Or it needs to be removed? Unclear. Maybe useful for the markdown
+;; parser too.
 (defn read-and-write-dir
   "Searches a source dir for all files that match a given predicate.
 
@@ -91,11 +96,22 @@
       (write-doc html-relpath-pair target-dir)
       )))
 
+;; Hrmmmmmmm. Could be useful for our markdown parser?
 (defn read-html
   "Reads a directory structure looking for html; returns the result as a vector
   of relative path-html"
   [src-dir]
   (let [docs (walk-docs-dir src-dir html?)]
     (into [] (for [doc docs
-           :let [[html rel-path] (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
+                   :let [[html rel-path] (htmlify doc src-dir identity)]] ;; Is this a hack? WHY YES IT IS.
                [rel-path html]))))
+
+
+(defn list-files-with-relative-paths
+  "Given a directory, list the contents as pairs of:
+  [path-relative-to-root file-handle]"
+  [root]
+  (let [all-files (walk-docs-dir root)]
+    (for [found-file all-files
+          :let [rel-path (truncate-str found-file root)]]
+      [rel-path found-file])))
