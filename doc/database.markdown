@@ -41,37 +41,13 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 
 This table creates mappings between `heads` and `tentacles`; it relies on Postgres to to enforce A) that both names exist, and B) that when a `head` or `tentacle` is deleted, its mappings must be deleted as well.
 
-Column Name
+|Column Name|Data Type|Spec|Comments|
+|:----------|:--------|:---|:-------|
+|`head_name`|varchar(50)|references heads(name) on delete cascade| |
+|`tentacle_name`|varchar(50)|references tentacles(name) on delete cascade| |
 
-Data Type
-
-Spec
-
-Comments
-
-`head_name`
-
-varchar(50)
-
-references heads(name) on delete cascade
-
- 
-
-`tentacle_name`
-
-varchar(50)
-
-references tentacles(name) on delete cascade
-
- 
-
-Extra:
-
- 
-
-primary key(`head_name`, `tentacle_name`)
-
- 
+||
+|Extra:| |primary key(`head_name`, `tentacle_name`)| |
 
 ### 2.4 `documents`
 
@@ -85,7 +61,7 @@ primary key(`head_name`, `tentacle_name`)
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 17:12
+Created: 2015-05-24 Sun 17:14
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
