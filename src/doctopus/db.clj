@@ -76,6 +76,15 @@
   (belongs-to heads)
   (belongs-to tentacles))
 
+(defentity documents
+  (table :documents)
+  (prepare ->snake-keys)
+  (prepare add-updated)
+  (transform ->kebab-keys)
+  (belongs-to tentacles)
+  (entity-fields :name :uri :tentacle_name :body))
+
+
 (defn get-tentacle
   [name]
   (first (select tentacles
