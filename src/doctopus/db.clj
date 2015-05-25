@@ -202,3 +202,37 @@
   [tentacle]
   (select head-tentacle-mappings
           (where {:name (:name tentacle)})))
+
+(defn get-document-by-name
+  [doc-name]
+  (select documents
+          (where {:name doc-name})))
+
+(defn get-document-by-uri
+  [uri]
+  (select documents
+          (where {:uri uri})))
+
+(defn get-document-for-tentacle
+  [tentacle]
+  (select documents
+          (where {:tentacle_name (:name tentacle)})))
+
+(defn create-document!
+  [document]
+  (log/info "Creating new document named:" (:name document))
+  (insert documents
+          (values document)))
+
+(defn update-document!
+  [document]
+  (log/info "Updating document named:" (:name document))
+  (update documents
+          (set-fields document)
+          (where {:name (:name document)})))
+
+(defn save-document!
+  [document]
+  (if-not (empty? (get-document-by-name (:name document)))
+    (update-document! document)
+    (create-document! document)))
