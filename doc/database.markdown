@@ -1,13 +1,3 @@
-Table of Contents
------------------
-
--   [1. DATABASS](#sec-1)
--   [2. Schema](#sec-2)
-    -   [2.1. `heads`](#sec-2-1)
-    -   [2.2. `tentacles`](#sec-2-2)
-    -   [2.3. `head_tentacle_mappings`](#sec-2-3)
-    -   [2.4. `documents`](#sec-2-4)
-
 1 DATABASS
 ----------
 
@@ -45,9 +35,7 @@ This table creates mappings between `heads` and `tentacles`; it relies on Postgr
 |:----------|:--------|:---|:-------|
 |`head_name`|varchar(50)|references heads(name) on delete cascade| |
 |`tentacle_name`|varchar(50)|references tentacles(name) on delete cascade| |
-
-||
-|Extra:| |primary key(`head_name`, `tentacle_name`)| |
+|Primary Key:| |primary key(`head_name`, `tentacle_name`)| |
 
 ### 2.4 `documents`
 
@@ -61,7 +49,7 @@ This table creates mappings between `heads` and `tentacles`; it relies on Postgr
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 17:14
+Created: 2015-05-24 Sun 17:16
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
