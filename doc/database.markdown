@@ -1,12 +1,12 @@
-1 DATABASS
-----------
+DATABASS
+--------
 
 Doctopus leans heavily on Postgres – currently for storing its configuration, but soon also for storing compiled HTML and resources.
 
-2 Schema
---------
+Schema
+------
 
-### 2.1 `heads`
+### `heads`
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
@@ -14,7 +14,7 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 |`created`|timestamp|"NOT NULL DEFAULT NOW"| |
 |`updated`|timestamp|"NOT NULL"| |
 
-### 2.2 `tentacles`
+### `tentacles`
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
@@ -27,7 +27,7 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 |`created`|timestamp|"NOT NULL DEFAULT NOW"| |
 |`updated`|timestamp|"NOT NULL"| |
 
-### 2.3 `head_tentacle_mappings`
+### `head_tentacle_mappings`
 
 This table creates mappings between `heads` and `tentacles`; it relies on Postgres to to enforce A) that both names exist, and B) that when a `head` or `tentacle` is deleted, its mappings must be deleted as well.
 
@@ -37,7 +37,7 @@ This table creates mappings between `heads` and `tentacles`; it relies on Postgr
 |`tentacle_name`|varchar(50)|references tentacles(name) on delete cascade| |
 |Primary Key:| |primary key(`head_name`, `tentacle_name`)| |
 
-### 2.4 `documents`
+### `documents`
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
@@ -49,7 +49,7 @@ This table creates mappings between `heads` and `tentacles`; it relies on Postgr
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 17:16
+Created: 2015-05-24 Sun 17:19
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
