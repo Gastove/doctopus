@@ -61,8 +61,9 @@
 ;; ### Head <-> Tentacle Join Table
 ;; Heads and Tentacles can share the notorious SQL many-to-many
 ;; relationship. Further, having either a head or a tentacle record _on the
-;; database_ storing information about the other gets conceptually weird. Enter:
-;; the join table.
+;; database_ storing information about the other gets conceptually weird. Korma
+;; will automatically handle this by using two queries, but I'm unconvinced by
+;; that as a data modeling approach. Enter: the join table.
 ;;
 ;; Join tables capture many-to-many relationships by inserting themselves in the
 ;; middle, effectively creating a one-to-many relationship between itself and
