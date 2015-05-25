@@ -46,6 +46,8 @@ This table creates mappings between `heads` and `tentacles`; it relies on Postgr
 |`body`|text|NOT NULL| |
 |`search_vector`|`ts_vector`| | |
 |`tentacle_name`|varchar|references tentacles(name) on delete cascade|Foreign key; which `tentacle` does this belong to?|
+|`created`|timestamp|NOT NULL DEFAULT NOW()| |
+|`updated`|timestamp|NOT NULL| |
 |Index:|`GIN`| | |
 
 The table cannot easily be created (using Clojure DSLs) to have `search_vector` in place as we'll want it; instead, the following should be used:
@@ -57,7 +59,7 @@ CREATE INDEX fts_idx ON documents USING GIN(search_vector);
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 17:31
+Created: 2015-05-24 Sun 18:06
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
