@@ -20,25 +20,25 @@ Doctopus leans heavily on Postgres – currently for storing its configuration, 
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
-|name|varchar|"PRIMARY KEY"| |
-|created|timestamp|"NOT NULL DEFAULT NOW"| |
-|updated|timestamp|"NOT NULL"| |
+|`name`|varchar|"PRIMARY KEY"| |
+|`created`|timestamp|"NOT NULL DEFAULT NOW"| |
+|`updated`|timestamp|"NOT NULL"| |
 
 ### 2.2 `tentacles`
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
-|name|varchar(50)|"PRIMARY KEY"| |
-|output<sub>root</sub>|varchar(50)| |This is where doctopus will|
+|`name`|varchar(50)|"PRIMARY KEY"| |
+|`output_root`|varchar(50)| |This is where doctopus will|
 | | | |look for the output of html|
 | | | |generation.|
 |`html_commands`|varchar(250)| | |
-|source<sub>control</sub>|varchar(50)| |Which VCS to use|
-|source<sub>location</sub>|varchar(250)| |VCS URI to clone from|
-|entry<sub>point</sub>|varchar(50)| |HTML entrypoint for your app|
-|created|timestamp|"NOT NULL| |
+|`source_control`|varchar(50)| |Which VCS to use|
+|`source_location`|varchar(250)| |VCS URI to clone from|
+|`entry_point`|varchar(50)| |HTML entrypoint for your app|
+|`created`|timestamp|"NOT NULL| |
 | | |DEFAULT NOW"| |
-|updated|timestamp|"NOT NULL"| |
+|`updated`|timestamp|"NOT NULL"| |
 
 ### 2.3 `head_tentacle_mappings`
 
@@ -52,7 +52,7 @@ Spec
 
 Comments
 
-head<sub>name</sub>
+`head_name`
 
 varchar(50)
 
@@ -68,7 +68,7 @@ on delete cascade
 
  
 
-tentacle<sub>name</sub>
+`tentacle_name`
 
 varchar(50)
 
@@ -96,17 +96,17 @@ primary key(head<sub>name</sub>,tentacle<sub>name</sub>)
 
 |Column Name|Data Type|Spec|Comments|
 |:----------|:--------|:---|:-------|
-|name|varchar|PRIMARY KEY| |
-|uri|varchar|NOT NULL| |
-|body|text|NOT NULL| |
-|search<sub>vector</sub>|ts<sub>vector</sub>| | |
-|tentacle<sub>name</sub>|varchar|references tentacles(name)|Foreign key; which|
+|`name`|varchar|PRIMARY KEY| |
+|`uri`|varchar|NOT NULL| |
+|`body`|text|NOT NULL| |
+|`search_vector`|ts<sub>vector</sub>| | |
+|`tentacle_name`|varchar|references tentacles(name)|Foreign key; which|
 | | |on delete cascade|`tentacle` does this|
 | | | |belong to?|
 
 Author: Ross Donaldson
 
-Created: 2015-05-24 Sun 16:59
+Created: 2015-05-24 Sun 17:09
 
 [Emacs](http://www.gnu.org/software/emacs/) 24.5.1 ([Org](http://orgmode.org) mode 8.2.10)
 
