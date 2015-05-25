@@ -33,10 +33,11 @@
              (select-keys (get-in (server-config) [:database :main])
                           [:db :user :password :host :port])))
 
-(declare head-tentacle-mappings)
+(declare head-tentacle-mappings documents)
 (defentity tentacles
   (pk :name)
   (has-many head-tentacle-mappings {:fk :tentacle_name})
+  (has-one documents {:fk :tentacle_name})
   (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
              (if html-commands
