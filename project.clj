@@ -16,9 +16,10 @@
                  [bidi "1.18.10"]
                  [enlive "1.1.5"]
                  [ring/ring-mock "0.2.0"]
-                 [korma "0.4.0"]
+                 [korma "0.4.1"]
                  [clj-time "0.9.0"]
-                 [postgresql/postgresql "8.4-702.jdbc4"]
+                 [org.postgresql/postgresql "9.4-1201-jdbc4"]
+                 [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
