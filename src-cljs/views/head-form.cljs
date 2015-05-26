@@ -1,7 +1,7 @@
 (ns doctopus.views.head-form
   (:require [cljs.core.async :refer [<!]]
             [reagent.core :as reagent :refer [atom]])
-  (:require-macros [clsj.core.async.macros :refer [go]]))
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (defn- get-value
   [event]
