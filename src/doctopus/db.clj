@@ -3,7 +3,7 @@
             [camel-snake-kebab.extras :refer [transform-keys]]
             [clj-time.coerce :refer [to-sql-time]]
             [clj-time.core :as clj-time]
-            [clojure.string :as string :refer [split-lines]]
+            [clojure.string :as str :refer [split-lines]]
             [doctopus.configuration :refer [server-config]]
             [korma.core :refer :all]
             [korma.db :refer [defdb postgres]]
@@ -41,7 +41,7 @@
   (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
              (if html-commands
-               (assoc tentacle :html-commands (string/join "\n" html-commands))
+               (assoc tentacle :html-commands (str/join "\n" html-commands))
                tentacle)))
   (prepare ->snake-keys)
   (transform ->kebab-keys)
@@ -224,15 +224,37 @@
   (insert documents
           (values document)))
 
+;; Manually
+;; (let [sql (str/join ["UPDATE documents"
+;;                      "SET search_vector = to_tsvector('english', body)"
+;;                      "WHERE name = ?"] " ")]
+;;   (exec ))
+(defn update-document-index
+  "The documents table has a column of type tsvector, `search_vector', which is
+  indexed for Full Text Search; this function updates that column, for one
+  document (in the case that a single doc has been modified) or for all
+  documents (for use after loading in a large batch of new docs, for instance)."
+  ([]
+   (update documents
+           (set-fields {:search-vector (raw "to_tsvector('english', body)")})
+           (where {:uri [like "%html"]})))
+  ([document]
+   (update documents
+           (set-fields {:search-vector (raw "to_tsvector('english', body)")})
+           (where {:name (:name document)}))))
+
 (defn update-document!
-  [document]
+  [document update-index?]
   (log/info "Updating document named:" (:name document))
-  (update documents
-          (set-fields document)
-          (where {:name (:name document)})))
+  (let [res (update documents
+                    (set-fields document)
+                    (where {:name (:name document)}))]
+    (if update-index? (update-document-index))
+    res))
 
 (defn save-document!
-  [document]
-  (if-not (empty? (get-document-by-name (:name document)))
-    (update-document! document)
-    (create-document! document)))
+  ([document] (save-document! document true))
+  ([document update-index?]
+   (if-not (empty? (get-document-by-name (:name document)))
+     (update-document! document update-index?)
+     (create-document! document))))
