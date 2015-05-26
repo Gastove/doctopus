@@ -1,4 +1,4 @@
-(ns doctopus.markdown
+(ns doctopus.parsers.markdown
   (:require [markdown.core :as md]))
 
 (defn parse-mardown-file
