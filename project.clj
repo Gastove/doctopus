@@ -20,7 +20,11 @@
                  [clj-time "0.9.0"]
                  [org.postgresql/postgresql "9.4-1201-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
-                 [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]]
+                 [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
+                 [log4j "1.2.15" :exclusions [javax.mail/mail
+                                              javax.jms/jms
+                                              com.sun.jdmk/jmxtools
+                                              com.sun.jmx/jmxri]]]
   :plugins [[lein-marginalia "0.8.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
