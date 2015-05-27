@@ -93,11 +93,11 @@
   ;; Because of the `raw' call used in update-document-index', this table
   ;; specifically needs to *not* have any but its top level keys munged by
   ;; ->snake-keys
+  (prepare add-updated)
   (prepare ->shallow-snake-keys)
   (transform ->kebab-keys)
   (belongs-to tentacles)
   (entity-fields :name :uri :tentacle_name :body))
-
 
 (defn get-tentacle
   [name]
@@ -268,3 +268,9 @@
    (if-not (empty? (get-document-by-name (:name document)))
      (update-document! document update-index?)
      (create-document! document))))
+
+(defn delete-document!
+  [document]
+  (log/warn "Removing document named" (:name document) "!")
+  (delete documents
+          (where {:name (:name document)})))
