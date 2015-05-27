@@ -90,8 +90,10 @@
 
 (defentity documents
   (table :documents)
-  (prepare ->snake-keys)
-  (prepare add-updated)
+  ;; Because of the `raw' call used in update-document-index', this table
+  ;; specifically needs to *not* have any but its top level keys munged by
+  ;; ->snake-keys
+  (prepare ->shallow-snake-keys)
   (transform ->kebab-keys)
   (belongs-to tentacles)
   (entity-fields :name :uri :tentacle_name :body))
