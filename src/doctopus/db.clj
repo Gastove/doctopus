@@ -6,7 +6,7 @@
             [clojure.string :as str :refer [split-lines]]
             [doctopus.configuration :refer [server-config]]
             [korma.core :refer :all]
-            [korma.db :refer [defdb postgres]]
+            [korma.db :refer [defdb postgres default-connection]]
             [taoensso.timbre :as log]))
 
 (defn- now
@@ -29,9 +29,21 @@
   [fields]
   (transform-keys ->snake_case_keyword fields))
 
-(defdb main (postgres
+(defn- ->shallow-snake-keys
+  "Converts only the outermost keys of a map to snake-case keywords"
+  [m]
+  (doall (into {} (map (fn [[k v]][(->snake_case_keyword k) v]) m))))
+
+(defdb main-db (postgres
              (select-keys (get-in (server-config) [:database :main])
                           [:db :user :password :host :port])))
+(defdb test-db (postgres
+                (select-keys (get-in (server-config) [:database :test])
+                             [:db :user :password :host :port])))
+
+(default-connection (if (= "dev" (:nomad/environment (server-config)))
+                      test-db
+                      main-db))
 
 (declare head-tentacle-mappings documents)
 (defentity tentacles
