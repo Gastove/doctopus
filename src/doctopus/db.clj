@@ -232,17 +232,6 @@
   (select documents
           (where {:tentacle_name (:name tentacle)})))
 
-(defn create-document!
-  [document]
-  (log/info "Creating new document named:" (:name document))
-  (insert documents
-          (values document)))
-
-;; Manually
-;; (let [sql (str/join ["UPDATE documents"
-;;                      "SET search_vector = to_tsvector('english', body)"
-;;                      "WHERE name = ?"] " ")]
-;;   (exec ))
 (defn update-document-index
   "The documents table has a column of type tsvector, `search_vector', which is
   indexed for Full Text Search; this function updates that column, for one
@@ -257,13 +246,20 @@
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})
            (where {:name (:name document)}))))
 
+(defn create-document!
+  [document]
+  (log/info "Creating new document named:" (:name document))
+  (insert documents
+          (values document))
+  (update-document-index document))
+
 (defn update-document!
   [document update-index?]
   (log/info "Updating document named:" (:name document))
   (let [res (update documents
                     (set-fields document)
                     (where {:name (:name document)}))]
-    (if update-index? (update-document-index))
+    (if update-index? (update-document-index document))
     res))
 
 (defn save-document!
