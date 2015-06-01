@@ -1,20 +1,25 @@
 (ns doctopus.main
-  (:require [doctopus.views.head-form :as head-form]
-            [goog.dom :as dom]
+  (:require [goog.dom :as dom]
+            [doctopus.views.head-form :refer [head-form]]
             [reagent.core :as reagent]))
 
-(enable-console-print!)
+;(enable-console-print!)
+
+(def pages {:add-head head-form})
 
 (defn- get-app-state
   []
   (-> (dom/getElement "app-state")
       (.-textContent)
-      (JSON/parse)
+      (js/JSON.parse)
       (js->clj :keywordize-keys true)))
 
-(defn init
-  []
-  (let [app-state (get-app-state)]
-    (println app-state)))
+(defn- get-page-component
+  [app-state]
+  (((keyword (:page app-state)) pages)) app-state)
 
-(init)
+(defn init
+  [app-state]
+    (reagent/render-component [head-form] (dom/getElement "app-content")))
+
+(init (get-app-state))

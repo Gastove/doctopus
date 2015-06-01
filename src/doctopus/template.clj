@@ -4,7 +4,9 @@
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
-            [ring.util.anti-forgery :as csrf]))
+            [clojure.data.json :as json]
+            [ring.util.anti-forgery :as csrf]
+            [ring.middleware.anti-forgery :as csrf-token]))
 
 (defn- make-anchor
   "given a uri and text, construct an anchor element"
@@ -42,10 +44,10 @@
   (enlive/sniptest main [[:body enlive/first-of-type]] (enlive/prepend frame)))
 
 (deftemplate base-template "templates/base.html"
-  [body]
+  [context]
   [:h1] (enlive/wrap :a)
   [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
-  [:body] (enlive/content body))
+  [:#app-state] (enlive/content (json/write-str context)))
 
 (defsnippet index-snippet "templates/index.html"
   [:#doctopus-main]
@@ -69,12 +71,6 @@
   [head-list]
   [:#doctopus-heads] (enlive/content (map head-li head-list)))
 
-(defsnippet add-head-snippet "templates/add-head.html"
-  [:form]
-  []
-  [:form] (enlive/set-attr :action "/add-head")
-  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
-
 (defsnippet add-tentacle-snippet "templates/add-tentacle.html"
   [:form]
   [doctopus]
@@ -84,8 +80,8 @@
 
 (defn- html
   "wraps the given body in the base template"
-  [body]
-  (apply str (base-template body)))
+  [context]
+  (apply str (base-template context)))
 
 (defn index
   "returns an HTML string for main doctopus navigation"
@@ -117,7 +113,9 @@
 (defn add-head
   "creates the page with form for adding a Doctopus head"
   []
-  (html (add-head-snippet)))
+  (html {:page "add-head"
+         :submit "/add-head"
+         :csrf csrf-token/*anti-forgery-token*}))
 
 (defn add-tentacle
   "creates the page with form for adding a Doctopus tentacle"
