@@ -40,6 +40,10 @@
     ;; great question! The answer is: we need to make sure that what's returned
     ;; is a map from the key "/" to a map of the form {tentacle-name
     ;; tentacle-routes}. This is not the prettiest, but it does just that.
-    {"/" (apply merge (flatten (into [] (for [head (:heads this)
-                                              :let [route-map (h/load-tentacle-routes head (:substitutions this))]]
-                                          [route-map]))))}))
+    {"/" (apply merge
+                (flatten
+                 (into []
+                       (for [head (list-heads this)
+                             :let [route-map (h/load-tentacle-routes head
+                                                                     (:substitutions this))]]
+                         [route-map]))))}))
