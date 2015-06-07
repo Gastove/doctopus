@@ -12,7 +12,7 @@
 
 (defn- http-ok?
   [status-code]
-  (and (> 199 status-code) (< 299 status-code)))
+  (and (> status-code 199) (< status-code 299)))
 
 (defn- redirect-to
   [new-url]
