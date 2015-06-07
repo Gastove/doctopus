@@ -6,7 +6,7 @@
 
 (defn- get-value
   [event]
-  (.-target.value event))
+  (-> event .-target .-value))
 
 (def form-data (atom {}))
 
@@ -40,15 +40,17 @@
 
 (defn head-input
   []
-  (let [{:name head-name} @form-data]
-    [:input {:type "text"
-             :value head-name
-             :on-change (fn [ev]
-                          (swap! form-data assoc :name (get-value ev)))}]))
+  [:input {:type "text"
+           :value (:name @form-data)
+           :id "head-name"
+           :on-change (fn [ev]
+                        (swap! form-data assoc :name (get-value ev)))}])
 
 (defn submit-button
   [submit-url]
-  [:input {:type "button" :value "save" :on-click #(validate-form submit-url)}])
+  [:input.btn.medium.secondary {:type "button"
+           :value "Save"
+           :on-click #(validate-form submit-url)}])
 
 (defn head-form
   ([{:keys [csrf submit-url original-name] :or {original-name ""}}]
@@ -56,6 +58,10 @@
       (swap! form-data assoc :original-name original-name
                              :__anti-forgery-token csrf)
       (fn []
-        [:div
-          [head-input]
-          [submit-button submit-url]]))))
+        [:form.main
+          [:div
+            [:fieldset
+              [:div
+                [:label {:for "head-name"} "Head Name"]
+                [head-input]]]
+            [submit-button submit-url]]]))))
