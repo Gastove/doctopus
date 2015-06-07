@@ -18,10 +18,16 @@
   [new-url]
   (set! js/window.location.href new-url))
 
+(defn- show-form-error
+  [error]
+  (println (str error)))
+
 (defn- submit-form
   [submit-url data]
   (go
-    (let [response (<! (http/post submit-url {:json-params data}))]
+    (let [response (<! (http/post submit-url
+                                  {:json-params data
+                                   :headers {"X-CSRF-Token" (:csrf data)}}))]
       (if (http-ok? (:status response))
         (redirect-to (:success-url response))
         (show-form-error (:error response))))))
@@ -30,13 +36,16 @@
   [errors]
   (println errors))
 
+(defn- get-errors
+  [form-data]
+  [])
+
 (defn validate-form
   [submit-url]
-  (fn []
-    (let [data @form-data errors (get-errors data)]
-      (if (empty? errors)
-        (submit-form submit-url data)
-        (render-errors errors)))))
+  (let [data @form-data errors (get-errors data)]
+    (if (empty? errors)
+      (submit-form submit-url data)
+      (render-errors errors))))
 
 (defn head-input
   []
@@ -56,7 +65,8 @@
   [{:keys [csrf submit-url original-name] :or {original-name ""}}]
     (do
       (swap! form-data assoc :original-name original-name
-                             :__anti-forgery-token csrf)
+                             :name original-name
+                             :csrf csrf)
       (fn []
         [:form.main
           [:div

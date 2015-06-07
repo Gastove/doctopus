@@ -4,10 +4,10 @@
             [doctopus.views.index :refer [main]]
             [reagent.core :as reagent]))
 
-;(enable-console-print!)
+(enable-console-print!)
 
 (def pages {:add-head head-form
-            :edit-head head-form
+            :head-page head-form
             :index main})
 
 (defn- get-app-state

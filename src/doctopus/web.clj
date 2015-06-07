@@ -74,8 +74,8 @@
      (serve-html (str "ADD A HEAD: " head-name))))
 
 (defn serve-head
-  [_]
-  (serve-html (templates/head-page doctopus)))
+  [params]
+  (serve-html (templates/head-page (get-in params [:route-params :head-name]))))
 
 (defn serve-all-heads
   [_]
@@ -96,9 +96,9 @@
                   "index.html"   {:get serve-index}
                   "assets"       (->Resources {:prefix "public/assets"})
                   "frame.html"   {:get serve-iframe}
-                  "heads"        {"/"           {:get serve-all-heads}
-                                  ""            {:get serve-all-heads}
-                                  [:head-name]  {:get serve-head}}
+                  "heads"        {"/" {""            {:get serve-all-heads}
+                                       [:head-name]  {:get serve-head}}
+                                  ""            {:get serve-all-heads}}
                   "add-head"     {:get serve-add-head-form :post add-head}
                   "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
                   "docs"         (load-routes doctopus)}])

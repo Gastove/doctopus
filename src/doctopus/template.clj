@@ -53,7 +53,7 @@
   "creates the page with form for adding a Doctopus head"
   []
   (html {:page "add-head"
-         :submit "/add-head"
+         :submit-url "/add-head"
          :csrf csrf-token/*anti-forgery-token*}))
 
 (defn tentacle-context
@@ -71,9 +71,11 @@
          :heads (map head-context (list-heads doctopus))}))
 
 (defn head-page
-  [head]
+  [head-name]
   (html {:page "head-page"
-         :head head}))
+         :submit-url "/add-head"
+         :original-name head-name
+         :csrf csrf-token/*anti-forgery-token*}))
 
 (defn index
   [doctopus]
