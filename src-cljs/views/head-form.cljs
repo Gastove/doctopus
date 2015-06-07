@@ -40,11 +40,11 @@
 
 (defn head-input
   []
-  [:input {:type "text"
-           :value (:name @form-data)
-           :id "head-name"
-           :on-change (fn [ev]
-                        (swap! form-data assoc :name (get-value ev)))}])
+  [:input#head-name
+   {:type "text"
+    :value (:name @form-data)
+    :on-change (fn [ev]
+                 (swap! form-data assoc :name (get-value ev)))}])
 
 (defn submit-button
   [submit-url]
@@ -53,7 +53,7 @@
            :on-click #(validate-form submit-url)}])
 
 (defn head-form
-  ([{:keys [csrf submit-url original-name] :or {original-name ""}}]
+  [{:keys [csrf submit-url original-name] :or {original-name ""}}]
     (do
       (swap! form-data assoc :original-name original-name
                              :__anti-forgery-token csrf)
@@ -64,4 +64,4 @@
               [:div
                 [:label {:for "head-name"} "Head Name"]
                 [head-input]]]
-            [submit-button submit-url]]]))))
+            [submit-button submit-url]]])))

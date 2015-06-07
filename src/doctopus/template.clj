@@ -8,30 +8,6 @@
             [ring.util.anti-forgery :as csrf]
             [ring.middleware.anti-forgery :as csrf-token]))
 
-(defn- make-anchor
-  "given a uri and text, construct an anchor element"
-  [href text]
-  [:a {:href href} text])
-
-(defn- head-li
-  "constructs a list item with head link"
-  [head]
-  (let [head-name (:name head)]
-    (enlive/html [:li (make-anchor (str "/heads/" head-name) head-name)])))
-
-(defn- head-option
-  "constructs an option element with head"
-  [head]
-  (let [head-name (:name head)]
-    (enlive/html [:option {:value head-name} head-name])))
-
-(defn- tentacle-li
-  "constructs a list item with tentacle link"
-  [tentacle]
-  (let [tentacle-name (:name tentacle)]
-    (enlive/html
-     [:li (make-anchor (get-html-entrypoint tentacle) tentacle-name)])))
-
 (defn- iframe-html
   "constructs an iframe element with relevant src attribute"
   []
@@ -49,44 +25,10 @@
   [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
   [:#app-state] (enlive/content (json/write-str context)))
 
-(defsnippet index-snippet "templates/index.html"
-  [:#doctopus-main]
-  [doctopus]
-  [:#doctopus-heads] (enlive/content (map head-li (list-heads doctopus)))
-  [:#doctopus-tentacles] (enlive/content
-                          (map tentacle-li
-                               (flatten (list-tentacles doctopus)))))
-
-(defsnippet head-snippet "templates/head.html"
-  [:#doctopus-main]
-  [head-name doctopus]
-  [:#doctopus-head-name] (enlive/content head-name)
-  [:#doctopus-tentacles] (enlive/content
-                          (map tentacle-li
-                               (flatten
-                                (list-tentacles-by-head doctopus head-name)))))
-
-(defsnippet heads-list-snippet "templates/head-list.html"
-  [:#doctopus-main]
-  [head-list]
-  [:#doctopus-heads] (enlive/content (map head-li head-list)))
-
-(defsnippet add-tentacle-snippet "templates/add-tentacle.html"
-  [:form]
-  [doctopus]
-  [:form] (enlive/set-attr :action "/add-tentacle")
-  [:select] (enlive/content (map head-option (list-heads doctopus)))
-  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
-
 (defn- html
   "wraps the given body in the base template"
   [context]
   (apply str (base-template context)))
-
-(defn index
-  "returns an HTML string for main doctopus navigation"
-  [doctopus]
-  (html (index-snippet doctopus)))
 
 (defn project-frame
   "returns a string of HTML suitable for serving an iframe with doctopus
@@ -100,15 +42,12 @@
   [html-str]
   (apply str (prepend-frame html-str (iframe-html))))
 
-(defn heads-list
-  "creates a page for listing all heads"
-  [doctopus]
-  (html (heads-list-snippet (list-heads doctopus))))
-
-(defn head-page
-  "creates the page for a Doctopus head"
-  [head-name doctopus]
-  (html (head-snippet head-name doctopus)))
+(defn add-tentacle
+  "creates the page with form for adding a Doctopus head"
+  []
+  (html {:page "add-tentacle"
+         :submit "/add-tentacle"
+         :csrf csrf-token/*anti-forgery-token*}))
 
 (defn add-head
   "creates the page with form for adding a Doctopus head"
@@ -117,7 +56,27 @@
          :submit "/add-head"
          :csrf csrf-token/*anti-forgery-token*}))
 
-(defn add-tentacle
-  "creates the page with form for adding a Doctopus tentacle"
+(defn tentacle-context
+  [tentacle]
+  {:name (:name tentacle) :location (get-html-entrypoint tentacle)})
+
+(defn head-context
+  [head]
+  (let [head-name (:name head)]
+    {:name head-name :location (str "/heads/" head-name)}))
+
+(defn heads-list
   [doctopus]
-  (html (add-tentacle-snippet doctopus)))
+  (html {:page "heads-list"
+         :heads (map head-context (list-heads doctopus))}))
+
+(defn head-page
+  [head]
+  (html {:page "head-page"
+         :head head}))
+
+(defn index
+  [doctopus]
+  (html {:page "index"
+         :tentacles (map tentacle-context (list-tentacles doctopus))
+         :heads (map head-context (list-heads doctopus))}))

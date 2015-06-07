@@ -68,23 +68,22 @@
   [_]
   (serve-html (templates/add-head)))
 
-(defn serve-add-tentacle-form
-  [_]
-  (serve-html (templates/add-tentacle doctopus)))
-
 (defn add-head
   [request]
    (let [head-name (get (:form-params request) "name")]
      (serve-html (str "ADD A HEAD: " head-name))))
 
 (defn serve-head
-  [request]
-  (let [head-name (get-in request [:params :head-name])]
-    (serve-html (templates/head-page head-name doctopus))))
+  [_]
+  (serve-html (templates/head-page doctopus)))
 
 (defn serve-all-heads
   [_]
   (serve-html (templates/heads-list doctopus)))
+
+(defn serve-add-tentacle-form
+  [_]
+  (serve-html (templates/add-tentacle)))
 
 (defn add-tentacle
   [request]
