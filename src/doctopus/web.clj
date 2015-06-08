@@ -5,6 +5,7 @@
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.template :as templates]
             [doctopus.files.predicates :refer [html?]]
+            [doctopus.db :as db]
             [doctopus.db.schema :as schema]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
@@ -12,6 +13,7 @@
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
             [taoensso.timbre :as log]
+            [clojure.data.json :as json]
             [clojure.walk :refer [keywordize-keys]])
   (:import [doctopus.doctopus Doctopus]))
 
@@ -39,6 +41,15 @@
     (if-let [response (handler request)]
       response
       (four-oh-four (:uri request)))))
+
+(defn serve-json
+  "Turns a clojure data-structure into JSON and serves it with the correct
+   content-type"
+  [data]
+  (-> data
+      (json/write-str)
+      (ring-response/response)
+      (ring-response/content-type "application/json")))
 
 (defn serve-html
   "Just returns html, with the content-type set correctly"
@@ -71,7 +82,9 @@
 (defn add-head
   [request]
    (let [head-name (get (:form-params request) "name")]
-     (serve-html (str "ADD A HEAD: " head-name))))
+     (do
+       (db/save-head! {:name head-name})
+       (serve-json {:success-url (str "/heads/" head-name)}))))
 
 (defn serve-head
   [params]
@@ -83,7 +96,7 @@
 
 (defn serve-add-tentacle-form
   [_]
-  (serve-html (templates/add-tentacle)))
+  (serve-html (templates/add-tentacle doctopus)))
 
 (defn add-tentacle
   [request]

@@ -29,14 +29,14 @@
   [form-data]
   [])
 
-(defn validate-form
+(defn- validate-form
   [submit-url]
   (let [data @form-data errors (get-errors data)]
     (if (empty? errors)
       (submit-form submit-url data)
       (render-errors errors))))
 
-(defn head-input
+(defn- head-input
   []
   [:input#head-name
    {:type "text"
@@ -44,11 +44,11 @@
     :on-change (fn [ev]
                  (swap! form-data assoc :name (get-value ev)))}])
 
-(defn submit-button
+(defn- submit-button
   [submit-url]
   [:input.btn.medium.secondary {:type "button"
-           :value "Save"
-           :on-click #(validate-form submit-url)}])
+                                :value "Save"
+                                :on-click #(validate-form submit-url)}])
 
 (defn head-form
   [{:keys [csrf submit-url original-name] :or {original-name ""}}]

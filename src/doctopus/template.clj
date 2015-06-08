@@ -44,9 +44,10 @@
 
 (defn add-tentacle
   "creates the page with form for adding a Doctopus head"
-  []
+  [doctopus]
   (html {:page "add-tentacle"
          :submit "/add-tentacle"
+         :heads (list-heads doctopus)
          :csrf csrf-token/*anti-forgery-token*}))
 
 (defn add-head
@@ -73,7 +74,7 @@
 (defn head-page
   [head-name]
   (html {:page "head-page"
-         :submit-url "/add-head"
+         :submit-url "/update-head"
          :original-name head-name
          :csrf csrf-token/*anti-forgery-token*}))
 
