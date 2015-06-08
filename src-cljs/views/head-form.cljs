@@ -1,11 +1,13 @@
 (ns doctopus.views.head-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [doctopus.util :as util :refer [get-value http-ok? redirect-to]]
+            [doctopus.util :refer [get-value http-ok? redirect-to]]
+            [doctopus.view.common :refer [button]]
             [reagent.core :as reagent :refer [atom]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def form-data (atom {}))
+(def csrf-token (atom ""))
 
 (defn- show-form-error
   [error]
@@ -16,7 +18,7 @@
   (go
     (let [response (<! (http/post submit-url
                                   {:json-params data
-                                   :headers {"X-CSRF-Token" (:csrf data)}}))]
+                                   :headers {"X-CSRF-Token" @csrf-token}}))]
       (if (http-ok? (:status response))
         (redirect-to (:success-url response))
         (show-form-error (:error response))))))
@@ -41,21 +43,14 @@
   [:input#head-name
    {:type "text"
     :value (:name @form-data)
-    :on-change (fn [ev]
-                 (swap! form-data assoc :name (get-value ev)))}])
-
-(defn- submit-button
-  [submit-url]
-  [:input.btn.medium.secondary {:type "button"
-                                :value "Save"
-                                :on-click #(validate-form submit-url)}])
+    :on-change #(swap! form-data assoc :name (get-value %))}])
 
 (defn head-form
   [{:keys [csrf submit-url original-name] :or {original-name ""}}]
     (do
       (swap! form-data assoc :original-name original-name
-                             :name original-name
-                             :csrf csrf)
+                             :name original-name)
+      (reset! csrf-token csrf)
       (fn []
         [:form.main
           [:div
@@ -63,4 +58,4 @@
               [:div
                 [:label {:for "head-name"} "Head Name"]
                 [head-input]]]
-            [submit-button submit-url]]])))
+            [button #(validate-form submit-url)]]])))

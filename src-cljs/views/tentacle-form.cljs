@@ -1,17 +1,27 @@
 (ns doctopus.views.tentacle-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [doctopus.util :as util :refer [get-value http-ok? redirect-to]]
+            [doctopus.util :refer [get-value http-ok? redirect-to]]
+            [doctopus.views.common :refer [button]]
             [reagent.core :as reagent :refer [atom]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (def form-data (atom {}))
+(def csrf-token (atom ""))
 
-(defn- submit-button
+(defn- submit-form
+  [data submit-url]
+  (go
+   (let [response (<! (http/post submit-url
+                                 {:json-params data
+                                  :headers {"X-CSRF-Token" @csrf-token}}))]
+     (if (http-ok? (:status response))
+       (redirect-to (:success-url response))
+       (show-form-error (:error response))))))
+
+(defn- validate-form
   [submit-url]
-  [:input.btn.medium.secondary {:type "button"
-                                :value "Save"
-                                :on-click #(validate-form submit-url)}])
+  (submit-form @form-data submit-url))
 
 (defn- head-selector
   [heads]
@@ -24,8 +34,8 @@
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
   (do
       (swap! form-data assoc :original-name original-name
-                             :name original-name
-                             :csrf csrf)
+                             :name original-name)
+      (reset! csrf-token csrf)
       (fn []
         [:form.main
          [:fieldset
@@ -41,4 +51,4 @@
           [:div
            [:label {:for "tentacle-command"} "Tentacle Command"]
            [tentacle-command-input]]]
-         [submit-button submit-url]])))
+         [button #(validate-form submit-url)]])))
