@@ -1,22 +1,11 @@
 (ns doctopus.views.head-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
+            [doctopus.util :as util :refer [get-value http-ok? redirect-to]]
             [reagent.core :as reagent :refer [atom]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(defn- get-value
-  [event]
-  (-> event .-target .-value))
-
 (def form-data (atom {}))
-
-(defn- http-ok?
-  [status-code]
-  (and (> status-code 199) (< status-code 299)))
-
-(defn- redirect-to
-  [new-url]
-  (set! js/window.location.href new-url))
 
 (defn- show-form-error
   [error]
