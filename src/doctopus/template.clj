@@ -1,6 +1,5 @@
 (ns doctopus.template
-  (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
-            [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+  (:require [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
@@ -42,12 +41,22 @@
   [html-str]
   (apply str (prepend-frame html-str (iframe-html))))
 
+(defn- tentacle-context
+  [tentacle]
+  {:name (:name tentacle) :location (get-html-entrypoint tentacle)})
+
+(defn head-context
+  [head]
+  (let [head-name (:name head)]
+    {:name head-name :location (str "/heads/" head-name)}))
+
 (defn add-tentacle
-  "creates the page with form for adding a Doctopus head"
+  "creates the page with form for adding a Doctopus tentacle"
   [doctopus]
   (html {:page "add-tentacle"
          :submit "/add-tentacle"
-         :heads (list-heads doctopus)
+         :heads (map head-context (list-heads doctopus))
+         :tentacles (map tentacle-context (list-tentacles doctopus))
          :csrf csrf-token/*anti-forgery-token*}))
 
 (defn add-head
@@ -56,15 +65,6 @@
   (html {:page "add-head"
          :submit-url "/add-head"
          :csrf csrf-token/*anti-forgery-token*}))
-
-(defn tentacle-context
-  [tentacle]
-  {:name (:name tentacle) :location (get-html-entrypoint tentacle)})
-
-(defn head-context
-  [head]
-  (let [head-name (:name head)]
-    {:name head-name :location (str "/heads/" head-name)}))
 
 (defn heads-list
   [doctopus]

@@ -2,7 +2,7 @@
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to]]
-            [doctopus.view.common :refer [button]]
+            [doctopus.views.common :refer [button]]
             [reagent.core :as reagent :refer [atom]])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 

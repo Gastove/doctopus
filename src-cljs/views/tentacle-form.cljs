@@ -30,6 +30,27 @@
       (let [head-name (:name head)]
         ^{:key head-name} [:option {:value head-name} head-name]))])
 
+(defn- input
+  [id initial-value on-change]
+  [(keyword (str "input#" id)) {:type "text"
+                                :value initial-value
+                                :on-change on-change}])
+
+(defn- tentacle-input
+  []
+  (input "tentacle-name" (:name @form-data)
+         #(swap! form-data assoc :name (get-value %))))
+
+(defn- tentacle-source-input
+  []
+  (input "tentacle-source" (:source @form-data)
+         #(swap! form-data assoc :source (get-value %))))
+
+(defn- tentacle-command-input
+  []
+  [:textarea#tentacle-command
+   {:on-change #(swap! form-data assoc :command (get-value %))}])
+
 (defn tentacle-form
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
   (do

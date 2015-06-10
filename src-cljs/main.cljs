@@ -1,13 +1,15 @@
 (ns doctopus.main
   (:require [goog.dom :as dom]
             [doctopus.views.head-form :refer [head-form]]
+            [doctopus.views.tentacle-form :refer [tentacle-form]]
             [doctopus.views.index :refer [main]]
             [reagent.core :as reagent]))
 
 (enable-console-print!)
 
 (def pages {:add-head head-form
-            :head-page head-form
+            :add-tentacle tentacle-form
+            :edit-tentacle tentacle-form
             :index main})
 
 (defn- get-app-state
