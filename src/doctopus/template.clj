@@ -61,9 +61,10 @@
 
 (defn add-head
   "creates the page with form for adding a Doctopus head"
-  []
+  [doctopus]
   (html {:page "add-head"
          :submit-url "/add-head"
+         :heads (map head-context (list-heads doctopus))
          :csrf csrf-token/*anti-forgery-token*}))
 
 (defn heads-list

@@ -77,7 +77,7 @@
 
 (defn serve-add-head-form
   [_]
-  (serve-html (templates/add-head)))
+  (serve-html (templates/add-head doctopus)))
 
 (defn add-head
   [request]

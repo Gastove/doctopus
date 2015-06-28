@@ -30,6 +30,7 @@
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
   :cljsbuild {:builds [{:source-paths ["src-cljs"]
+                        :incremental false
                         :compiler {:main doctopus.main
                                    :source-map "resources/public/assets/scripts/main.js.map"
                                    :output-to "resources/public/assets/scripts/main.js"
