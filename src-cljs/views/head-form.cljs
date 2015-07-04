@@ -1,7 +1,7 @@
 (ns doctopus.views.head-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [doctopus.util :refer [get-value http-ok? redirect-to not-in?]]
+            [doctopus.util :refer [get-value http-ok? redirect-to in?]]
             [doctopus.views.common :refer [button]]
             [reagent.core :as reagent :refer [atom]])
             (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -10,13 +10,9 @@
 (def csrf-token (atom ""))
 (def existing-heads (atom []))
 
-(defn- name-unique?
+(defn- name-taken?
   [name heads]
-  (not-in? name (map :name heads)))
-
-(defn- show-form-error
-  [error]
-  (println (str error)))
+  (in? name (map :name heads)))
 
 (defn- submit-form
   [submit-url]
@@ -29,19 +25,26 @@
           (redirect-to (:success-url response))
           (show-form-error (:error response)))))))
 
-(defn- head-input-element
-  ([] (head-input-element "input"))
-  ([class-name]
-    [(keyword (str "input#head-name." class-name))
-     {:type "text"
-      :value (:name @form-data)
-      :on-change #(swap! form-data assoc :name (get-value %))}]))
+(enable-console-print!)
+
+(defn- name-invalid?
+  [head-name]
+  (and (not= head-name "") (->> head-name
+      (re-matches #"[\w-_]+")
+      nil?)))
 
 (defn- head-input
   [data]
-  (if (name-unique? (:name data) @existing-heads)
-    [:div [head-input-element]]
-    [:div [head-input-element "error"] [:p "Head name already exists"]]))
+  (let [head-name (:name data)]
+    [:div
+      [:input#head-name
+       {:type "text"
+        :value head-name
+        :on-change #(swap! form-data assoc :name (get-value %))}]
+      (when (name-invalid? head-name)
+                           [:p "Head name invalid"])
+      (when (name-taken? head-name @existing-heads)
+                           [:p "Head name taken"])]))
 
 (defn head-form
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]

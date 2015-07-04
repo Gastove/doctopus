@@ -14,6 +14,6 @@
   [new-url]
   (set! js/window.location.href new-url))
 
-(defn not-in?
+(defn in?
   [item coll]
-  (not-any? #(= item %) coll))
+  (not (not-any? #(= item %) coll)))
