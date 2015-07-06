@@ -9,10 +9,11 @@
 (def form-data (atom {}))
 (def csrf-token (atom ""))
 (def existing-heads (atom []))
+(def errors (atom []))
 
 (defn- name-taken?
-  [name heads]
-  (in? name (map :name heads)))
+  [head-name heads]
+  (in? head-name (map :name heads)))
 
 (defn- submit-form
   [submit-url]
@@ -24,8 +25,6 @@
         (if (http-ok? (:status response))
           (redirect-to (:success-url response))
           (show-form-error (:error response)))))))
-
-(enable-console-print!)
 
 (defn- name-invalid?
   [head-name]
