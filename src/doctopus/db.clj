@@ -35,8 +35,8 @@
   (doall (into {} (map (fn [[k v]][(->snake_case_keyword k) v]) m))))
 
 (defdb main-db (postgres
-             (select-keys (get-in (server-config) [:database :main])
-                          [:db :user :password :host :port])))
+                (select-keys (get-in (server-config) [:database :main])
+                             [:db :user :password :host :port])))
 (defdb test-db (postgres
                 (select-keys (get-in (server-config) [:database :test])
                              [:db :user :password :host :port])))
@@ -246,6 +246,9 @@
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})
            (where {:name (:name document)}))))
 
+
+;; ### Document
+;; `document'
 (defn create-document!
   [document]
   (log/info "Creating new document named:" (:name document))

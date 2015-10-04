@@ -1,32 +1,14 @@
 (ns doctopus.db.schema
+  "Define and bootstrap the Doctopus DB Schema."
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as sql]
             [clojure.string :as str]
-            [doctopus.configuration :refer [server-config]]
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :as t]
-            [taoensso.timbre :as log]))
-
-(defn- get-subname
-  "pull database options out of the local config"
-  [{:keys [host port db] :or {host "localhost" port 5432 db "doctopus"}}]
-  (let [tpl "//%s:%d/%s"]
-    (format tpl host port db)))
-
-(defn build-db-spec
-  [{:keys [user password] :as cfg-map}]
-  {:classname "org.postgresql.Driver"
-   :subprotocol "postgresql"
-   :subname (get-subname cfg-map)
-   :user user
-   :password password})
-
-(defn build-db-spec-by-name
-  [db-name]
-  (let [db-map (get-in (server-config) [:database db-name])]
-    (build-db-spec db-map)))
+            [taoensso.timbre :as log]
+            [doctopus.db.jdbc :refer [build-db-spec-by-name]]))
 
 (defn table-created?
   "check our database for a table"
