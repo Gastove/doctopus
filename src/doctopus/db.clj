@@ -40,13 +40,13 @@
   (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
              (if html-commands
-               (assoc tentacle :html-commands (string/join "\n" html-commands))
+               (assoc tentacle :html-commands (pr-str html-commands))
                tentacle)))
   (prepare ->snake-keys)
   (transform ->kebab-keys)
   (transform (fn [{html-commands :html-commands :as tentacle}]
                (if html-commands
-                 (assoc tentacle :html-commands (split-lines html-commands))
+                 (assoc tentacle :html-commands (read-string html-commands))
                  tentacle))))
 
 
