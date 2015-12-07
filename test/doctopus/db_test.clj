@@ -3,6 +3,7 @@
             [doctopus
              [db :refer :all]
              [test-utilities :as utils]]
+            [doctopus.db.jdbc :as jdbc]
             [doctopus.db.schema :refer :all]
             [doctopus.test-database :refer [database-fixture truncate!]]))
 
@@ -29,12 +30,12 @@
 
 (deftest schema
   (testing "get-subname fills in defaults"
-    (is (= (#'doctopus.db.schema/get-subname {}) "//localhost:5432/doctopus"))
-    (is (= (#'doctopus.db.schema/get-subname {:host "meow"})
+    (is (= (#'doctopus.db.jdbc/get-subname {}) "//localhost:5432/doctopus"))
+    (is (= (#'doctopus.db.jdbc/get-subname {:host "meow"})
            "//meow:5432/doctopus"))
-    (is (= (#'doctopus.db.schema/get-subname {:host "meow" :db "cats"})
+    (is (= (#'doctopus.db.jdbc/get-subname {:host "meow" :db "cats"})
            "//meow:5432/cats"))
-    (is (= (#'doctopus.db.schema/get-subname {:host "meow" :db "cats" :port 31})
+    (is (= (#'doctopus.db.jdbc/get-subname {:host "meow" :db "cats" :port 31})
            "//meow:31/cats"))))
 
 (deftest db-crud-joins-and-lookups
