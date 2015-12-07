@@ -3,7 +3,7 @@
   :url "http://github.com/Gastove/doctopus"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.6.0"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
                  [joda-time/joda-time "2.6"]
                  [markdown-clj "0.9.63"]
                  [me.raynes/fs "1.4.6"]
@@ -18,14 +18,14 @@
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.1"]
                  [clj-time "0.9.0"]
-                 [org.postgresql/postgresql "9.4-1201-jdbc4"]
+                 [org.postgresql/postgresql "9.4-1206-jdbc42"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
                  [log4j "1.2.15" :exclusions [javax.mail/mail
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
                                               com.sun.jmx/jmxri]]]
-  :plugins [[lein-marginalia "0.8.0"]]
+  :plugins [[michaelblume/lein-marginalia "0.9.0"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
   :profiles {:uberjar {:aot :all}})

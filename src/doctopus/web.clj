@@ -5,6 +5,7 @@
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.template :as templates]
             [doctopus.files.predicates :refer [html?]]
+            [doctopus.db.schema :as schema]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
@@ -53,7 +54,7 @@
 (def substitutions {"$URL_ROOT"  (:ip (server-config))})
 
 ;; Let's start bootstrapping!
-(def doctopus (bootstrap-heads (Doctopus. (server-config) substitutions)))
+(def doctopus (Doctopus. (server-config) substitutions))
 
 (defn serve-index
   [_]
@@ -136,5 +137,9 @@
 (defn -main
   []
   (let [{:keys [port]} (server-config)]
+    (log/info "Checking DB is set up...")
+    (schema/bootstrap)
+    (log/info "Bootstrapping heads")
+    (bootstrap-heads doctopus)
     (log/info "Starting HTTP server on port" port)
     (server/run-server application {:port port})))
