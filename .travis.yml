@@ -3,6 +3,8 @@ lein: lein2
 jdk:
   - oraclejdk7
   - oraclejdk8
+  - openjdk7
+  - openjdk8
 env: NOMAD_ENV=travis
 addons:
   postgresql: "9.3"
