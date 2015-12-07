@@ -60,8 +60,6 @@
   HeadMethods
   (list-tentacles [this subs-map]
     (let [tentacle-maps (db/get-tentacles-for-head this)
-          ;;tentacle-configs (for [cfg-map tentacle-maps]
-          ;;                   (parse-tentacle-config-map cfg-map subs-map))
           tentacles (map map->Tentacle tentacle-maps)]
       (doall tentacles)))
   (bootstrap-tentacles [this]
