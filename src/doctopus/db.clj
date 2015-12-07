@@ -41,7 +41,8 @@
                 (select-keys (get-in (server-config) [:database :test])
                              [:db :user :password :host :port])))
 
-(default-connection (if (= "dev" (:nomad/environment (server-config)))
+(default-connection (if (or (= "dev" (:nomad/environment (server-config)))
+                            (= "travis" (:nomad/environment (server-config))))
                       test-db
                       main-db))
 

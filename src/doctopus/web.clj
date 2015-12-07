@@ -1,18 +1,18 @@
 (ns doctopus.web
   (:require [bidi.ring :as bidi :refer [->Resources]]
             [clojure.java.io :as io]
+            [clojure.walk :refer [keywordize-keys]]
             [doctopus.configuration :refer [server-config]]
-            [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
-            [doctopus.template :as templates]
-            [doctopus.files.predicates :refer [html?]]
             [doctopus.db.schema :as schema]
+            [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
+            [doctopus.files.predicates :refer [html?]]
+            [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log]
-            [clojure.walk :refer [keywordize-keys]])
+            [taoensso.timbre :as log])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
@@ -131,14 +131,21 @@
          wrap-error-page
          trace/wrap-stacktrace))))
 
+(defn parse-env []
+  (case (:nomad/environment (server-config))
+    ["dev" "travis"] :test
+    ["prod"] :main
+    :test))
+
 ;; # Http Server
 ;; This is what lifts the whole beast off the ground. Reads its configs out of
 ;; resources/configuration.edn
 (defn -main
   []
-  (let [{:keys [port]} (server-config)]
+  (let [{:keys [port]} (server-config)
+        env (parse-env)]
     (log/info "Checking DB is set up...")
-    (schema/bootstrap)
+    (schema/bootstrap env)
     (log/info "Bootstrapping heads")
     (bootstrap-heads doctopus)
     (log/info "Starting HTTP server on port" port)
