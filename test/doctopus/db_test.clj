@@ -66,7 +66,7 @@
       (is (= 5 (count (get-all-tentacles))) "We should have 5 saved tentacles"))
 
     (testing "Can we save documents?"
-      (is (< 1 (count (save-document! mock-doc)))
+      (is (= 1 (save-document! mock-doc))
           "We should get back a single map representing the created doc"))
 
     (testing "Can we load a document by name? By URI? By tentacle?"
