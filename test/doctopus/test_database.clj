@@ -1,23 +1,17 @@
 (ns doctopus.test-database
   (:require [clojure.test :refer :all]
             [doctopus.configuration :refer [server-config]]
+            ;; [doctopus.db :as db]
             [doctopus.db :refer :all]
-            [doctopus.db.schema :refer :all]
-            [korma.db :refer [defdb postgres]]
-            [clojure.test :refer :all]
             [doctopus
              [db :refer :all]]
             [doctopus.db.schema :refer :all]
-            [clojure.test :refer :all]
-            [clojure.test :refer :all]
-            [doctopus
-             [db :refer :all]]
-            [doctopus.db.schema :refer :all]))
+            [korma.db :refer [default-connection postgres]]))
 
 
-(defdb test-db (postgres
-                (select-keys (get-in (server-config) [:database :test])
-                             [:db :user :password :host :port])))
+;; (defdb test-db (postgres
+;;                 (select-keys (get-in (server-config) [:database :test])
+;;                              [:db :user :password :host :port])))
 
 (defn truncate!
   [table-name]

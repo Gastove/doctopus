@@ -3,10 +3,10 @@
             [camel-snake-kebab.extras :refer [transform-keys]]
             [clj-time.coerce :refer [to-sql-time]]
             [clj-time.core :as clj-time]
-            [clojure.string :as string :refer [split-lines]]
+            [clojure.string :as str :refer [split-lines]]
             [doctopus.configuration :refer [server-config]]
             [korma.core :refer :all]
-            [korma.db :refer [defdb postgres]]
+            [korma.db :refer [defdb postgres default-connection]]
             [taoensso.timbre :as log]))
 
 (defn- now
@@ -29,24 +29,38 @@
   [fields]
   (transform-keys ->snake_case_keyword fields))
 
-(defdb main (postgres
-             (select-keys (get-in (server-config) [:database :main])
-                          [:db :user :password :host :port])))
+(defn- ->shallow-snake-keys
+  "Converts only the outermost keys of a map to snake-case keywords"
+  [m]
+  (doall (into {} (map (fn [[k v]][(->snake_case_keyword k) v]) m))))
 
-(declare head-tentacle-mappings)
+(defdb main-db (postgres
+                (select-keys (get-in (server-config) [:database :main])
+                             [:db :user :password :host :port])))
+(defdb test-db (postgres
+                (select-keys (get-in (server-config) [:database :test])
+                             [:db :user :password :host :port])))
+
+(default-connection (if (or (= "dev" (:nomad/environment (server-config)))
+                            (= "travis" (:nomad/environment (server-config))))
+                      test-db
+                      main-db))
+
+(declare head-tentacle-mappings documents)
 (defentity tentacles
   (pk :name)
   (has-many head-tentacle-mappings {:fk :tentacle_name})
+  (has-one documents {:fk :tentacle_name})
   (prepare add-updated)
   (prepare (fn [{html-commands :html-commands :as tentacle}]
              (if html-commands
-               (assoc tentacle :html-commands (string/join "\n" html-commands))
+               (assoc tentacle :html-commands (pr-str html-commands))
                tentacle)))
   (prepare ->snake-keys)
   (transform ->kebab-keys)
   (transform (fn [{html-commands :html-commands :as tentacle}]
                (if html-commands
-                 (assoc tentacle :html-commands (split-lines html-commands))
+                 (assoc tentacle :html-commands (read-string html-commands))
                  tentacle))))
 
 
@@ -60,8 +74,9 @@
 ;; ### Head <-> Tentacle Join Table
 ;; Heads and Tentacles can share the notorious SQL many-to-many
 ;; relationship. Further, having either a head or a tentacle record _on the
-;; database_ storing information about the other gets conceptually weird. Enter:
-;; the join table.
+;; database_ storing information about the other gets conceptually weird. Korma
+;; will automatically handle this by using two queries, but I'm unconvinced by
+;; that as a data modeling approach. Enter: the join table.
 ;;
 ;; Join tables capture many-to-many relationships by inserting themselves in the
 ;; middle, effectively creating a one-to-many relationship between itself and
@@ -73,6 +88,17 @@
   (transform ->kebab-keys)
   (belongs-to heads)
   (belongs-to tentacles))
+
+(defentity documents
+  (table :documents)
+  ;; Because of the `raw' call used in update-document-index', this table
+  ;; specifically needs to *not* have any but its top level keys munged by
+  ;; ->snake-keys
+  (prepare add-updated)
+  (prepare ->shallow-snake-keys)
+  (transform ->kebab-keys)
+  (belongs-to tentacles)
+  (entity-fields :name :uri :tentacle_name :body))
 
 (defn get-tentacle
   [name]
@@ -191,3 +217,64 @@
   [tentacle]
   (select head-tentacle-mappings
           (where {:name (:name tentacle)})))
+
+(defn get-document-by-name
+  [doc-name]
+  (select documents
+          (where {:name doc-name})))
+
+(defn get-document-by-uri
+  [uri]
+  (select documents
+          (where {:uri uri})))
+
+(defn get-document-for-tentacle
+  [tentacle]
+  (select documents
+          (where {:tentacle_name (:name tentacle)})))
+
+(defn update-document-index
+  "The documents table has a column of type tsvector, `search_vector', which is
+  indexed for Full Text Search; this function updates that column, for one
+  document (in the case that a single doc has been modified) or for all
+  documents (for use after loading in a large batch of new docs, for instance)."
+  ([]
+   (update documents
+           (set-fields {:search-vector (raw "to_tsvector('english', body)")})
+           (where {:uri [like "%html"]})))
+  ([document]
+   (update documents
+           (set-fields {:search-vector (raw "to_tsvector('english', body)")})
+           (where {:name (:name document)}))))
+
+
+;; ### Document
+;; `document'
+(defn create-document!
+  [document]
+  (log/info "Creating new document named:" (:name document))
+  (insert documents
+          (values document))
+  (update-document-index document))
+
+(defn update-document!
+  [document update-index?]
+  (log/info "Updating document named:" (:name document))
+  (let [res (update documents
+                    (set-fields document)
+                    (where {:name (:name document)}))]
+    (if update-index? (update-document-index document))
+    res))
+
+(defn save-document!
+  ([document] (save-document! document true))
+  ([document update-index?]
+   (if-not (empty? (get-document-by-name (:name document)))
+     (update-document! document update-index?)
+     (create-document! document))))
+
+(defn delete-document!
+  [document]
+  (log/warn "Removing document named" (:name document) "!")
+  (delete documents
+          (where {:name (:name document)})))
