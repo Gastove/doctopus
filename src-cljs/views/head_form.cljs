@@ -3,6 +3,7 @@
             [cljs-http.client :as http]
             [clojure.string :as s]
             [doctopus.util :refer [get-value http-ok? redirect-to in?]]
+            [doctopus.validation :as validation]
             [doctopus.views.common :refer [button]]
             [reagent.core :refer [atom]])
             (:require-macros [cljs.core.async.macros :refer [go]]))
@@ -11,10 +12,6 @@
 (defonce errors (atom [:name-empty]))
 (defonce csrf-token (atom ""))
 (defonce existing-heads (atom []))
-
-(defn- name-taken?
-  [heads head-name]
-  (in? head-name (map :name heads)))
 
 (defn- submit-form
   [submit-url]
@@ -25,16 +22,6 @@
                                      :headers {"X-CSRF-Token" @csrf-token}}))]
         (if (http-ok? (:status response))
           (redirect-to (get-in response [:body :success-url])))))))
-
-(defn- name-invalid?
-  [head-name]
-  (and (not= head-name "") (->> head-name
-      (re-matches #"[\w-_]+")
-      nil?)))
-
-(defn- name-empty?
-  [head-name]
-  (empty? (s/trim head-name)))
 
 (defn- head-input
   [data errors]
@@ -60,9 +47,9 @@
 
 (defn head-form
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
-  (let [validation-map [[(partial name-taken? heads) :name-taken]
-                        [name-invalid? :name-invalid]
-                        [name-empty? :name-empty]]]
+  (let [validation-map [[(partial validation/field-duplicate-value? :name heads) :name-taken]
+                        [validation/field-invalid-characters? :name-invalid]
+                        [validation/field-empty? :name-empty]]]
     (do
       (swap! form-data assoc :original-name original-name
              :name original-name)
