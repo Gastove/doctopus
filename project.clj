@@ -31,10 +31,13 @@
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
                                               com.sun.jmx/jmxri]]]
-  :plugins [[michaelblume/lein-marginalia "0.9.0"] [lein-cljsbuild "1.1.1"]]
+  :plugins [[michaelblume/lein-marginalia "0.9.0" :exclusions [org.clojure/clojurescript]]
+            [lein-figwheel "0.5.0-2" :exclusions [joda-time]]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
-  :cljsbuild {:builds [{:source-paths ["src-cljs"]
+  :cljsbuild {:builds [{:id "dev"
+                        :source-paths ["src-cljs"]
+                        :figwheel true
                         :incremental false
                         :compiler {:main doctopus.main
                                    :source-map "resources/public/assets/scripts/main.js.map"
