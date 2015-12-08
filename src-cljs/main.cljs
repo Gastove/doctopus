@@ -21,12 +21,13 @@
 
 (defn- get-page-component
   [app-state]
-  [((keyword (:page app-state)) pages) app-state])
+  (if-let [page (:page app-state)]
+    [((keyword page) pages) app-state]))
 
 (defn init
   [app-state]
-    (reagent/render-component
-     (get-page-component app-state)
-     (dom/getElement "app-content")))
+  (if-let [page-component (get-page-component app-state)]
+    (reagent/render-component page-component (dom/getElement "app-content"))
+    (js/console.debug "Abandoning init: no component is defined for this page")))
 
 (init (get-app-state))
