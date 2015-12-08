@@ -18,7 +18,7 @@
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.1"]
                  [clj-time "0.9.0"]
-                 [org.postgresql/postgresql "9.4-1206-jdbc42"]
+                 [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
                  [log4j "1.2.15" :exclusions [javax.mail/mail
