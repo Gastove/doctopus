@@ -24,7 +24,7 @@
                                     {:json-params data
                                      :headers {"X-CSRF-Token" @csrf-token}}))]
         (if (http-ok? (:status response))
-          (redirect-to (:success-url response)))))))
+          (redirect-to (get-in response [:body :success-url])))))))
 
 (defn- name-invalid?
   [head-name]
