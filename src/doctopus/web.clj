@@ -74,8 +74,8 @@
 
 (defn add-head
   [request]
-   (let [head-name (get (:form-params request) "name")]
-     (serve-html (str "ADD A HEAD: " head-name))))
+  (let [head-name (get (:form-params request) "name")]
+    (serve-html (str "ADD A HEAD: " head-name))))
 
 (defn serve-head
   [request]
@@ -88,28 +88,30 @@
 
 (defn add-tentacle
   [request]
-   (let [params (keywordize-keys (:form-params request))]
-     (serve-html
-      (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
+  (let [params (keywordize-keys (:form-params request))]
+    (serve-html
+     (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
 
 ;; Bidi routes are defined as nested sets of ""
-(def routes ["/" {""             {:get serve-index}
-                  "index.html"   {:get serve-index}
-                  "assets"       (->Resources {:prefix "public/assets"})
-                  "frame.html"   {:get serve-iframe}
-                  "heads"        {"/"           {:get serve-all-heads}
-                                  ""            {:get serve-all-heads}
-                                  [:head-name]  {:get serve-head}}
-                  "add-head"     {:get serve-add-head-form :post add-head}
-                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
-                  "docs"         (load-routes doctopus)}])
+(defn generate-routes []
+  ["/" {""             {:get serve-index}
+        "index.html"   {:get serve-index}
+        "assets"       (->Resources {:prefix "public/assets"})
+        "frame.html"   {:get serve-iframe}
+        "heads"        {"/"           {:get serve-all-heads}
+                        ""            {:get serve-all-heads}
+                        [:head-name]  {:get serve-head}}
+        "add-head"     {:get serve-add-head-form :post add-head}
+        "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
+        "docs"         (load-routes doctopus)}])
 
 (defn- get-tentacle-from-uri
   [request-uri]
   (let [pieces (re-find #"/docs/([^/]+)/.+" request-uri)]
     (if pieces (second pieces) nil)))
 
-(def application-handlers
+(defn generate-application-handlers
+  [routes]
   (bidi/make-handler routes))
 
 (defn wrap-iframe-transform
@@ -122,8 +124,9 @@
         (assoc response :body (templates/add-frame (slurp file)))
         response))))
 
-(def application
-  (-> (wrap-defaults application-handlers site-defaults)
+(defn create-application
+  [app-handlers]
+  (-> (wrap-defaults app-handlers site-defaults)
       (wrap-iframe-transform)
       (wrap-route-not-found)
       (reload/wrap-reload)
@@ -143,7 +146,10 @@
 (defn -main
   []
   (let [{:keys [port]} (server-config)
-        env (parse-env)]
+        env (parse-env)
+        routes (generate-routes)
+        handlers (generate-application-handlers routes)
+        application (create-application handlers)]
     (log/info "Checking DB is set up...")
     (schema/bootstrap env)
     (log/info "Bootstrapping heads")
