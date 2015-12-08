@@ -835,7 +835,7 @@ input[disabled] {
   border-color: #dfdfdf;
   box-shadow: none; }
   input[disabled][type="button"] {
-    border: #dfdfdf;
+    border-color: #dfdfdf;
     background: #dfdfdf; }
 
 /* Half and third field group */
