@@ -1,9 +1,15 @@
 (ns doctopus.storage.impls.postgres-impl
   (:require [doctopus.db :as db]
-            [doctopus.files :as f]))
+            [doctopus.files :as f])
+  (:import [java.nio.file Files Paths]))
 
 (def is-img-regex
   #"\.(png|pdf|jpg|jpeg|gif|ico|){1}$")
+
+(defn get-mime-type
+  [path-str]
+  (let [path (Paths/get path-str (into-array String []))]
+    (Files/probeContentType path)))
 
 (defn save-fn
   "Load every document from a directory in to the database.
@@ -21,7 +27,7 @@
             :let [new-doc {:name (str tent-name "-" (.getName doc-file))
                            :body (slurp doc-file)
                            :path doc-file
-                           :type (if (re-find is-img-regex doc-file) :img :text)
+                           :type (get-mime-type doc-file)
                            :uri (str tent-name "/" relpath)
                            :tentacle-name tent-name}]]
       (db/save-document! new-doc))
