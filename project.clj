@@ -3,8 +3,8 @@
   :url "http://github.com/Gastove/doctopus"
   :license {:name "Eclipse Public License"
             :url "http://www.eclipse.org/legal/epl-v10.html"}
-  :dependencies [[org.clojure/clojure "1.7.0-beta3"]
-                 [org.clojure/tools.reader "0.9.2"]
+  :dependencies [[org.clojure/clojure "1.7.0"]
+                 [org.clojure/tools.reader "0.10.0"]
                  [org.clojure/data.json "0.2.6"]
                  [joda-time/joda-time "2.6"]
                  [markdown-clj "0.9.63"]
@@ -20,10 +20,10 @@
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.1"]
                  [clj-time "0.9.0"]
-                 [org.clojure/core.async "0.1.346.0-17112a-alpha"]
-                 [org.clojure/clojurescript "0.0-3269"]
-                 [cljs-http "0.1.30"]
-                 [reagent "0.5.0"]
+                 [org.clojure/core.async "0.2.374"]
+                 [org.clojure/clojurescript "1.7.170"]
+                 [cljs-http "0.1.38"]
+                 [reagent "0.5.1"]
                  [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
@@ -31,7 +31,7 @@
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
                                               com.sun.jmx/jmxri]]]
-  :plugins [[michaelblume/lein-marginalia "0.9.0"] [lein-cljsbuild "1.0.6"]]
+  :plugins [[michaelblume/lein-marginalia "0.9.0"] [lein-cljsbuild "1.1.1"]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
   :cljsbuild {:builds [{:source-paths ["src-cljs"]
