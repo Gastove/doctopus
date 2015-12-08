@@ -8,6 +8,7 @@
             [doctopus.db :as db]
             [doctopus.db.schema :as schema]
             [org.httpkit.server :as server]
+            [ring.middleware.json :refer [wrap-json-body]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
             [ring.middleware.stacktrace :as trace]
@@ -81,10 +82,10 @@
 
 (defn add-head
   [request]
-   (let [head-name (get (:form-params request) "name")]
-     (do
-       (db/save-head! {:name head-name})
-       (serve-json {:success-url (str "/heads/" head-name)}))))
+  (let [head-name (get-in request [:body "name"])]
+    (do
+      (db/save-head! {:name head-name})
+      (serve-json {:success-url (str "/heads/" head-name)}))))
 
 (defn serve-head
   [params]
@@ -139,6 +140,7 @@
 (defn create-application
   [app-handlers]
   (-> (wrap-defaults app-handlers site-defaults)
+      (wrap-json-body)
       (wrap-iframe-transform)
       (wrap-route-not-found)
       (reload/wrap-reload)

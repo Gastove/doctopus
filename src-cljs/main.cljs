@@ -5,8 +5,6 @@
             [doctopus.views.index :refer [main]]
             [reagent.core :as reagent]))
 
-(enable-console-print!)
-
 (def pages {:add-head head-form
             :add-tentacle tentacle-form
             :edit-tentacle tentacle-form

@@ -15,6 +15,7 @@
                  [ring/ring-defaults "0.1.4"]
                  [ring/ring-core "1.3.2"]
                  [ring/ring-devel "1.3.2"]
+                 [ring/ring-json "0.4.0"]
                  [bidi "1.19.0"]
                  [enlive "1.1.5"]
                  [ring/ring-mock "0.2.0"]

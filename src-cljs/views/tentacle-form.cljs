@@ -16,8 +16,7 @@
                                  {:json-params data
                                   :headers {"X-CSRF-Token" @csrf-token}}))]
      (if (http-ok? (:status response))
-       (redirect-to (:success-url response))
-       (show-form-error (:error response))))))
+       (redirect-to (:success-url response))))))
 
 (defn- validate-form
   [submit-url]
