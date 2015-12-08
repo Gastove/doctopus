@@ -143,9 +143,14 @@ input:-moz-placeholder {
 }
 
 /* Disabled */
-input[disabled="disabled"] {
+input[disabled] {
     border-color:#dfdfdf;
     box-shadow:none;
+
+    &[type="button"] {
+        border: #dfdfdf;
+        background: #dfdfdf;
+    }
 }
 
 /* Half and third field group */

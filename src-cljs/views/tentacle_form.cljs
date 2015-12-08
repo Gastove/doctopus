@@ -3,24 +3,25 @@
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to]]
             [doctopus.views.common :refer [button]]
-            [reagent.core :as reagent :refer [atom]])
+            [reagent.core :refer [atom]]
+            [doctopus.validation :as validation])
   (:require-macros [cljs.core.async.macros :refer [go]]))
 
-(def form-data (atom {}))
-(def csrf-token (atom ""))
+(enable-console-print!)
+
+(defonce form-data (atom {}))
+(defonce errors (atom [:name-empty :source-empty :command-empty]))
+(defonce csrf-token (atom ""))
 
 (defn- submit-form
-  [data submit-url]
-  (go
-   (let [response (<! (http/post submit-url
-                                 {:json-params data
-                                  :headers {"X-CSRF-Token" @csrf-token}}))]
-     (if (http-ok? (:status response))
-       (redirect-to (:success-url response))))))
-
-(defn- validate-form
   [submit-url]
-  (submit-form @form-data submit-url))
+  (let [data @form-data]
+    (go
+      (let [response (<! (http/post submit-url
+                                    {:json-params data
+                                     :headers {"X-CSRF-Token" @csrf-token}}))]
+        (if (http-ok? (:status response))
+          (redirect-to (get-in response [:body :success-url])))))))
 
 (defn- head-selector
   [heads]
@@ -51,11 +52,17 @@
    {:on-change #(swap! form-data assoc :command (get-value %))}])
 
 (defn tentacle-form
-  [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
-  (do
-      (swap! form-data assoc :original-name original-name
-                             :name original-name)
+  [{:keys [csrf submit-url original-name heads tentacles] :or {original-name ""}}]
+  (let [validation-map {:name    [[(partial validation/field-duplicate-value? :name tentacles) :name-taken]
+                                  [validation/field-invalid-characters? :name-invalid]
+                                  [validation/field-empty? :name-empty]]
+                        :source  [[validation/field-empty? :source-empty]]
+                        :command [[validation/field-empty? :command-empty]]}]
+    (do
+      (swap! form-data assoc :original-name original-name :name original-name)
       (reset! csrf-token csrf)
+      (add-watch form-data :validation
+                 (validation/create-form-validator validation-map #(reset! errors %)))
       (fn []
         [:form.main
          [:fieldset
@@ -71,4 +78,6 @@
           [:div
            [:label {:for "tentacle-command"} "Tentacle Command"]
            [tentacle-command-input]]]
-         [button #(validate-form submit-url)]])))
+         (if (> (count @errors) 0)
+           [button #(submit-form submit-url) "Save" {:disabled "disabled"}]
+           [button #(submit-form submit-url) "Save"])]))))

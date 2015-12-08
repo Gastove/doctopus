@@ -36,20 +36,11 @@
      (when (in? :name-taken errors)
        [:p "Head name taken"])]))
 
-(defn- create-form-validator
-  [validators lookup]
-  (fn [key atom old new]
-    (let [item (lookup new)]
-      (reset! errors
-              (filter #(not (nil? %))
-                      (for [[f k] validators]
-                        (if (f item) k)))))))
-
 (defn head-form
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
-  (let [validation-map [[(partial validation/field-duplicate-value? :name heads) :name-taken]
-                        [validation/field-invalid-characters? :name-invalid]
-                        [validation/field-empty? :name-empty]]]
+  (let [validation-map {:name [[(partial validation/field-duplicate-value? :name heads) :name-taken]
+                               [validation/field-invalid-characters? :name-invalid]
+                               [validation/field-empty? :name-empty]]}]
     (do
       (swap! form-data assoc :original-name original-name
              :name original-name)
@@ -57,7 +48,7 @@
       (reset! existing-heads heads)
       (add-watch form-data
                  :validation
-                 (create-form-validator validation-map #(get % :name)))
+                 (validation/create-form-validator validation-map #(reset! errors %)))
       (fn []
         [:form.main
          [:div
@@ -66,5 +57,5 @@
             [:label {:for "head-name"} "Head Name"]
             [head-input @form-data @errors]]]
           (if (> (count @errors) 0)
-            [button #(submit-form submit-url) "Save" {:disabled true}]
+            [button #(submit-form submit-url) "Save" {:disabled "disabled"}]
             [button #(submit-form submit-url) "Save"])]]))))
