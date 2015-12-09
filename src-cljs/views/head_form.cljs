@@ -2,7 +2,7 @@
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
             [clojure.string :as s]
-            [doctopus.util :refer [get-value http-ok? redirect-to in?]]
+            [doctopus.util :refer [get-value http-ok? redirect-to in? maybe-conj]]
             [doctopus.validation :as validation]
             [doctopus.views.common :refer [button]]
             [reagent.core :refer [atom]])
@@ -56,6 +56,4 @@
            [:div
             [:label {:for "head-name"} "Head Name"]
             [head-input @form-data @errors]]]
-          (if (> (count @errors) 0)
-            [button #(submit-form submit-url) "Save" {:disabled "disabled"}]
-            [button #(submit-form submit-url) "Save"])]]))))
+          (maybe-conj (> (count @errors) 0) [button #(submit-form submit-url) "Save"] {:disabled "disabled"})]]))))

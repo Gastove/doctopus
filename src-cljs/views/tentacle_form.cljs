@@ -1,7 +1,7 @@
 (ns doctopus.views.tentacle-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [doctopus.util :refer [get-value http-ok? redirect-to]]
+            [doctopus.util :refer [get-value http-ok? redirect-to maybe-conj]]
             [doctopus.views.common :refer [button]]
             [reagent.core :refer [atom]]
             [doctopus.validation :as validation])
@@ -79,6 +79,4 @@
           [:div
            [:label {:for "tentacle-command"} "Tentacle Command"]
            [tentacle-command-input]]]
-         (if (> (count @errors) 0)
-           [button #(submit-form submit-url) "Save" {:disabled "disabled"}]
-           [button #(submit-form submit-url) "Save"])]))))
+         (maybe-conj (> (count @errors) 0) [button #(submit-form submit-url) "Save"] {:disabled "disabled"})]))))

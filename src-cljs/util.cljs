@@ -17,3 +17,8 @@
 (defn in?
   [item coll]
   (not (not-any? #(= item %) coll)))
+
+(defn maybe-conj
+  "If pred passes, return (conj coll x), else return coll"
+  [pred coll x]
+  (if pred (conj coll x) coll))
