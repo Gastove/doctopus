@@ -42,6 +42,8 @@
   [[:name "varchar(50)" "PRIMARY KEY"]
    [:uri "varchar(100) NOT NULL"]
    [:body :text "NOT NULL"]
+   [:mime_type "varchar(127) NOT NULL"] ;; Max length according to RFC http://tools.ietf.org/html/rfc4288#section-4.2
+   [:image "bytea"]
    [:search_vector "tsvector"]
    [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]
    [:created :timestamp "NOT NULL DEFAULT NOW()"]
