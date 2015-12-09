@@ -47,6 +47,17 @@
                                    :output-dir "resources/public/assets/scripts"
                                    :asset-path "/assets/scripts"
                                    :optimizations :none
+                                   :pretty-print true}}
+                       {:id "dev-omni"
+                        :source-paths ["src-cljs"]
+                        :figwheel true
+                        :incremental false
+                        :compiler {:main doctopus.omni
+                                   :source-map "resources/public/assets/scripts/omni.js.map"
+                                   :output-to "resources/public/assets/scripts/omni.js"
+                                   :output-dir "resources/public/assets/scripts"
+                                   :asset-path "/assets/scripts"
+                                   :optimizations :none
                                    :pretty-print true}}]}
   :profiles {:uberjar {:aot :all
                        :prep-tasks ["compile" ["cljsbuild" "once" "prod"]]

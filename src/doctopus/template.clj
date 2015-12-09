@@ -13,10 +13,27 @@
   (enlive/html
    [:iframe {:src "/frame.html" :width "100%" :height "90" :frameBorder "0"}]))
 
-(defn- prepend-frame
-  "injects the Doctopus iframe into the first body element of the given HTML"
-  [main frame]
-  (enlive/sniptest main [[:body enlive/first-of-type]] (enlive/prepend frame)))
+(defn- omnibar-html
+  "constructions domnibar (the doctopus omnibar) html"
+  []
+  (enlive/html
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]
+    [:div#doctopus-omnibar]
+    [:script {:src "/assets/scripts/omni.js" :type "application/javascript"}]))
+
+(defn- omnibar-css
+  "constructs a stylesheet reference for the domnibar"
+  []
+  (enlive/html
+    [:script {:src "//use.typekit.net/txl6yqy.js" :type "application/javascript"}]
+    [:script "try{Typekit.load();}catch(e){}"]
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]))
+
+(defn- prepend-to-element
+  ([main to-prepend]
+   (prepend-to-element main :body to-prepend))
+  ([main element to-prepend]
+   (enlive/sniptest main [[element enlive/first-of-type]] (enlive/prepend to-prepend))))
 
 (deftemplate base-template "templates/base.html"
   [context]
@@ -40,6 +57,13 @@
    its body"
   [html-str]
   (apply str (prepend-frame html-str (iframe-html))))
+
+(defn add-omnibar
+  "given a string of HTML, returns a string with a the Doctopus omnibar inserted
+  at the end of its body"
+  [html-str]
+  (apply str (prepend-to-element (prepend-to-element html-str :head (omnibar-css))
+                                 :body (omnibar-html))))
 
 (defn- tentacle-context
   [tentacle]
