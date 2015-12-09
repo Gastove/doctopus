@@ -14,7 +14,7 @@
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
             [taoensso.timbre :as log]
-            [clojure.data.json :as json]
+            [cheshire.core :as json]
             [clojure.walk :refer [keywordize-keys]]
             [clojure.string :as str])
   (:import [doctopus.doctopus Doctopus]))
@@ -49,7 +49,7 @@
    content-type"
   [data]
   (-> data
-      (json/write-str)
+      (json/generate-string)
       (ring-response/response)
       (ring-response/content-type "application/json")))
 

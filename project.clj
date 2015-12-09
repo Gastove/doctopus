@@ -5,7 +5,7 @@
             :url "http://www.eclipse.org/legal/epl-v10.html"}
   :dependencies [[org.clojure/clojure "1.7.0"]
                  [org.clojure/tools.reader "0.10.0"]
-                 [org.clojure/data.json "0.2.6"]
+                 [cheshire "5.5.0"]
                  [joda-time/joda-time "2.6"]
                  [markdown-clj "0.9.63"]
                  [me.raynes/fs "1.4.6"]
