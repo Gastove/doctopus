@@ -53,6 +53,7 @@
                        :cljsbuild {:jar true
                                    :builds [{:id "prod"
                                              :source-paths ["src-cljs"]
+                                             :figwheel false
                                              :compiler {:main doctopus.main
                                                         :source-map "resources/public/assets/scripts/main.js.map"
                                                         :output-to "resources/public/assets/scripts/main.js"
