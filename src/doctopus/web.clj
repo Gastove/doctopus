@@ -1,18 +1,22 @@
 (ns doctopus.web
   (:require [bidi.ring :as bidi :refer [->Resources]]
             [clojure.java.io :as io]
-            [clojure.walk :refer [keywordize-keys]]
             [doctopus.configuration :refer [server-config]]
-            [doctopus.db.schema :as schema]
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
-            [doctopus.files.predicates :refer [html?]]
             [doctopus.template :as templates]
+            [doctopus.files.predicates :refer [html?]]
+            [doctopus.db :as db]
+            [doctopus.db.schema :as schema]
             [org.httpkit.server :as server]
+            [ring.middleware.json :refer [wrap-json-body]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
             [ring.middleware.reload :as reload]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log])
+            [taoensso.timbre :as log]
+            [cheshire.core :as json]
+            [clojure.walk :refer [keywordize-keys]]
+            [clojure.string :as str])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
@@ -40,6 +44,15 @@
       response
       (four-oh-four (:uri request)))))
 
+(defn serve-json
+  "Turns a clojure data-structure into JSON and serves it with the correct
+   content-type"
+  [data]
+  (-> data
+      (json/generate-string)
+      (ring-response/response)
+      (ring-response/content-type "application/json")))
+
 (defn serve-html
   "Just returns html, with the content-type set correctly"
   [html]
@@ -66,31 +79,37 @@
 
 (defn serve-add-head-form
   [_]
-  (serve-html (templates/add-head)))
-
-(defn serve-add-tentacle-form
-  [_]
-  (serve-html (templates/add-tentacle doctopus)))
+  (serve-html (templates/add-head doctopus)))
 
 (defn add-head
   [request]
-  (let [head-name (get (:form-params request) "name")]
-    (serve-html (str "ADD A HEAD: " head-name))))
+  (let [head-name (get-in request [:body "name"])]
+    (do
+      (db/save-head! {:name head-name})
+      (serve-json {:success-url (str "/heads/" head-name)}))))
 
 (defn serve-head
-  [request]
-  (let [head-name (get-in request [:params :head-name])]
-    (serve-html (templates/head-page head-name doctopus))))
+  [params]
+  (serve-html (templates/head-page (get-in params [:route-params :head-name]))))
 
 (defn serve-all-heads
   [_]
   (serve-html (templates/heads-list doctopus)))
 
+(defn serve-add-tentacle-form
+  [_]
+  (serve-html (templates/add-tentacle doctopus)))
+
 (defn add-tentacle
   [request]
-  (let [params (keywordize-keys (:form-params request))]
-    (serve-html
-     (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
+  (let [params (keywordize-keys (:body request))
+        tentacle {:name            (:name params)
+                  :html-commands   (str/split-lines (:command params))
+                  :source-location (:source params)}
+        head (db/get-head (:head params))]
+    (db/save-tentacle! tentacle)
+    (db/create-mapping! head tentacle)
+    (serve-json {:success-url (str "/tentacles/" (:name tentacle))})))
 
 ;; Bidi routes are defined as nested sets of ""
 (defn generate-routes []
@@ -127,6 +146,7 @@
 (defn create-application
   [app-handlers]
   (-> (wrap-defaults app-handlers site-defaults)
+      (wrap-json-body)
       (wrap-iframe-transform)
       (wrap-route-not-found)
       (reload/wrap-reload)
