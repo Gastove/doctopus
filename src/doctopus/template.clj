@@ -23,11 +23,21 @@
     [:script "try{Typekit.load();}catch(e){}"]
     [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]))
 
+(defn- add-to-element-with-fn
+  [main element snippet f]
+  (enlive/sniptest main [[element enlive/first-of-type]] (f snippet)))
+
+(defn- append-to-element
+  ([main to-append]
+   (append-to-element main :body to-append))
+  ([main element to-append]
+   (add-to-element-with-fn main element to-append enlive/append)))
+
 (defn- prepend-to-element
   ([main to-prepend]
    (prepend-to-element main :body to-prepend))
   ([main element to-prepend]
-   (enlive/sniptest main [[element enlive/first-of-type]] (enlive/prepend to-prepend))))
+   (add-to-element-with-fn main element to-prepend enlive/prepend)))
 
 (deftemplate base-template "templates/base.html"
   [context]
@@ -40,12 +50,19 @@
   [context]
   (apply str (base-template context)))
 
+(defn- app-context
+  [context]
+  (enlive/html
+    [:script#app-state {:type "application/javascript"} (json/write-str context)]))
+
 (defn add-omnibar
   "given a string of HTML, returns a string with a the Doctopus omnibar inserted
   at the end of its body"
-  [html-str]
-  (apply str (prepend-to-element (prepend-to-element html-str :head (omnibar-css))
-                                 :body (omnibar-html))))
+  [html-str context]
+  (-> html-str
+      (prepend-to-element :body (omnibar-html))
+      (prepend-to-element :head (omnibar-css))
+      (append-to-element :body (app-context context))))
 
 (defn- tentacle-context
   [tentacle]

@@ -135,7 +135,7 @@
           file (:body response)
           tentacle-name (get-tentacle-from-uri (:uri request))]
       (if (and tentacle-name file (html? file))
-        (assoc response :body (templates/add-omnibar (slurp file)))
+        (assoc response :body (templates/add-omnibar (slurp file) {:tentacle-name tentacle-name}))
         response))))
 
 (defn create-application
