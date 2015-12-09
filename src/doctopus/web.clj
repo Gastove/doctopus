@@ -73,10 +73,6 @@
   [_]
   (serve-html (templates/index doctopus)))
 
-(defn serve-iframe
-  [_]
-  (serve-html (templates/project-frame)))
-
 (defn serve-add-head-form
   [_]
   (serve-html (templates/add-head doctopus)))
@@ -116,7 +112,6 @@
   ["/" {""             {:get serve-index}
         "index.html"   {:get serve-index}
         "assets"       (->Resources {:prefix "public/assets"})
-        "frame.html"   {:get serve-iframe}
         "heads"        {"/"           {:get serve-all-heads}
                         ""            {:get serve-all-heads}
                         [:head-name]  {:get serve-head}}

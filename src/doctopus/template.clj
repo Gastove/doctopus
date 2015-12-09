@@ -7,12 +7,6 @@
             [ring.util.anti-forgery :as csrf]
             [ring.middleware.anti-forgery :as csrf-token]))
 
-(defn- iframe-html
-  "constructs an iframe element with relevant src attribute"
-  []
-  (enlive/html
-   [:iframe {:src "/frame.html" :width "100%" :height "90" :frameBorder "0"}]))
-
 (defn- omnibar-html
   "constructions domnibar (the doctopus omnibar) html"
   []
@@ -45,18 +39,6 @@
   "wraps the given body in the base template"
   [context]
   (apply str (base-template context)))
-
-(defn project-frame
-  "returns a string of HTML suitable for serving an iframe with doctopus
-   navigation"
-  []
-  (base-template ""))
-
-(defn add-frame
-  "given a string of HTML, returns a string with a Doctopus iframe inserted into
-   its body"
-  [html-str]
-  (apply str (prepend-frame html-str (iframe-html))))
 
 (defn add-omnibar
   "given a string of HTML, returns a string with a the Doctopus omnibar inserted
