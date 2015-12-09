@@ -54,6 +54,7 @@
         mock-doc {:name "doctopus_test"
                   :body "<p>I'm a paragraph and I'm <emph>OK</emph></p>"
                   :tentacle-name (:name (first mock-tentacles))
+                  :mime-type "text/html"
                   :uri "index.html"}]
 
     ;; Let's start some testing:

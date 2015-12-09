@@ -5,7 +5,6 @@
             [doctopus.storage :refer :all]
             [me.raynes.fs :as fs]))
 
-
 (deftest storage
   (testing "Can we swap backends?"
     (is (set-backend! :temp-fs)
