@@ -537,13 +537,13 @@ button,
 input[type=submit] {
   background: #e517b2;
   border: #dc16ab 2px solid;
-  color: white; }
+  color: #fff; }
   a.btn:hover,
   button:hover,
   input[type=submit]:hover {
     background: #ec43c2;
     border: #eb3abf 2px solid;
-    color: white; }
+    color: #fff; }
   a.btn:active, a.btn.active,
   button:active,
   button.active,
@@ -551,7 +551,7 @@ input[type=submit] {
   input[type=submit].active {
     background: #b7128e;
     border: #ad1187 2px solid;
-    color: white; }
+    color: #fff; }
   a.btn.selected,
   button.selected,
   input[type=submit].selected {
@@ -561,15 +561,15 @@ input[type=submit] {
 .btn.primary {
   background: #e517b2;
   border: #dc16ab 2px solid;
-  color: white; }
+  color: #fff; }
   .btn.primary:hover {
     background: #ec43c2;
     border: #eb3abf 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.primary:active, .btn.primary.active {
     background: #b7128e;
     border: #ad1187 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.primary.selected {
     background: #b7128e;
     cursor: default; }
@@ -577,15 +577,15 @@ input[type=submit] {
 .btn.secondary {
   background: #6d17e5;
   border: #6916dc 2px solid;
-  color: white; }
+  color: #fff; }
   .btn.secondary:hover {
     background: #8a43ec;
     border: #843aeb 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.secondary:active, .btn.secondary.active {
     background: #5712b7;
     border: #5311ad 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.secondary.selected {
     background: #5712b7;
     cursor: default; }
@@ -609,15 +609,15 @@ input[type=submit] {
 .btn.important {
   background: #e517b2;
   border: #dc16ab 2px solid;
-  color: white; }
+  color: #fff; }
   .btn.important:hover {
     background: #ec43c2;
     border: #eb3abf 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.important:active, .btn.important.active {
     background: #b7128e;
     border: #ad1187 2px solid;
-    color: white; }
+    color: #fff; }
   .btn.important.selected {
     background: #b7128e;
     cursor: default; }
@@ -786,6 +786,7 @@ select {
 @-moz-document url-prefix() {
   select {
     padding-top: 10px; } }
+
 select option {
   border: none;
   padding: 5px; }
@@ -830,9 +831,12 @@ input:-moz-placeholder {
   color: #bfbfbf; }
 
 /* Disabled */
-input[disabled="disabled"] {
+input[disabled] {
   border-color: #dfdfdf;
   box-shadow: none; }
+  input[disabled][type="button"] {
+    border-color: #dfdfdf;
+    background: #dfdfdf; }
 
 /* Half and third field group */
 .half-field,
