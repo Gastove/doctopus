@@ -7,7 +7,8 @@
             [doctopus.configuration :refer [server-config]]
             [korma.core :refer :all]
             [korma.db :refer [defdb postgres default-connection]]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log])
+  (:refer-clojure :exclude [update]))
 
 (defn- now
   []
