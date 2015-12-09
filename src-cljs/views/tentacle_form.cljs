@@ -1,11 +1,11 @@
 (ns doctopus.views.tentacle-form
-  (:require [cljs.core.async :refer [<!]]
+  (:require [cljs.core.async :refer [<! >!]]
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to maybe-conj]]
             [doctopus.views.common :refer [button]]
             [reagent.core :refer [atom]]
             [doctopus.validation :as validation])
-  (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 (enable-console-print!)
 
@@ -58,12 +58,15 @@
                                   [validation/field-invalid-characters? :name-invalid]
                                   [validation/field-empty? :name-empty]]
                         :source  [[validation/field-empty? :source-empty]]
-                        :command [[validation/field-empty? :command-empty]]}]
+                        :command [[validation/field-empty? :command-empty]]}
+        validator (validation/create-form-validator validation-map)]
+    (go-loop []
+      (reset! errors (<! validator))
+      (recur))
     (do
       (swap! form-data assoc :original-name original-name :name original-name :head (:name (first heads)))
       (reset! csrf-token csrf)
-      (add-watch form-data :validation
-                 (validation/create-form-validator validation-map #(reset! errors %)))
+      (add-watch form-data :validation #(go (>! validator %4)))
       (fn []
         [:form.main
          [:fieldset

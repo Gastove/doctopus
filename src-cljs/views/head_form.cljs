@@ -1,11 +1,11 @@
 (ns doctopus.views.head-form
-  (:require [cljs.core.async :refer [<!]]
+  (:require [cljs.core.async :refer [<! >!]]
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to in? maybe-conj]]
             [doctopus.validation :as validation]
             [doctopus.views.common :refer [button]]
             [reagent.core :refer [atom]])
-            (:require-macros [cljs.core.async.macros :refer [go]]))
+  (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
 (defonce form-data (atom {}))
 (defonce errors (atom [:name-empty]))
@@ -39,15 +39,16 @@
   [{:keys [csrf submit-url original-name heads] :or {original-name ""}}]
   (let [validation-map {:name [[(partial validation/field-duplicate-value? :name heads) :name-taken]
                                [validation/field-invalid-characters? :name-invalid]
-                               [validation/field-empty? :name-empty]]}]
+                               [validation/field-empty? :name-empty]]}
+        validator (validation/create-form-validator validation-map)]
+    (go-loop []
+      (reset! errors (<! validator))
+      (recur))
     (do
-      (swap! form-data assoc :original-name original-name
-             :name original-name)
+      (swap! form-data assoc :original-name original-name :name original-name)
       (reset! csrf-token csrf)
       (reset! existing-heads heads)
-      (add-watch form-data
-                 :validation
-                 (validation/create-form-validator validation-map #(reset! errors %)))
+      (add-watch form-data :validation #(go (>! validator %4)))
       (fn []
         [:form.main
          [:div
