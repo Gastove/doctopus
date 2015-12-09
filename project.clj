@@ -33,7 +33,8 @@
                                               com.sun.jdmk/jmxtools
                                               com.sun.jmx/jmxri]]]
   :plugins [[michaelblume/lein-marginalia "0.9.0" :exclusions [org.clojure/clojurescript]]
-            [lein-figwheel "0.5.0-2" :exclusions [joda-time]]]
+            [lein-figwheel "0.5.0-2" :exclusions [joda-time]]
+            [lein-cljsbuild "1.1.1" :exclusions [org.clojure/clojurescript]]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
   :cljsbuild {:builds [{:id "dev"
@@ -47,4 +48,14 @@
                                    :asset-path "/assets/scripts"
                                    :optimizations :none
                                    :pretty-print true}}]}
-  :profiles {:uberjar {:aot :all}})
+  :profiles {:uberjar {:aot :all
+                       :prep-tasks ["compile" ["cljsbuild" "once" "prod"]]
+                       :cljsbuild {:jar true
+                                   :builds [{:id "prod"
+                                             :source-paths ["src-cljs"]
+                                             :compiler {:main doctopus.main
+                                                        :source-map "resources/public/assets/scripts/main.js.map"
+                                                        :output-to "resources/public/assets/scripts/main.js"
+                                                        :asset-path "/assets/scripts"
+                                                        :optimizations :advanced
+                                                        :pretty-print false}}]}}})
