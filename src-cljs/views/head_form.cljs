@@ -1,7 +1,6 @@
 (ns doctopus.views.head-form
   (:require [cljs.core.async :refer [<!]]
             [cljs-http.client :as http]
-            [clojure.string :as s]
             [doctopus.util :refer [get-value http-ok? redirect-to in? maybe-conj]]
             [doctopus.validation :as validation]
             [doctopus.views.common :refer [button]]
