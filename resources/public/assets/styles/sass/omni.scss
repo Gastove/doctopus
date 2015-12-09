@@ -5,8 +5,8 @@
     background: $dark-background;
     color: $type-color;
     font: 100%/1.5 "proxima-nova-soft", Helvetica, Arial, sans-serif;
-    height: 100%;
-    min-width: 1024px;
+    position: fixed;
+    top: 0; left: 0;
     -webkit-font-smoothing: antialiased;
 
     #brand {
@@ -27,6 +27,58 @@
             top: 0; left: 0;
             width: 100%;
             height: 100%;
+        }
+    }
+
+    #sidebar {
+        position: absolute;
+        top: 0; left: 0;
+        width: 20%;
+        min-width: 300px;
+        min-height: 75px;
+        background: $dark-background;
+        padding-top: 16px;
+
+        .logo {
+            background: url(/assets/images/doctopus-logo.png);
+            background-size: 125px 25px;
+            height: 25px;
+            width: 125px;
+            text-indent: 100%;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0;
+            position: relative;
+
+            a {
+                position: absolute;
+                display: block;
+                top: 0; left: 0;
+                width: 100%;
+                height: 100%;
+            }
+        }
+
+        .close {
+            position: absolute;
+            display: block;
+            top: 8px; right: 8px;
+            overflow: hidden;
+            white-space: nowrap;
+            margin: 0;
+
+            a {
+                text-indent: 100%;
+                color: $base-color;
+                text-decoration: none;
+
+                &:before {
+                    font-size: 1.2em;
+                    margin-right: 0.2em;
+                    content: "\00d7";
+                    font-weight: bold;
+                }
+            }
         }
     }
 }
