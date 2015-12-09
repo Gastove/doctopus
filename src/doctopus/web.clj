@@ -15,7 +15,8 @@
             [ring.util.response :as ring-response]
             [taoensso.timbre :as log]
             [clojure.data.json :as json]
-            [clojure.walk :refer [keywordize-keys]])
+            [clojure.walk :refer [keywordize-keys]]
+            [clojure.string :as str])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
@@ -101,9 +102,14 @@
 
 (defn add-tentacle
   [request]
-  (let [params (keywordize-keys (:form-params request))]
-    (serve-html
-     (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
+  (let [params (keywordize-keys (:body request))
+        tentacle {:name            (:name params)
+                  :html-commands   (str/split-lines (:command params))
+                  :source-location (:source params)}
+        head (db/get-head (:head params))]
+    (db/save-tentacle! tentacle)
+    (db/create-mapping! head tentacle)
+    (serve-json {:success-url (str "/tentacles/" (:name tentacle))})))
 
 ;; Bidi routes are defined as nested sets of ""
 (defn generate-routes []

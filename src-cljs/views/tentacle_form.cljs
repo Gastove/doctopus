@@ -25,10 +25,11 @@
 
 (defn- head-selector
   [heads]
-  [:select#head-selector
+  [:select#head-selector {:on-change #(swap! form-data assoc :head (get-value %))}
     (for [head heads]
       (let [head-name (:name head)]
-        ^{:key head-name} [:option {:value head-name} head-name]))])
+        ^{:key head-name} [:option {:value head-name}
+                           head-name]))])
 
 (defn- input
   [id initial-value on-change]
@@ -59,7 +60,7 @@
                         :source  [[validation/field-empty? :source-empty]]
                         :command [[validation/field-empty? :command-empty]]}]
     (do
-      (swap! form-data assoc :original-name original-name :name original-name)
+      (swap! form-data assoc :original-name original-name :name original-name :head (:name (first heads)))
       (reset! csrf-token csrf)
       (add-watch form-data :validation
                  (validation/create-form-validator validation-map #(reset! errors %)))
