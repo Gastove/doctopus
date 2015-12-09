@@ -98,6 +98,12 @@
   (prepare add-updated)
   (prepare ->shallow-snake-keys)
   (transform ->kebab-keys)
+  (transform (fn [ent]
+               (if (= (:body ent) :image)
+                 (-> ent
+                     (assoc :body (:image ent))
+                     (dissoc :image))
+                 (dissoc ent :image))))
   (belongs-to tentacles)
   (entity-fields :name :uri :tentacle_name :body))
 
