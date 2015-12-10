@@ -136,11 +136,6 @@
   (let [pieces (re-find #"/docs/([^/]+)/.+" request-uri)]
     (if pieces (second pieces) nil)))
 
-
-(defn generate-application-handlers
-  [routes]
-  (bidi/make-handler routes))
-
 (defn wrap-omnibar-transform
   [handler]
   (fn [request]
