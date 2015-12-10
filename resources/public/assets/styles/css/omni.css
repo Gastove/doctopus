@@ -436,3 +436,11 @@
       #doctopus-omnibar #sidebar .search-form .checkbox > label > input {
         margin-left: 0.5em;
         vertical-align: -0.2em; }
+    #doctopus-omnibar #sidebar .results .result-list h3 {
+      font-weight: normal;
+      margin-bottom: 0; }
+      #doctopus-omnibar #sidebar .results .result-list h3 a {
+        color: #e517b2; }
+    #doctopus-omnibar #sidebar .results .result-list p {
+      margin-top: 0.2em;
+      margin-bottom: 1em; }

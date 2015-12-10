@@ -16,7 +16,8 @@
             [taoensso.timbre :as log]
             [cheshire.core :as json]
             [clojure.walk :refer [keywordize-keys]]
-            [clojure.string :as str])
+            [clojure.string :as str]
+            [ring.middleware.anti-forgery :as csrf-token])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
@@ -96,6 +97,20 @@
   [_]
   (serve-html (templates/add-tentacle doctopus)))
 
+(defn serve-search-results
+  [request]
+  (let [query (:query-params request)
+        {:keys [tentacle-name tentacle-local]} query]
+    (serve-json {:ok true
+                 :tentacle-name tentacle-name
+                 :tentacle-local tentacle-local
+                 :results [{:title "some document"
+                            :snippet "beep boop this is a piece of snippet text"
+                            :url "/some/url"}
+                           {:title "some other document"
+                            :snippet "this is some other piece of snipppet text for yer context"
+                            :url "/some/other/url"}]})))
+
 (defn add-tentacle
   [request]
   (let [params (keywordize-keys (:body request))
@@ -117,6 +132,7 @@
                         [:head-name]  {:get serve-head}}
         "add-head"     {:get serve-add-head-form :post add-head}
         "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
+        "search"       {:get serve-search-results}
         "docs"         (load-routes doctopus)}])
 
 (defn- get-tentacle-from-uri

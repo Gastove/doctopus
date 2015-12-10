@@ -126,5 +126,23 @@
                 vertical-align: -0.2em;
             }
         }
+
+        .results {
+            .result-list {
+                h3 {
+                    font-weight: normal;
+                    margin-bottom: 0;
+
+                    a {
+                        color: $primary-color;
+                    }
+                }
+
+                p {
+                    margin-top: 0.2em;
+                    margin-bottom: 1em;
+                }
+            }
+        }
     }
 }

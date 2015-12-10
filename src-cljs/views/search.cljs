@@ -1,8 +1,11 @@
 (ns doctopus.search
-  (:require [cljs.core.async :refer [>!]]
+  (:require [cljs.core.async :refer [<!]]
             [clojure.string :as s]
             [reagent.core :as r]
-            [reagent-forms.core :refer [bind-fields init-field value-of]]))
+            [reagent-forms.core :refer [bind-fields init-field value-of]]
+            [cljs-http.client :as http]
+            [doctopus.util :refer [http-ok?]])
+  (:require-macros [cljs.core.async.macros :refer [go]]))
 
 (enable-console-print!)
 
@@ -27,8 +30,14 @@
 
 (defn- results-component
   [{:keys [results]}]
-  [:div.results (for [result results]
-    [:div {:key (keyword (:title result))} (:title result)])])
+  [:div.results
+   [:h2 "Search Results"]
+   [:div.result-list
+    (for [result results]
+      (let [{:keys [snippet url title]} result]
+        [:div {:key (keyword title)}
+         [:h3 [:a {:href url} title]]
+         [:p snippet]]))]])
 
 (defn- loading-component
   []
@@ -50,9 +59,14 @@
   (fn [event]
     (.preventDefault event)
     (.stopPropagation event)
-    (if-let [terms (not-empty (s/trim (:terms @state)))]
-      (do
-        (swap! state assoc :loading true)))))
+    (if (not-empty (s/trim (:terms @state)))
+      (let [payload (dissoc @state :results :loading :csrf-token)]
+      (go
+        (swap! state assoc :loading true)
+        (let [response (<! (http/get "/search" {:query-params payload}))]
+          (if (http-ok? (:status response))
+            (swap! state assoc :results (get-in response [:body :results])
+                               :loading false))))))))
 
 (defn search-form
   "instantiates a new search form, optionally with an initial state"
