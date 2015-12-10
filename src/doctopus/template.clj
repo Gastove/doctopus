@@ -7,16 +7,41 @@
             [ring.util.anti-forgery :as csrf]
             [ring.middleware.anti-forgery :as csrf-token]))
 
-(defn- iframe-html
-  "constructs an iframe element with relevant src attribute"
+(defn- omnibar-html
+  "constructions domnibar (the doctopus omnibar) html"
   []
   (enlive/html
-   [:iframe {:src "/frame.html" :width "100%" :height "90" :frameBorder "0"}]))
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]
+    [:div#doctopus-omnibar]
+    [:script {:src "/assets/scripts/omni.js" :type "application/javascript"}]))
 
-(defn- prepend-frame
-  "injects the Doctopus iframe into the first body element of the given HTML"
-  [main frame]
-  (enlive/sniptest main [[:body enlive/first-of-type]] (enlive/prepend frame)))
+(defn- omnibar-css
+  "constructs a stylesheet reference for the domnibar"
+  []
+  (enlive/html
+    [:script {:src "//use.typekit.net/txl6yqy.js" :type "application/javascript"}]
+    [:script "try{Typekit.load();}catch(e){}"]
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]))
+
+(defn- add-to-element-with-fn
+  [main element snippet f]
+  (enlive/sniptest main [[element enlive/first-of-type]] (f snippet)))
+
+(defn- append-to-element
+  "Given an an html string and an enlive-compiled html to-append, insert at the
+  end of the given element; defaults to :body"
+  ([main to-append]
+   (append-to-element main :body to-append))
+  ([main element to-append]
+   (add-to-element-with-fn main element to-append enlive/append)))
+
+(defn- prepend-to-element
+  "Given an an html string and an enlive-compiled html to-prepend, insert at the
+  beginning of the given element; defaults to :body"
+  ([main to-prepend]
+   (prepend-to-element main :body to-prepend))
+  ([main element to-prepend]
+   (add-to-element-with-fn main element to-prepend enlive/prepend)))
 
 (deftemplate base-template "templates/base.html"
   [context]
@@ -29,17 +54,21 @@
   [context]
   (apply str (base-template context)))
 
-(defn project-frame
-  "returns a string of HTML suitable for serving an iframe with doctopus
-   navigation"
-  []
-  (base-template ""))
+(defn- app-context
+  "generates an enlive-encoded html description map for app-state; a known
+  element used to communicate context to the frontend cljs app on page load"
+  [context]
+  (enlive/html
+    [:script#app-state {:type "application/json"} (json/write-str context)]))
 
-(defn add-frame
-  "given a string of HTML, returns a string with a Doctopus iframe inserted into
-   its body"
-  [html-str]
-  (apply str (prepend-frame html-str (iframe-html))))
+(defn add-omnibar
+  "given a string of HTML, returns a string with a the Doctopus omnibar and
+  associated assets inserted into the appropriate places."
+  [html-str context]
+  (-> html-str
+      (prepend-to-element :body (omnibar-html))
+      (prepend-to-element :head (omnibar-css))
+      (append-to-element :head (app-context context))))
 
 (defn- tentacle-context
   [tentacle]

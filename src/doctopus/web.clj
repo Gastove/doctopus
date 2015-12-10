@@ -73,10 +73,6 @@
   [_]
   (serve-html (templates/index doctopus)))
 
-(defn serve-iframe
-  [_]
-  (serve-html (templates/project-frame)))
-
 (defn serve-add-head-form
   [_]
   (serve-html (templates/add-head doctopus)))
@@ -116,7 +112,6 @@
   ["/" {""             {:get serve-index}
         "index.html"   {:get serve-index}
         "assets"       (->Resources {:prefix "public/assets"})
-        "frame.html"   {:get serve-iframe}
         "heads"        {"/"           {:get serve-all-heads}
                         ""            {:get serve-all-heads}
                         [:head-name]  {:get serve-head}}
@@ -133,21 +128,21 @@
   [routes]
   (bidi/make-handler routes))
 
-(defn wrap-iframe-transform
+(defn wrap-omnibar-transform
   [handler]
   (fn [request]
     (let [response (handler request)
           file (:body response)
           tentacle-name (get-tentacle-from-uri (:uri request))]
       (if (and tentacle-name file (html? file))
-        (assoc response :body (templates/add-frame (slurp file)))
+        (assoc response :body (templates/add-omnibar (slurp file) {:tentacle-name tentacle-name}))
         response))))
 
 (defn create-application
   [app-handlers]
   (-> (wrap-defaults app-handlers site-defaults)
       (wrap-json-body)
-      (wrap-iframe-transform)
+      (wrap-omnibar-transform)
       (wrap-route-not-found)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
