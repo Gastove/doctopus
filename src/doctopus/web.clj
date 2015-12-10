@@ -1,22 +1,23 @@
 (ns doctopus.web
-  (:require [bidi.ring :as bidi :refer [->Resources]]
+  (:require [cheshire.core :as json]
             [clojure.java.io :as io]
-            [doctopus.configuration :refer [server-config]]
-            [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
-            [doctopus.template :as templates]
-            [doctopus.files.predicates :refer [html?]]
+            [clojure.string :as str]
+            [clojure.walk :refer [keywordize-keys]]
+            [compojure.core :refer [routes defroutes context GET POST ANY]]
+            [doctopus.configuration :refer [server-config docs-uri-prefix]]
             [doctopus.db :as db]
             [doctopus.db.schema :as schema]
+            [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
+            [doctopus.files.predicates :refer [html?]]
+            [doctopus.template :as templates]
             [org.httpkit.server :as server]
-            [ring.middleware.json :refer [wrap-json-body]]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.json :refer [wrap-json-body]]
             [ring.middleware.reload :as reload]
+            [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log]
-            [cheshire.core :as json]
-            [clojure.walk :refer [keywordize-keys]]
-            [clojure.string :as str])
+            [taoensso.timbre :as log])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
