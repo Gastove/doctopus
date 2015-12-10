@@ -89,8 +89,20 @@
 (defn- create-fts-document-index
   [db-name]
   (let [update-sql "UPDATE documents SET search_vector = to_tsvector('english', name || ' ' || body)"
-        idx-sql "CREATE INDEX fts_idx ON documents USING GIN(search_vector)"]
-    (log/info "Creating FTS Index for the documents table")
+        idx-sql (->> ["DO $$"
+                     "BEGIN"
+                     "IF NOT EXISTS ("
+                     "SELECT 1"
+                     "FROM pg_class c"
+                     "JOIN pg_namespace n ON n.oid = c.relnamespace"
+                     "WHERE c.relname = 'fts_idx'"
+                     "AND n.nspname = 'public'"
+                     ") THEN"
+                     "CREATE INDEX fts_idx ON documents USING GIN(search_vector);"
+                     "END IF;"
+                     "END$$"]
+                    (str/join \newline))]
+    (log/info "Ensuring FTS Index for the documents table")
     (do-sql-with-logging! update-sql db-name)
     (do-sql-with-logging! idx-sql db-name)
     (log/info "Index successfully created")))
