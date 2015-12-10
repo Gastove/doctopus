@@ -21,6 +21,7 @@
 ;; documents all at once.
 
 (defprotocol DoctopusBackend
+  (count-records-for-tentacle [this tent-name])
   (get-key-from-backend [this k])
   (load-from-storage [this k])
   (save-to-storage [this k v])
@@ -30,6 +31,9 @@
 (defrecord Backend
     [backend available-backends]
   DoctopusBackend
+  (count-records-for-tentacle [this tentacle]
+    (let [c-fn (get-key-from-backend this :count-fn)]
+      (c-fn tentacle)))
   (get-key-from-backend [this k]
     (let [retrieved-backend (deref (:backend this))]
       (k retrieved-backend)))
@@ -49,7 +53,7 @@
                   storage-impls/postgres-backend]]
     (into {} (for [b backends] [(:name b) b]))))
 
-(def default-backend :permanent-fs)
+(def default-backend :postgres)
 (def backend (Backend. (atom (default-backend available-backends)) available-backends))
 
 (defn set-backend! [backend-key]

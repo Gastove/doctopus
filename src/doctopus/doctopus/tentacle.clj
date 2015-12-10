@@ -4,7 +4,7 @@
   (:require [clojure.string :as str]
             [compojure.core :refer [GET routes context]]
             [doctopus.shell :refer [make-html-from-vec git-clone]]
-            [doctopus.storage :refer [save-to-storage load-from-storage backend]]
+            [doctopus.storage :refer [save-to-storage load-from-storage count-records-for-tentacle backend]]
             [me.raynes.fs :as fs]
             [taoensso.timbre :as log]))
 
@@ -50,9 +50,9 @@
     [name html-commands output-root source-location entry-point]
   TentacleMethods
   (load-html [this]
-    (if (nil? (load-from-storage backend (:name this)))
-      (generate-html this)
-      (log/info "Found html for" (:name this))))
+    (if (= 0 (count-records-for-tentacle backend this))
+      (do (log/debug "Generating") (generate-html this))
+      (log/info "Found html for" (:name this) ", count is:" (count-records-for-tentacle backend (:name this)) "for name:" (:name this))))
   (generate-html [this]
     (log/info "Generating HTML for" (:name this))
     (let [{:keys [html-commands source-location output-root]} this

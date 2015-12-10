@@ -20,19 +20,22 @@
 ;; [["/"    root-fn]
 ;;  ["/foo" foo-fn]]
 
-(defrecord BackendImplementation [name load-fn save-fn remove-fn])
+(defrecord BackendImplementation [name load-fn save-fn remove-fn count-fn])
 
 (def temp-fs-backend (BackendImplementation. :temp-fs
                                              temp-fs-impl/load-fn
                                              temp-fs-impl/save-fn
-                                             temp-fs-impl/remove-fn))
+                                             temp-fs-impl/remove-fn
+                                             temp-fs-impl/count-fn))
 
 (def permanent-fs-backend (BackendImplementation. :permanent-fs
                                                   perm-fs-impl/load-fn
                                                   perm-fs-impl/save-fn
-                                                  perm-fs-impl/remove-fn))
+                                                  perm-fs-impl/remove-fn
+                                                  perm-fs-impl/count-fn))
 
 (def postgres-backend (BackendImplementation. :postgres
                                               postgres-impl/load-fn
                                               postgres-impl/save-fn
-                                              postgres-impl/remove-fn))
+                                              postgres-impl/remove-fn
+                                              postgres-impl/count-fn))
