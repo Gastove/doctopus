@@ -1,6 +1,5 @@
 (ns doctopus.storage.impls.temp-fs
-  (:require [bidi.ring :as bidi-ring]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
             [doctopus.files :as files]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]
@@ -26,11 +25,12 @@
 
 (defn load-fn
   "Returns the routes this serves"
-  [key]
-  (let [file-handle (binding [fs/*cwd* @temp-dir] (fs/file key))
-        file-name (str (.getPath file-handle) "/")]
+  [uri]
+  (let [rel-path (str/replace uri (str docs-uri-prefix "/") "") ;; Remove URI prefix to get relative path
+        file-handle (binding [fs/*cwd* @temp-dir] (fs/file rel-path))
+        file-name (.getPath file-handle)]
     (if (fs/exists? file-handle)
-      [key {"/" (bidi-ring/->Files {:dir file-name})}]
+      (file-response file-name)
       nil)))
 
 (defn remove-fn

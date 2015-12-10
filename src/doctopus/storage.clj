@@ -49,7 +49,7 @@
                   storage-impls/postgres-backend]]
     (into {} (for [b backends] [(:name b) b]))))
 
-(def default-backend :postgres)
+(def default-backend :permanent-fs)
 (def backend (Backend. (atom (default-backend available-backends)) available-backends))
 
 (defn set-backend! [backend-key]
