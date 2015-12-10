@@ -29,5 +29,5 @@
             v (io/resource "test")]
         (set-backend! kw)
         (is (not= nil (save-to-storage backend k v)) "Can we save to this backend?")
-        (is (not= nil (load-routes-from-storage backend k)) "Can we load from this backend?")
+        (is (not= nil (load-from-storage backend k)) "Can we load from this backend?")
         (is (remove-from-storage backend k))))))
