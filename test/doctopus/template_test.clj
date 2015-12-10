@@ -6,6 +6,24 @@
             [net.cgrand.enlive-html :as enlive]))
 
 (deftest template
-  (testing "add-frame injects an iframe in the body element"
-    (is (not (nil? (re-find #"\<body\>\<iframe.*?\>\</body\>"
-                            (add-frame "<body></body>")))))))
+  (testing "append inserts html at end of selection"
+    (is (= "<body><div>test</div><div>inserted</div></body>"
+           (#'doctopus.template/append-to-element
+             "<body><div>test</div></body>"
+             :body
+             (enlive/html [:div "inserted"])))))
+
+  (testing "prepend inserts html at beginning of selection"
+    (is (= "<body><div>inserted</div><div>test</div></body>"
+           (#'doctopus.template/prepend-to-element
+             "<body><div>test</div></body>"
+             :body
+             (enlive/html [:div "inserted"])))))
+
+  (testing "add-omnibar inserts omnibar and context into existing html"
+    (is (not (nil? (re-find #"omnibar"
+                            (add-omnibar "<head></head><body></body>" {})))))
+    (is (not (nil? (re-find #"muh-context"
+                            (add-omnibar "<head></head><body></body>"
+                                         {:muh-context true})))))))
+

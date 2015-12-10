@@ -3,19 +3,13 @@
             [doctopus.views.head-form :refer [head-form]]
             [doctopus.views.tentacle-form :refer [tentacle-form]]
             [doctopus.views.index :refer [main]]
+            [doctopus.util :refer [get-app-state]]
             [reagent.core :as reagent]))
 
 (def pages {:add-head head-form
             :add-tentacle tentacle-form
             :edit-tentacle tentacle-form
             :index main})
-
-(defn- get-app-state
-  []
-  (-> (dom/getElement "app-state")
-      (.-textContent)
-      (js/JSON.parse)
-      (js->clj :keywordize-keys true)))
 
 (defn- get-page-component
   [app-state]
