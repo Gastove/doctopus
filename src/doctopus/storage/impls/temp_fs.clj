@@ -1,8 +1,10 @@
 (ns doctopus.storage.impls.temp-fs
   (:require [clojure.string :as str]
+            [doctopus.configuration :refer [docs-uri-prefix]]
             [doctopus.files :as files]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]
+            [ring.util.response :refer [file-response]]
             [taoensso.timbre :as log]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
