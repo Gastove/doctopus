@@ -13,10 +13,9 @@
                  [jarohen/nomad "0.7.0"]
                  [com.taoensso/timbre "3.4.0"]
                  [ring/ring-defaults "0.1.4"]
-                 [ring/ring-core "1.3.2"]
-                 [ring/ring-devel "1.3.2"]
+                 [ring/ring-core "1.4.0"]
+                 [ring/ring-devel "1.4.0"]
                  [ring/ring-json "0.4.0"]
-                 [bidi "1.19.0"]
                  [enlive "1.1.5"]
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.1"]
@@ -31,7 +30,8 @@
                  [log4j "1.2.15" :exclusions [javax.mail/mail
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
-                                              com.sun.jmx/jmxri]]]
+                                              com.sun.jmx/jmxri]]
+                 [compojure "1.4.0"]]
   :plugins [[michaelblume/lein-marginalia "0.9.0" :exclusions [org.clojure/clojurescript]]
             [lein-figwheel "0.5.0-2" :exclusions [joda-time]]
             [lein-cljsbuild "1.1.1" :exclusions [org.clojure/clojurescript]]]
