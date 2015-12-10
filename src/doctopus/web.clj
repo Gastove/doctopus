@@ -140,10 +140,10 @@
   [handler]
   (fn [request]
     (let [response (handler request)
-          file (:body response)
+          body (:body response)
           tentacle-name (get-tentacle-from-uri (:uri request))]
-      (if (and tentacle-name file (html? file))
-        (assoc response :body (templates/add-omnibar (slurp file) {:tentacle-name tentacle-name}))
+      (if (and tentacle-name body (html? body))
+        (assoc response :body (templates/add-omnibar body {:tentacle-name tentacle-name}))
         response))))
 
 (def doctopus-ring-defaults
