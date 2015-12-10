@@ -39,8 +39,8 @@ You'll want to mosey on over to the `resources` directory and make a
 `configuration-local.edn` by copying the template. Get a value or two configured
 in there and you'll be good to go to get the whole thing spun up:
 
-```bash
-        > NOMAD_ENV=DEV lein run
+```bash    
+    > NOMAD_ENV=DEV lein trampoline run
 ```
 
 (You can, of course, set `NOMAD_ENV` in the `rc` file of your choice.)
