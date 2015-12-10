@@ -44,6 +44,17 @@
       response
       (four-oh-four (:uri request)))))
 
+(defn wrap-trim-trailing-slash
+  "Compojure can't use regex; chomp a trailing slash before calling the handler."
+  [handler]
+  (fn [request]
+    (let [uri (:uri request)
+          new-uri (if (and (not (= "/" uri))
+                           (re-find #"/$" uri))
+                    (subs uri 0 (dec (count uri)))
+                    uri)]
+      (handler (assoc request :uri new-uri)))))
+
 (defn serve-json
   "Turns a clojure data-structure into JSON and serves it with the correct
    content-type"
@@ -111,27 +122,22 @@
     (db/create-mapping! head tentacle)
     (serve-json {:success-url (str "/tentacles/" (:name tentacle))})))
 
-;; Bidi routes are defined as nested sets of ""
-(defn generate-routes []
-  ["/" {""             {:get serve-index}
-        "index.html"   {:get serve-index}
-        "assets"       (->Resources {:prefix "public/assets"})
-        "frame.html"   {:get serve-iframe}
-        "heads"        {"/"           {:get serve-all-heads}
-                        ""            {:get serve-all-heads}
-                        [:head-name]  {:get serve-head}}
-        "add-head"     {:get serve-add-head-form :post add-head}
-        "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
-        "docs"         (load-routes doctopus)}])
+(def doctopus-routes
+  (routes
+   (GET "/" [] serve-index)
+   (GET "/index.html" [] serve-index)
+   (GET "/frame.html" [] serve-all-heads)
+   (GET "/heads" [] serve-all-heads)
+   (GET "/heads/:head-name" [head-name] serve-head)
+   (GET "/add-head" [] serve-add-head-form)
+   (POST "/add-head" [] add-head)
+   (GET "/add-tentacle" [] serve-add-tentacle-form)
+   (POST "/add-tentacle" [] add-tentacle)))
 
 (defn- get-tentacle-from-uri
   [request-uri]
   (let [pieces (re-find #"/docs/([^/]+)/.+" request-uri)]
     (if pieces (second pieces) nil)))
-
-(defn generate-application-handlers
-  [routes]
-  (bidi/make-handler routes))
 
 (defn wrap-iframe-transform
   [handler]
@@ -143,9 +149,14 @@
         (assoc response :body (templates/add-frame (slurp file)))
         response))))
 
+(def doctopus-ring-defaults
+  (-> site-defaults
+      (assoc-in [:static :resources] "public")))
+
 (defn create-application
   [app-handlers]
-  (-> (wrap-defaults app-handlers site-defaults)
+  (-> (wrap-defaults app-handlers doctopus-ring-defaults)
+      (wrap-trim-trailing-slash)
       (wrap-json-body)
       (wrap-iframe-transform)
       (wrap-route-not-found)
@@ -167,9 +178,12 @@
   []
   (let [{:keys [port]} (server-config)
         env (parse-env)
-        routes (generate-routes)
-        handlers (generate-application-handlers routes)
-        application (create-application handlers)]
+        ;; Building routes here to avoid loading the full doctopus stack until
+        ;; app launch.
+        application-routes (routes
+                 (context docs-uri-prefix [] (load-routes doctopus))
+                 doctopus-routes)
+        application (create-application application-routes)]
     (log/info "Checking DB is set up...")
     (schema/bootstrap env)
     (log/info "Bootstrapping heads")

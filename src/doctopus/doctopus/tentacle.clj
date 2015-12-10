@@ -2,6 +2,7 @@
   "A `Tentacle' defines a single unit of documentation -- one 'source' worth,
   and all the configs required to build it."
   (:require [clojure.string :as str]
+            [compojure.core :refer [GET routes context]]
             [doctopus.shell :refer [make-html-from-vec git-clone]]
             [doctopus.storage :refer [save-to-storage load-from-storage backend]]
             [me.raynes.fs :as fs]
@@ -43,7 +44,7 @@
   (generate-html [this])
   (save-build-output [this dir])
   (get-html-entrypoint [this])
-  (routes [this]))
+  (generate-routes [this]))
 
 (defrecord Tentacle
     [name html-commands output-root source-location entry-point]
@@ -70,5 +71,8 @@
        (save-to-storage backend name dir) name "saved HTML" "save HTML")))
   (get-html-entrypoint [this]
     (str/join "/" ["" "docs" (:name this) (:entry-point this)]))
-  (routes [this]
-    (load-from-storage backend (:name this))))
+  (generate-routes [this]
+    (routes
+     (GET "*" {:keys [uri]}
+          (log/debug "Looking for URI:" uri)
+          (load-from-storage backend uri)))))
