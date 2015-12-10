@@ -1,9 +1,17 @@
 (ns doctopus.storage.impls.postgres-impl
-  (:require [doctopus.db :as db]
-            [doctopus.files :as f])
-  (:import [java.nio.file Files Paths]))
+  (:require [doctopus.configuration :as configuration]
+            [doctopus.db :as db]
+            [doctopus.files :as f]
+            [ring.util.mime-type :as ring-mime]
+            [ring.util.response :as response]
+            [taoensso.timbre :as log])
+  (:import [java.io ByteArrayInputStream]
+           [java.nio.file Files Paths]))
 
 (def is-img-regex #"^image")
+
+(defn count-fn [tentacle]
+  (count (db/get-all-documents-for-tentacle tentacle)))
 
 (defn get-mime-type
   [f]
@@ -11,8 +19,9 @@
     (Files/probeContentType path)))
 
 (defn assign-body-and-image
-  [base-doc doc-path mime-type]
-  (let [doc-content (slurp doc-path)]
+  [base-doc doc-file mime-type]
+  (log/debug base-doc)
+  (let [doc-content (slurp doc-file)]
     (if (re-find is-img-regex mime-type)
       (assoc base-doc :body :image :image (.getBytes doc-content))
       (assoc base-doc :body doc-content :image nil))))
@@ -26,23 +35,47 @@
   update's `where' clause.
 
   Also note: there are two kinds of files to be loaded: text and images (binary)."
-  [tentacle src-dir]
-  (let [relpath-file-pairs (f/list-files-with-relative-paths src-dir)
-        tent-name (:name tentacle)]
+  [tent-name src-dir]
+  (let [relpath-file-pairs (f/list-files-with-relative-paths src-dir)]
     (doseq [[relpath doc-file] relpath-file-pairs
-            :let [doc-mime-type (get-mime-type doc-file)
+            :let [doc-mime-type (ring-mime/ext-mime-type relpath)
                   base-doc {:name (str tent-name "-" (.getName doc-file))
                             ;; :path doc-file
                             :mime-type doc-mime-type
-                            :uri (str tent-name "/" relpath)
+                            :uri (str configuration/docs-uri-prefix "/" tent-name relpath)
                             :tentacle-name tent-name}
                   new-doc (assign-body-and-image base-doc doc-file doc-mime-type)]]
+      (log/debug "Reading doc from:" relpath)
+      (log/debug "Giving doc URI:" (:uri new-doc))
       (db/save-document! new-doc false))
     (db/update-document-index)))
 
+(defn- build-body
+  "Examine a DB result to see if it's an image; if so, build a ByteArrayInputStream
+  and use it as the response body."
+  [res]
+  (if (nil? (:image res))
+    res
+    (let [bais (ByteArrayInputStream. (:image res))]
+      (-> res
+          (assoc :body bais)
+          (dissoc :image)))))
+
+(defn- make-response
+  [res]
+  (response/response (:body res)))
+
+(defn- set-content-type
+  [res]
+  (response/content-type (dissoc res :mime-type) (:mime-type res)))
+
 (defn load-fn
   [uri]
-  (db/get-document-by-uri uri))
+  (if-let [res (first (db/get-document-by-uri uri))]
+    (-> res
+        (build-body)
+        (make-response)
+        (set-content-type))))
 
 (defn remove-fn
   [document]
