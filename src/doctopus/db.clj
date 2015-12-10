@@ -105,7 +105,7 @@
                      (dissoc :image))
                  (dissoc ent :image))))
   (belongs-to tentacles)
-  (entity-fields :name :uri :tentacle_name :body))
+  (entity-fields :name :uri :tentacle_name :body :mime_type))
 
 (defn get-tentacle
   [name]
