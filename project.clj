@@ -60,7 +60,7 @@
                                    :optimizations :none
                                    :pretty-print true}}]}
   :profiles {:uberjar {:aot :all
-                       :prep-tasks ["compile" ["cljsbuild" "once" "prod"]]
+                       :prep-tasks ["compile" ["cljsbuild" "once" "prod" "prod-omni"]]
                        :cljsbuild {:jar true
                                    :builds [{:id "prod"
                                              :source-paths ["src-cljs"]
@@ -68,6 +68,15 @@
                                              :compiler {:main doctopus.main
                                                         :source-map "resources/public/assets/scripts/main.js.map"
                                                         :output-to "resources/public/assets/scripts/main.js"
+                                                        :asset-path "/assets/scripts"
+                                                        :optimizations :advanced
+                                                        :pretty-print false}}
+                                            {:id "prod-omni"
+                                             :source-paths ["src-cljs"]
+                                             :figwheel false
+                                             :compiler {:main doctopus.omni
+                                                        :source-map "resources/public/assets/scripts/omni.js.map"
+                                                        :output-to "resources/public/assets/scripts/omni.js"
                                                         :asset-path "/assets/scripts"
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}})
