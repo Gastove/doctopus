@@ -235,7 +235,7 @@
   (select documents
           (where {:uri uri})))
 
-(defn get-document-for-tentacle
+(defn get-all-documents-for-tentacle
   [tentacle]
   (select documents
           (where {:tentacle_name (:name tentacle)})))
