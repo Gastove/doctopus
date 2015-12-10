@@ -1,16 +1,21 @@
-/* Global box sizing */
-html {
-  box-sizing: border-box; }
-
-*, *:before, *:after {
-  box-sizing: inherit; }
-
-/* Clear floats */
-.hidden {
-  display: none; }
-
 /* all elements added to the page _must_ be under the omnibar's namespace */
 #doctopus-omnibar {
+  /* Global box sizing */
+  /* Clear floats */
+  /****** Forms ******/
+  /* focus styles */
+  /* Customize placeholder text */
+  /* Disabled */
+  /* Half and third field group */
+  /* String form elements */
+  /* Join form elements */
+  /* Mixins */
+  /* Extend */
+  /* 26px */
+  /* 30px */
+  /* 34px */
+  /* 38px */
+  box-sizing: border-box;
   background: #333032;
   color: #666165;
   font: 100%/1.5 "proxima-nova-soft", Helvetica, Arial, sans-serif;
@@ -18,6 +23,333 @@ html {
   top: 0;
   left: 0;
   -webkit-font-smoothing: antialiased; }
+  #doctopus-omnibar html {
+    box-sizing: border-box; }
+  #doctopus-omnibar *, #doctopus-omnibar *:before, #doctopus-omnibar *:after {
+    box-sizing: inherit; }
+  #doctopus-omnibar fieldset:after, #doctopus-omnibar .btn-group:after, #doctopus-omnibar .btn-bar:after {
+    clear: both;
+    content: " ";
+    display: table; }
+  #doctopus-omnibar .hidden {
+    display: none; }
+  #doctopus-omnibar ul.form {
+    list-style: none;
+    margin: 0;
+    padding: 0; }
+  #doctopus-omnibar ul.form > li {
+    margin: 0; }
+  #doctopus-omnibar fieldset {
+    border: none;
+    margin: 0;
+    padding: 0; }
+  #doctopus-omnibar fieldset > div {
+    display: block;
+    margin: 0 0 10px;
+    position: relative;
+    vertical-align: top;
+    width: 100%; }
+  #doctopus-omnibar label {
+    color: #626566;
+    display: block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 20px;
+    margin: 0 0 5px;
+    min-height: 20px; }
+  #doctopus-omnibar label span {
+    color: #666;
+    font-size: 12px;
+    font-style: normal;
+    font-weight: normal; }
+  #doctopus-omnibar label span.note {
+    display: block;
+    padding: 0; }
+  #doctopus-omnibar input[type="color"],
+  #doctopus-omnibar input[type="date"],
+  #doctopus-omnibar input[type="datetime"],
+  #doctopus-omnibar input[type="datetime-local"],
+  #doctopus-omnibar input[type="email"],
+  #doctopus-omnibar input[type="month"],
+  #doctopus-omnibar input[type="number"],
+  #doctopus-omnibar input[type="password"],
+  #doctopus-omnibar input[type="search"],
+  #doctopus-omnibar input[type="tel"],
+  #doctopus-omnibar input[type="text"],
+  #doctopus-omnibar input[type="time"],
+  #doctopus-omnibar input[type="url"],
+  #doctopus-omnibar input[type="week"],
+  #doctopus-omnibar select,
+  #doctopus-omnibar textarea {
+    background: #f5f5f5;
+    border-color: #c4cacc;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 4px;
+    font-size: 14px;
+    height: 34px;
+    line-height: 22px;
+    padding: 4px 10px;
+    vertical-align: middle;
+    width: 100%;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+    -webkit-transition: all .25s linear;
+    transition: all .25s linear; }
+  #doctopus-omnibar input[type="checkbox"],
+  #doctopus-omnibar input[type="radio"] {
+    display: inline-block;
+    margin: 2px 3px 0 0; }
+  #doctopus-omnibar input[type="checkbox"] + label,
+  #doctopus-omnibar input[type="radio"] + label {
+    display: inline-block;
+    margin: 0 5px 5px 0; }
+  #doctopus-omnibar input[type="file"] {
+    height: 24px;
+    font-size: 14px;
+    line-height: 1; }
+  #doctopus-omnibar select {
+    outline: 0;
+    padding: 5px 5px 5px 10px; }
+
+@-moz-document url-prefix() {
+  #doctopus-omnibar select {
+    padding-top: 10px; } }
+  #doctopus-omnibar select option {
+    border: none;
+    padding: 5px; }
+  #doctopus-omnibar textarea {
+    display: block;
+    min-height: 60px;
+    padding: 10px; }
+  #doctopus-omnibar :focus {
+    outline: 0; }
+  #doctopus-omnibar input[type="checkbox"]:focus,
+  #doctopus-omnibar input[type="color"]:focus,
+  #doctopus-omnibar input[type="date"]:focus,
+  #doctopus-omnibar input[type="datetime"]:focus,
+  #doctopus-omnibar input[type="datetime-local"]:focus,
+  #doctopus-omnibar input[type="email"]:focus,
+  #doctopus-omnibar input[type="month"]:focus,
+  #doctopus-omnibar input[type="number"]:focus,
+  #doctopus-omnibar input[type="password"]:focus,
+  #doctopus-omnibar input[type="radio"]:focus,
+  #doctopus-omnibar input[type="search"]:focus,
+  #doctopus-omnibar input[type="time"]:focus,
+  #doctopus-omnibar input[type="tel"]:focus,
+  #doctopus-omnibar input[type="text"]:focus,
+  #doctopus-omnibar input[type="url"]:focus,
+  #doctopus-omnibar input[type="week"]:focus,
+  #doctopus-omnibar select:focus,
+  #doctopus-omnibar textarea:focus {
+    background-color: #fff;
+    border-color: #5cdce5; }
+  #doctopus-omnibar ::-webkit-input-placeholder {
+    color: #bfbfbf;
+    white-space: normal; }
+  #doctopus-omnibar :-moz-placeholder,
+  #doctopus-omnibar input:-moz-placeholder {
+    color: #bfbfbf; }
+  #doctopus-omnibar input[disabled] {
+    border-color: #dfdfdf;
+    box-shadow: none; }
+    #doctopus-omnibar input[disabled][type="button"] {
+      border-color: #dfdfdf;
+      background: #dfdfdf; }
+  #doctopus-omnibar .half-field,
+  #doctopus-omnibar .third-field {
+    float: left;
+    padding-right: 10px;
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box; }
+  #doctopus-omnibar .half-field:last-child,
+  #doctopus-omnibar .third-field:last-child {
+    padding-right: 0; }
+  #doctopus-omnibar .half-field {
+    width: 50%; }
+  #doctopus-omnibar .third-field {
+    width: 33.33333333333333%; }
+  #doctopus-omnibar .align label,
+  #doctopus-omnibar .align input,
+  #doctopus-omnibar .align select {
+    display: inline-block;
+    width: auto; }
+  #doctopus-omnibar .align input[type="number"] {
+    max-width: 60px; }
+  #doctopus-omnibar .align .btn {
+    display: inline-block;
+    vertical-align: middle; }
+  #doctopus-omnibar input[type].prefix,
+  #doctopus-omnibar select.prefix {
+    border-radius: 4px 0 0 4px;
+    margin-right: -4px; }
+  #doctopus-omnibar input[type].postfix,
+  #doctopus-omnibar select.postfix {
+    border-radius: 0 4px 4px 0; }
+  #doctopus-omnibar input[type].prefix + input[type].postfix,
+  #doctopus-omnibar select.prefix + select.postfix,
+  #doctopus-omnibar input[type].prefix + select.postfix,
+  #doctopus-omnibar select.prefix + input[type].postfix {
+    border-left: none; }
+  #doctopus-omnibar select.prefix,
+  #doctopus-omnibar select.postfix {
+    background-position: 90% 50%;
+    padding-right: 30px; }
+  #doctopus-omnibar .submit {
+    padding-top: 10px; }
+  #doctopus-omnibar a.btn,
+  #doctopus-omnibar button,
+  #doctopus-omnibar input[type=submit], #doctopus-omnibar .btn.primary, #doctopus-omnibar .btn.secondary, #doctopus-omnibar .btn.tertiary, #doctopus-omnibar .btn.important {
+    border-radius: 4px;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    outline: none;
+    padding: 4px 10px;
+    text-decoration: none;
+    -webkit-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out; }
+  #doctopus-omnibar a.btn,
+  #doctopus-omnibar button,
+  #doctopus-omnibar input[type=submit] {
+    background: #e517b2;
+    border: #dc16ab 2px solid;
+    color: #fff; }
+    #doctopus-omnibar a.btn:hover,
+    #doctopus-omnibar button:hover,
+    #doctopus-omnibar input[type=submit]:hover {
+      background: #ec43c2;
+      border: #eb3abf 2px solid;
+      color: #fff; }
+    #doctopus-omnibar a.btn:active, #doctopus-omnibar a.btn.active,
+    #doctopus-omnibar button:active,
+    #doctopus-omnibar button.active,
+    #doctopus-omnibar input[type=submit]:active,
+    #doctopus-omnibar input[type=submit].active {
+      background: #b7128e;
+      border: #ad1187 2px solid;
+      color: #fff; }
+    #doctopus-omnibar a.btn.selected,
+    #doctopus-omnibar button.selected,
+    #doctopus-omnibar input[type=submit].selected {
+      background: #b7128e;
+      cursor: default; }
+  #doctopus-omnibar .btn.primary {
+    background: #e517b2;
+    border: #dc16ab 2px solid;
+    color: #fff; }
+    #doctopus-omnibar .btn.primary:hover {
+      background: #ec43c2;
+      border: #eb3abf 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.primary:active, #doctopus-omnibar .btn.primary.active {
+      background: #b7128e;
+      border: #ad1187 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.primary.selected {
+      background: #b7128e;
+      cursor: default; }
+  #doctopus-omnibar .btn.secondary {
+    background: #6d17e5;
+    border: #6916dc 2px solid;
+    color: #fff; }
+    #doctopus-omnibar .btn.secondary:hover {
+      background: #8a43ec;
+      border: #843aeb 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.secondary:active, #doctopus-omnibar .btn.secondary.active {
+      background: #5712b7;
+      border: #5311ad 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.secondary.selected {
+      background: #5712b7;
+      cursor: default; }
+  #doctopus-omnibar .btn.tertiary {
+    background: #17d4e5;
+    border: #16cbdc 2px solid;
+    color: #939799; }
+    #doctopus-omnibar .btn.tertiary:hover {
+      background: #43deec;
+      border: #3addeb 2px solid;
+      color: #939799; }
+    #doctopus-omnibar .btn.tertiary:active, #doctopus-omnibar .btn.tertiary.active {
+      background: #12a9b7;
+      border: #11a1ad 2px solid;
+      color: #939799; }
+    #doctopus-omnibar .btn.tertiary.selected {
+      background: #12a9b7;
+      cursor: default; }
+  #doctopus-omnibar .btn.important {
+    background: #e517b2;
+    border: #dc16ab 2px solid;
+    color: #fff; }
+    #doctopus-omnibar .btn.important:hover {
+      background: #ec43c2;
+      border: #eb3abf 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.important:active, #doctopus-omnibar .btn.important.active {
+      background: #b7128e;
+      border: #ad1187 2px solid;
+      color: #fff; }
+    #doctopus-omnibar .btn.important.selected {
+      background: #b7128e;
+      cursor: default; }
+  #doctopus-omnibar .btn.mini {
+    font-size: 10px;
+    line-height: 20px;
+    padding: 1px 6px; }
+  #doctopus-omnibar .btn.small {
+    font-size: 12px;
+    line-height: 22px;
+    padding: 2px 6px; }
+  #doctopus-omnibar .btn.medium {
+    font-size: 14px;
+    line-height: 24px;
+    padding: 3px 10px; }
+  #doctopus-omnibar .btn.large {
+    font-size: 16px;
+    line-height: 26px;
+    padding: 4px 20px; }
+  #doctopus-omnibar .btn-group {
+    margin: 0 0 10px; }
+  #doctopus-omnibar .btn-group > .btn {
+    margin: 0 5px 0 0; }
+  #doctopus-omnibar .btn-bar {
+    margin: 0 0 10px; }
+  #doctopus-omnibar .btn-bar > .btn,
+  #doctopus-omnibar .btn-bar > a {
+    float: left;
+    margin-left: -2px;
+    border-radius: 0; }
+  #doctopus-omnibar .btn-bar > .btn:first-child,
+  #doctopus-omnibar .btn-bar > a:first-child {
+    border-radius: 4px 0 0 4px;
+    margin: 0; }
+  #doctopus-omnibar .btn-bar > .btn:last-child,
+  #doctopus-omnibar .btn-bar > a:last-child {
+    border-radius: 0 4px 4px 0; }
+  #doctopus-omnibar .btn-action {
+    border: #c4cacc 2px solid;
+    border-radius: 4px;
+    color: #939799;
+    display: inline-block;
+    font-size: 14px;
+    font-weight: bold;
+    line-height: 22px;
+    outline: none;
+    padding: 4px 10px;
+    text-decoration: none;
+    -webkit-transition: all .25s ease-in-out;
+    transition: all .25s ease-in-out; }
+    #doctopus-omnibar .btn-action:hover {
+      background: #f3f4f5;
+      color: #939799; }
+  #doctopus-omnibar .controls .btn-bar {
+    display: inline-block;
+    margin-right: 10px; }
   #doctopus-omnibar a {
     text-decoration: none;
     color: #17d4e5; }
@@ -90,3 +422,17 @@ html {
           color: #fbfbfb; }
         #doctopus-omnibar #sidebar .state h1 small {
           font-weight: normal; }
+    #doctopus-omnibar #sidebar .search-form {
+      margin-left: 0.5em;
+      margin-right: 0.5em;
+      margin-bottom: 0.5em; }
+      #doctopus-omnibar #sidebar .search-form #terms {
+        display: inline-block;
+        width: 70%; }
+      #doctopus-omnibar #sidebar .search-form .search-button {
+        float: right;
+        margin-left: 2%;
+        width: 28%; }
+      #doctopus-omnibar #sidebar .search-form .checkbox > label > input {
+        margin-left: 0.5em;
+        vertical-align: -0.2em; }

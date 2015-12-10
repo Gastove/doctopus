@@ -25,6 +25,7 @@
                  [org.clojure/clojurescript "1.7.170"]
                  [cljs-http "0.1.38"]
                  [reagent "0.5.1"]
+                 [reagent-forms "0.5.13"]
                  [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]

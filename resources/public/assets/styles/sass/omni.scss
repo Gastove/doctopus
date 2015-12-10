@@ -1,7 +1,11 @@
-@import 'settings';
-
 /* all elements added to the page _must_ be under the omnibar's namespace */
 #doctopus-omnibar {
+    @import 'settings';
+    @import 'components/forms';
+    @import 'components/buttons';
+
+    box-sizing: border-box;
+
     background: $dark-background;
     color: $type-color;
     font: 100%/1.5 "proxima-nova-soft", Helvetica, Arial, sans-serif;
@@ -98,6 +102,28 @@
                 small {
                     font-weight: normal;
                 }
+            }
+        }
+
+        .search-form {
+            margin-left: 0.5em;
+            margin-right: 0.5em;
+            margin-bottom: 0.5em;
+
+            #terms {
+                display: inline-block;
+                width: 70%;
+            }
+
+            .search-button {
+                float: right;
+                margin-left: 2%;
+                width: 28%;
+            }
+
+            .checkbox > label > input {
+                margin-left: 0.5em;
+                vertical-align: -0.2em;
             }
         }
     }
