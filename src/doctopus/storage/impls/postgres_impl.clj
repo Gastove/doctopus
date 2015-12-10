@@ -57,25 +57,20 @@
   (if (nil? (:image res))
     res
     (let [bais (ByteArrayInputStream. (:image res))]
-      (-> res
-          (assoc :body bais)
-          (dissoc :image)))))
+      (assoc res :body bais))))
 
 (defn- make-response
   [res]
-  (response/response (:body res)))
-
-(defn- set-content-type
-  [res]
-  (response/content-type (dissoc res :mime-type) (:mime-type res)))
+  (log/debug "Content type from the DB is:" (:mime-type res))
+  (-> (response/response (:body res))
+      (response/content-type (:mime-type res))))
 
 (defn load-fn
   [uri]
   (if-let [res (first (db/get-document-by-uri uri))]
     (-> res
         (build-body)
-        (make-response)
-        (set-content-type))))
+        (make-response))))
 
 (defn remove-fn
   [document]
