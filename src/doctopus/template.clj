@@ -28,12 +28,16 @@
   (enlive/sniptest main [[element enlive/first-of-type]] (f snippet)))
 
 (defn- append-to-element
+  "Given an an html string and an enlive-compiled html to-append, insert at the
+  end of the given element; defaults to :body"
   ([main to-append]
    (append-to-element main :body to-append))
   ([main element to-append]
    (add-to-element-with-fn main element to-append enlive/append)))
 
 (defn- prepend-to-element
+  "Given an an html string and an enlive-compiled html to-prepend, insert at the
+  beginning of the given element; defaults to :body"
   ([main to-prepend]
    (prepend-to-element main :body to-prepend))
   ([main element to-prepend]
@@ -51,13 +55,15 @@
   (apply str (base-template context)))
 
 (defn- app-context
+  "generates an enlive-encoded html description map for app-state; a known
+  element used to communicate context to the frontend cljs app on page load"
   [context]
   (enlive/html
     [:script#app-state {:type "application/json"} (json/write-str context)]))
 
 (defn add-omnibar
-  "given a string of HTML, returns a string with a the Doctopus omnibar inserted
-  at the end of its body"
+  "given a string of HTML, returns a string with a the Doctopus omnibar and
+  associated assets inserted into the appropriate places."
   [html-str context]
   (-> html-str
       (prepend-to-element :body (omnibar-html))
