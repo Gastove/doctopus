@@ -9,6 +9,11 @@
     top: 0; left: 0;
     -webkit-font-smoothing: antialiased;
 
+    a {
+        text-decoration: none;
+        color: $link-color;
+    }
+
     #brand {
         background: url(/assets/images/doctopus-favicon.png) $dark-background;
         background-size: 32px 32px;
@@ -70,13 +75,28 @@
             a {
                 text-indent: 100%;
                 color: $base-color;
-                text-decoration: none;
 
                 &:before {
                     font-size: 1.2em;
                     margin-right: 0.2em;
                     content: "\00d7";
                     font-weight: bold;
+                }
+            }
+        }
+
+        .state {
+            margin: 1em 0.2em 0.2em 0.2em;
+
+            h1 {
+                color: $base-color;
+
+                a {
+                    color: $base-color;
+                }
+
+                small {
+                    font-weight: normal;
                 }
             }
         }

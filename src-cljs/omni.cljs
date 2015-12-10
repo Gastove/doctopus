@@ -1,6 +1,7 @@
 (ns doctopus.omni
   (:require [goog.dom :as dom]
-            [reagent.core :as r]))
+            [reagent.core :as r]
+            [doctopus.util :refer [get-app-state]]))
 
 (enable-console-print!)
 
@@ -10,8 +11,7 @@
   [event]
   (.stopPropagation event)
   (.preventDefault event)
-  (swap! state assoc :open (not (:open @state)))
-  (println @state))
+  (swap! state assoc :open (not (:open @state))))
 
 (defn- brand-component
   []
@@ -29,22 +29,32 @@
   []
   [:div.logo [:a {:href "/"} "doctopus"]])
 
+(defn- state-component
+  [app-state]
+  (let [{:keys [tentacle-name]} app-state]
+    [:div.state
+     [:h1
+      [:small "currently viewing "]
+      [:a {:href (str "/docs/" tentacle-name)} tentacle-name]]]))
+
 (defn- sidebar-component
-  []
+  [full-state]
   [:div#sidebar
    [logo-component]
-   [close-component]])
+   [close-component]
+   [state-component (:context full-state)]])
 
 
 (defn omnibar
-  []
+  [context]
+  (swap! state assoc :context context)
   (let [{:keys [open]} @state]
     (if open
-      [sidebar-component]
+      [sidebar-component @state]
       [brand-component])))
 
 (defn init
   [component]
   (r/render-component component (dom/getElement "doctopus-omnibar")))
 
-(init [omnibar])
+(init [omnibar (get-app-state)])

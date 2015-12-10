@@ -53,7 +53,7 @@
 (defn- app-context
   [context]
   (enlive/html
-    [:script#app-state {:type "application/javascript"} (json/write-str context)]))
+    [:script#app-state {:type "application/json"} (json/write-str context)]))
 
 (defn add-omnibar
   "given a string of HTML, returns a string with a the Doctopus omnibar inserted
@@ -62,7 +62,7 @@
   (-> html-str
       (prepend-to-element :body (omnibar-html))
       (prepend-to-element :head (omnibar-css))
-      (append-to-element :body (app-context context))))
+      (append-to-element :head (app-context context))))
 
 (defn- tentacle-context
   [tentacle]
