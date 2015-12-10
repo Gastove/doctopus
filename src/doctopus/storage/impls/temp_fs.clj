@@ -11,6 +11,9 @@
 ;; within this directory
 (def temp-dir (atom (fs/temp-dir  "doctopus-temp")))
 
+;; TODO:
+(defn count-fn [] nil)
+
 (defn regenerate-temp-dir
   "Generates a new temp dir"
   []

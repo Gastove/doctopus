@@ -19,6 +19,8 @@
 
 (if-not (fs/exists? root) (fs/mkdirs root))
 
+;; TODO:
+(defn count-fn [] nil)
 
 (defn save-fn
   "Save a dir of html stuff by moving it in to the annointed dir in
