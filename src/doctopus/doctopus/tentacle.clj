@@ -2,8 +2,10 @@
   "A `Tentacle' defines a single unit of documentation -- one 'source' worth,
   and all the configs required to build it."
   (:require [clojure.string :as str]
+            [compojure.core :refer [GET routes context]]
+            [doctopus.configuration :refer [docs-uri-prefix]]
             [doctopus.shell :refer [make-html-from-vec git-clone]]
-            [doctopus.storage :refer [save-to-storage load-from-storage backend]]
+            [doctopus.storage :refer [save-to-storage load-from-storage count-records-for-tentacle backend]]
             [me.raynes.fs :as fs]
             [taoensso.timbre :as log]))
 
@@ -43,14 +45,15 @@
   (generate-html [this])
   (save-build-output [this dir])
   (get-html-entrypoint [this])
-  (routes [this]))
+  (generate-routes [this]))
 
 (defrecord Tentacle
     [name html-commands output-root source-location entry-point]
   TentacleMethods
   (load-html [this]
-    (if (nil? (load-from-storage backend (:name this)))
-      (generate-html this)
+    (if (= 0 (count-records-for-tentacle backend this))
+      (do (log/info "No HTML found for" (:name this))
+          (generate-html this))
       (log/info "Found html for" (:name this))))
   (generate-html [this]
     (log/info "Generating HTML for" (:name this))
@@ -69,6 +72,9 @@
       (check-and-report
        (save-to-storage backend name dir) name "saved HTML" "save HTML")))
   (get-html-entrypoint [this]
-    (str/join "/" ["" "docs" (:name this) (:entry-point this)]))
-  (routes [this]
-    (load-from-storage backend (:name this))))
+    (str/join "/" ["" docs-uri-prefix (:name this) (:entry-point this)]))
+  (generate-routes [this]
+    (routes
+     (GET "*" {:keys [uri]}
+          (log/debug "Looking for URI:" uri)
+          (load-from-storage backend uri)))))

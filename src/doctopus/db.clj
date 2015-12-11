@@ -7,7 +7,8 @@
             [doctopus.configuration :refer [server-config]]
             [korma.core :refer :all]
             [korma.db :refer [defdb postgres default-connection]]
-            [taoensso.timbre :as log]))
+            [taoensso.timbre :as log])
+  (:refer-clojure :exclude [update]))
 
 (defn- now
   []
@@ -97,8 +98,14 @@
   (prepare add-updated)
   (prepare ->shallow-snake-keys)
   (transform ->kebab-keys)
+  (transform (fn [ent]
+               (if (= (:body ent) :image)
+                 (-> ent
+                     (assoc :body (:image ent))
+                     (dissoc :image))
+                 (dissoc ent :image))))
   (belongs-to tentacles)
-  (entity-fields :name :uri :tentacle_name :body))
+  (entity-fields :name :uri :tentacle_name :body :image :mime_type))
 
 (defn get-tentacle
   [name]
@@ -228,7 +235,7 @@
   (select documents
           (where {:uri uri})))
 
-(defn get-document-for-tentacle
+(defn get-all-documents-for-tentacle
   [tentacle]
   (select documents
           (where {:tentacle_name (:name tentacle)})))
@@ -241,7 +248,7 @@
   ([]
    (update documents
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})
-           (where {:uri [like "%html"]})))
+           (where {:mime_type [like "text%"]})))
   ([document]
    (update documents
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})

@@ -3,12 +3,15 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.configuration :as cfg]
+            [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
-            [doctopus.storage :as storage]
-            [doctopus.storage.impls.temp-fs :as temp-fs]
+            [doctopus.storage :as storage :refer [count-records-for-tentacle backend]]
+            [doctopus.test-database :refer [database-fixture]]
             [doctopus.test-utilities :as utils]
             [me.raynes.fs :as fs]))
+
+(use-fixtures :once database-fixture)
 
 (def test-map-props
   (h/parse-tentacle-config-map
@@ -16,15 +19,12 @@
 
 (def one-tentacle (map->Tentacle test-map-props))
 
-(storage/set-backend! :temp-fs)
-
 (deftest tentacle-test
+  (db/save-tentacle! one-tentacle)
   (testing "Generating HTML"
     (is (not= nil (generate-html one-tentacle)) "This should return a truthy value on success")
-    (binding [fs/*cwd* @temp-fs/temp-dir]
-      (let [html-location (fs/file "doctopus-test/index.html")]
-        (is (fs/exists? html-location)
-            "There should be some HTML in a known location"))))
+    (is (< 0 (count-records-for-tentacle backend one-tentacle))
+        "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
       (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
