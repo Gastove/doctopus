@@ -4,15 +4,18 @@
             [doctopus.files :as files]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]
-            [ring.util.response :refer [file-response]]
+            [ring.util.response :as response]
+            [ring.util.mime-type :refer [ext-mime-type]]
             [taoensso.timbre :as log]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
 ;; within this directory
 (def temp-dir (atom (fs/temp-dir  "doctopus-temp")))
 
-;; TODO:
-(defn count-fn [] nil)
+(defn count-fn [tentacle]
+  (binding [fs/*cwd* (fs/file @temp-dir docs-uri-prefix)]
+    (let [target-dir (fs/file (:name tentacle))]
+      (count (files/walk-docs-dir target-dir)))))
 
 (defn regenerate-temp-dir
   "Generates a new temp dir"
@@ -28,14 +31,21 @@
       (and (fs/exists? result)
            (fs/readable? result)))))
 
+(defn- build-response
+  [file-handle]
+  (let [body (slurp file-handle)
+        file-name (.getPath file-handle)
+        mime-type (ext-mime-type file-name)]
+    (-> (response/response body)
+        (response/content-type mime-type))))
+
 (defn load-fn
   "Returns the routes this serves"
   [uri]
   (let [rel-path (str/replace uri (str docs-uri-prefix "/") "") ;; Remove URI prefix to get relative path
-        file-handle (binding [fs/*cwd* @temp-dir] (fs/file rel-path))
-        file-name (.getPath file-handle)]
+        file-handle (binding [fs/*cwd* @temp-dir] (fs/file rel-path))]
     (if (fs/exists? file-handle)
-      (file-response file-name)
+      (build-response file-handle)
       nil)))
 
 (defn remove-fn
