@@ -39,24 +39,24 @@
   :target-path "target/%s"
   :cljsbuild {:builds [{:id "dev"
                         :source-paths ["src-cljs"]
-                        :figwheel true
+                        :figwheel false
                         :incremental false
                         :compiler {:main doctopus.main
                                    :source-map "resources/public/assets/scripts/main.js.map"
                                    :output-to "resources/public/assets/scripts/main.js"
-                                   :output-dir "resources/public/assets/scripts"
-                                   :asset-path "/assets/scripts"
+                                   :output-dir "resources/public/assets/scripts/main"
+                                   :asset-path "/assets/scripts/main"
                                    :optimizations :none
                                    :pretty-print true}}
                        {:id "dev-omni"
                         :source-paths ["src-cljs"]
-                        :figwheel true
+                        :figwheel false
                         :incremental false
                         :compiler {:main doctopus.omni
                                    :source-map "resources/public/assets/scripts/omni.js.map"
                                    :output-to "resources/public/assets/scripts/omni.js"
-                                   :output-dir "resources/public/assets/scripts"
-                                   :asset-path "/assets/scripts"
+                                   :output-dir "resources/public/assets/scripts/omni"
+                                   :asset-path "/assets/scripts/omni"
                                    :optimizations :none
                                    :pretty-print true}}]}
   :profiles {:uberjar {:aot :all
@@ -79,4 +79,26 @@
                                                         :output-to "resources/public/assets/scripts/omni.js"
                                                         :asset-path "/assets/scripts"
                                                         :optimizations :advanced
-                                                        :pretty-print false}}]}}})
+                                                        :pretty-print false}}]}}
+             :figwheel {:cljsbuild {:builds [{:id "dev"
+                                              :source-paths ["src-cljs"]
+                                              :figwheel true
+                                              :incremental false
+                                              :compiler {:main doctopus.main
+                                                         :source-map "resources/public/assets/scripts/main.js.map"
+                                                         :output-to "resources/public/assets/scripts/main.js"
+                                                         :output-dir "resources/public/assets/scripts/main"
+                                                         :asset-path "/assets/scripts/main"
+                                                         :optimizations :none
+                                                         :pretty-print true}}
+                                             {:id "dev-omni"
+                                              :source-paths ["src-cljs"]
+                                              :figwheel true
+                                              :incremental false
+                                              :compiler {:main doctopus.omni
+                                                         :source-map "resources/public/assets/scripts/omni.js.map"
+                                                         :output-to "resources/public/assets/scripts/omni.js"
+                                                         :output-dir "resources/public/assets/scripts/omni"
+                                                         :asset-path "/assets/scripts/omni"
+                                                         :optimizations :none
+                                                         :pretty-print true}}]}}})
