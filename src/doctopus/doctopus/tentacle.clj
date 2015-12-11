@@ -51,8 +51,9 @@
   TentacleMethods
   (load-html [this]
     (if (= 0 (count-records-for-tentacle backend this))
-      (do (log/debug "Generating") (generate-html this))
-      (log/info "Found html for" (:name this) ", count is:" (count-records-for-tentacle backend (:name this)) "for name:" (:name this))))
+      (do (log/info "No HTML found for" (:name this))
+          (generate-html this))
+      (log/info "Found html for" (:name this))))
   (generate-html [this]
     (log/info "Generating HTML for" (:name this))
     (let [{:keys [html-commands source-location output-root]} this
