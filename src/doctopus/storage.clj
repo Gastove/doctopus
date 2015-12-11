@@ -1,6 +1,9 @@
 (ns doctopus.storage
   "Defines how Doctopus speaks to different places it can store generated HTML"
-  (:require [doctopus.storage.impls :as storage-impls]))
+  (:require [doctopus.configuration :refer [server-config]]
+            [doctopus.storage.impls :as storage-impls]
+            [taoensso.timbre :as log]
+            [taoensso.timbre :as timbre]))
 
 ;; ## Storage
 ;; Doctopus shouldn't really care _where_ it puts generated HTML; it
@@ -53,7 +56,8 @@
                   storage-impls/postgres-backend]]
     (into {} (for [b backends] [(:name b) b]))))
 
-(def default-backend :postgres)
+(def default-backend (:backend (server-config)))
+(log/info "Using backend:" default-backend)
 (def backend (Backend. (atom (default-backend available-backends)) available-backends))
 
 (defn set-backend! [backend-key]
