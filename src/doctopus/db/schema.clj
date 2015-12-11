@@ -107,12 +107,19 @@
     (do-sql-with-logging! idx-sql db-name)
     (log/info "Index successfully created")))
 
+(defn bootstrap-schema
+  "Create DB schema"
+  [db-name]
+  (doseq [[table-name schema] table-name-schema-pairs]
+    (when (not (table-created? db-name table-name))
+      (create-table! db-name table-name schema))))
+
 (defn bootstrap
-  "checks for the presence of tables and creates them if necessary"
+  "Checks for the presence of tables and creates them if necessary
+
+  Loads some default data in to the DB."
   ([] (bootstrap :main))
   ([db-name]
-   (doseq [[table-name schema] table-name-schema-pairs]
-     (when (not (table-created? db-name table-name))
-       (create-table! db-name table-name schema)))
+   (bootstrap-schema db-name)
    (load-doctopus)
    (create-fts-document-index db-name)))

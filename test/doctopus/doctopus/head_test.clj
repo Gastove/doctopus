@@ -12,7 +12,7 @@
 
 (use-fixtures :once database-fixture)
 
-(storage/set-backend! :temp-fs)
+;; (storage/set-backend! :temp-fs)
 
 (deftest head-test
   (testing "Can we bootstrap a Head's tentacles?"
