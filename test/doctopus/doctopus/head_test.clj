@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.db :as db]
+            [doctopus.db.schema :as schema]
             [doctopus.doctopus.head :refer :all]
             [doctopus.doctopus.tentacle :as t]
             [doctopus.storage :as storage]
@@ -11,11 +12,11 @@
   (:import [doctopus.doctopus.head Head]))
 
 (use-fixtures :once database-fixture)
-(def one-head (map->Head {:name "main"}))
 ;; (storage/set-backend! :temp-fs)
 
 (deftest head-test
-  (db/save-head! one-head)
+  ;; Uses all the default mappings from bootstrapping; might as well
+  (schema/bootstrap :test)
   (testing "Can we bootstrap a Head's tentacles?"
     (let [head (map->Head (db/get-head "main"))
           tentacles (list-tentacles head {})]
