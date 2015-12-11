@@ -178,8 +178,8 @@
         ;; Building routes here to avoid loading the full doctopus stack until
         ;; app launch.
         application-routes (routes
-                 (context docs-uri-prefix [] (load-routes doctopus))
-                 doctopus-routes)
+                            (context (str "/" docs-uri-prefix) [] (load-routes doctopus))
+                            doctopus-routes)
         application (create-application application-routes)]
     (log/info "Checking DB is set up...")
     (schema/bootstrap env)
