@@ -105,7 +105,7 @@
                      (dissoc :image))
                  (dissoc ent :image))))
   (belongs-to tentacles)
-  (entity-fields :name :uri :tentacle_name :body :mime_type))
+  (entity-fields :name :uri :tentacle_name :body :image :mime_type))
 
 (defn get-tentacle
   [name]
@@ -248,7 +248,7 @@
   ([]
    (update documents
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})
-           (where {:uri [like "%html"]})))
+           (where {:mime_type [like "text%"]})))
   ([document]
    (update documents
            (set-fields {:search-vector (raw "to_tsvector('english', body)")})
