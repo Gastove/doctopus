@@ -42,7 +42,7 @@
                   base-doc {:name (str tent-name "-" (.getName doc-file))
                             ;; :path doc-file
                             :mime-type doc-mime-type
-                            :uri (str configuration/docs-uri-prefix "/" tent-name relpath)
+                            :uri (str "/" configuration/docs-uri-prefix "/" tent-name relpath)
                             :tentacle-name tent-name}]]
       (if (nil? doc-mime-type)
         (log/warn "Refusing to save" relpath ", cannot discern mime-type")

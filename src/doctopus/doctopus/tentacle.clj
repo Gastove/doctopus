@@ -3,6 +3,7 @@
   and all the configs required to build it."
   (:require [clojure.string :as str]
             [compojure.core :refer [GET routes context]]
+            [doctopus.configuration :refer [docs-uri-prefix]]
             [doctopus.shell :refer [make-html-from-vec git-clone]]
             [doctopus.storage :refer [save-to-storage load-from-storage count-records-for-tentacle backend]]
             [me.raynes.fs :as fs]
@@ -71,7 +72,7 @@
       (check-and-report
        (save-to-storage backend name dir) name "saved HTML" "save HTML")))
   (get-html-entrypoint [this]
-    (str/join "/" ["" "docs" (:name this) (:entry-point this)]))
+    (str/join "/" ["" docs-uri-prefix (:name this) (:entry-point this)]))
   (generate-routes [this]
     (routes
      (GET "*" {:keys [uri]}
