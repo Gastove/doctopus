@@ -23,7 +23,7 @@
   (log/debug base-doc)
   (let [doc-content (slurp doc-file)]
     (if (re-find is-img-regex mime-type)
-      (assoc base-doc :body :image :image (.getBytes doc-content))
+      (assoc base-doc :body "image" :image (.getBytes doc-content))
       (assoc base-doc :body doc-content :image nil))))
 
 (defn save-fn
