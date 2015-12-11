@@ -45,12 +45,50 @@ in there and you'll be good to go to get the whole thing spun up:
 
 (You can, of course, set `NOMAD_ENV` in the `rc` file of your choice.)
 
+### ClojureScript
+
+ClojureScript is build with [cljsbuild][], which has a few different profiles
+that you can use to build. If you're only interested in trying things out, the
+simplest is to build with the default profile:
+
+```bash
+lein cljsbuild once
+```
+
+This will get you set up to run the local server.
+
+For development, [figwheel][] is included. Do the following to get the figwheel
+server running and autobuilding:
+
+```bash
+lein with-profile figwheel figwheel dev dev-omni # yes, figwheel twice!
+```
+
+### SASS
+
+The stylesheets are currently checked into the repository as compiled CSS and as
+the source SASS, since they cannot be compiled without the help of an external
+tool. If you're not working on styles, you can just use what's included, but if
+you'd like to make style changes, you'll need either `node-sass` or the `sass`
+Ruby Gem.
+
+To compile with `node-sass`:
+
+```bash
+npm install -g node-sass
+cd resources/public/assets/styles
+node-sass --include-path ./sass --watch ./sass --output ./css ./sass
+```
+
+This will set up an auto-watching build server for CSS.
+
 ## Usage
 
 Right now: you don't.
 
 ### Free-range TODO List and Known Improvements
 
+See the [issues][].
 
 ## License
 
@@ -58,3 +96,7 @@ Copyright © 2015 Ross Donaldson
 
 Distributed under the Eclipse Public License either version 1.0 or (at
 your option) any later version.
+
+[cljsbuild]: https://github.com/emezeske/lein-cljsbuild
+[figwheel]: https://github.com/bhauman/lein-figwheel
+[issues]: https://github.com/Gastove/doctopus/issues
