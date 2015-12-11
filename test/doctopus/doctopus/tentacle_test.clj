@@ -6,7 +6,6 @@
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
-            [doctopus.storage :as storage :refer [count-records-for-tentacle backend]]
             [doctopus.test-database :refer [database-fixture]]
             [doctopus.test-utilities :as utils]
             [me.raynes.fs :as fs]))
@@ -23,9 +22,8 @@
   (db/save-tentacle! one-tentacle)
   (testing "Generating HTML"
     (is (not= nil (generate-html one-tentacle)) "This should return a truthy value on success")
-    (is (< 0 (count-records-for-tentacle backend one-tentacle))
+    (is (< 0 (count-records one-tentacle))
         "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
-      (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
-  (utils/clean-up-test-html "doctopus-test"))
+      (is (= loaded-entrypoint "/docs/doctopus-test/index.html")))))

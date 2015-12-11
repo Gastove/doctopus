@@ -7,15 +7,12 @@
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus :refer :all]
             [doctopus.doctopus.tentacle :as t]
-            [doctopus.storage :as storage]
             [doctopus.test-database :refer [database-fixture]]
             [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus Doctopus]
            [doctopus.doctopus.head Head]))
 
 (use-fixtures :once database-fixture)
-
-;; (storage/set-backend! :temp-fs)
 
 (def stunt-doctopus (Doctopus. {} {}))
 
@@ -34,5 +31,4 @@
     (is (= 1 (count (list-tentacles-by-head stunt-doctopus "main")))
         "This should get one tentacle")
     (is (empty? (list-tentacles-by-head stunt-doctopus "HOOBASTANK"))
-        "There should never, ever be a tentacle with this name. Ever."))
-  (utils/clean-up-test-html "doctopus"))
+        "There should never, ever be a tentacle with this name. Ever.")))
