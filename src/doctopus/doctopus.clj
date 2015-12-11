@@ -7,7 +7,8 @@
   Each Doctopus will have one or more Heads, which represent a logical grouping
   of docs, and some number of Tentacles -- individual sources of documentation
   orchestrated by the Head. "
-  (:require [doctopus.db :as db]
+  (:require [compojure.core :refer [context routes]]
+            [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :as t]
             [me.raynes.fs :as fs])
@@ -36,14 +37,7 @@
     (map #(h/list-tentacles % (:substitutions this))
          (filter #(= head (:name %)) (list-heads this))))
   (load-routes [this]
-    ;; You may be wondering, "what the hell is going on here". And that's a
-    ;; great question! The answer is: we need to make sure that what's returned
-    ;; is a map from the key "/" to a map of the form {tentacle-name
-    ;; tentacle-routes}. This is not the prettiest, but it does just that.
-    {"/" (apply merge
-                (flatten
-                 (into []
-                       (for [head (list-heads this)
-                             :let [route-map (h/load-tentacle-routes head
-                                                                     (:substitutions this))]]
-                         [route-map]))))}))
+    (apply routes
+           (for [head (list-heads this)
+                 :let [substitutions (:substitutions this)]]
+             (h/load-tentacle-routes head substitutions)))))

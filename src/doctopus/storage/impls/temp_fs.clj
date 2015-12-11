@@ -1,14 +1,21 @@
 (ns doctopus.storage.impls.temp-fs
-  (:require [bidi.ring :as bidi-ring]
-            [clojure.string :as str]
+  (:require [clojure.string :as str]
+            [doctopus.configuration :refer [docs-uri-prefix]]
             [doctopus.files :as files]
             [doctopus.storage.impls.fs-impl :refer [save-html-file] :as fs-impl]
             [me.raynes.fs :as fs]
+            [ring.util.response :as response]
+            [ring.util.mime-type :refer [ext-mime-type]]
             [taoensso.timbre :as log]))
 
 ;; The root of the temp filesystem. Each Thing will store its stuff
 ;; within this directory
 (def temp-dir (atom (fs/temp-dir  "doctopus-temp")))
+
+(defn count-fn [tentacle]
+  (binding [fs/*cwd* (fs/file @temp-dir docs-uri-prefix)]
+    (let [target-dir (fs/file (:name tentacle))]
+      (count (files/walk-docs-dir target-dir)))))
 
 (defn regenerate-temp-dir
   "Generates a new temp dir"
@@ -24,13 +31,21 @@
       (and (fs/exists? result)
            (fs/readable? result)))))
 
+(defn- build-response
+  [file-handle]
+  (let [body (slurp file-handle)
+        file-name (.getPath file-handle)
+        mime-type (ext-mime-type file-name)]
+    (-> (response/response body)
+        (response/content-type mime-type))))
+
 (defn load-fn
   "Returns the routes this serves"
-  [key]
-  (let [file-handle (binding [fs/*cwd* @temp-dir] (fs/file key))
-        file-name (str (.getPath file-handle) "/")]
+  [uri]
+  (let [rel-path (str/replace uri (str docs-uri-prefix "/") "") ;; Remove URI prefix to get relative path
+        file-handle (binding [fs/*cwd* @temp-dir] (fs/file rel-path))]
     (if (fs/exists? file-handle)
-      [key {"/" (bidi-ring/->Files {:dir file-name})}]
+      (build-response file-handle)
       nil)))
 
 (defn remove-fn

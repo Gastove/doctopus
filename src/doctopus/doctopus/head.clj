@@ -1,6 +1,7 @@
 (ns doctopus.doctopus.head
   (:require [clojure.edn :as edn]
             [clojure.string :as str]
+            [compojure.core :refer [context routes]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.db :as db]
             [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]
@@ -68,5 +69,7 @@
     (let [tentacles (list-tentacles this subs-map)]
       (doseq [tentacle tentacles] (t/load-html tentacle))))
   (load-tentacle-routes [this subs-map]
-    (into {} (for [tentacle (list-tentacles this subs-map)]
-               (t/routes tentacle)))))
+    (apply routes
+           (for [tentacle (list-tentacles this subs-map)
+                 :let [slashed-name (str "/" (:name tentacle))]]
+             (context slashed-name [] (t/generate-routes tentacle))))))

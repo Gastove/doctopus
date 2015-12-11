@@ -25,6 +25,6 @@
 
 (defn database-fixture
   [f]
-  (bootstrap :test)
+  (bootstrap-schema :test)
   (f)
   (obliterate!))

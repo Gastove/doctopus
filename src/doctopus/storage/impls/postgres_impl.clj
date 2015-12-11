@@ -1,15 +1,30 @@
 (ns doctopus.storage.impls.postgres-impl
-  (:require [doctopus.db :as db]
-            [doctopus.files :as f])
-  (:import [java.nio.file Files Paths]))
+  (:require [doctopus.configuration :as configuration]
+            [doctopus.db :as db]
+            [doctopus.files :as f]
+            [ring.util.mime-type :as ring-mime]
+            [ring.util.response :as response]
+            [taoensso.timbre :as log])
+  (:import [java.io ByteArrayInputStream]
+           [java.nio.file Files Paths]))
 
-(def is-img-regex
-  #"\.(png|pdf|jpg|jpeg|gif|ico|){1}$")
+(def is-img-regex #"^image")
+
+(defn count-fn [tentacle]
+  (count (db/get-all-documents-for-tentacle tentacle)))
 
 (defn get-mime-type
-  [path-str]
-  (let [path (Paths/get path-str (into-array String []))]
+  [f]
+  (let [path (.toPath f)]
     (Files/probeContentType path)))
+
+(defn assign-body-and-image
+  [base-doc doc-file mime-type]
+  (log/debug base-doc)
+  (let [doc-content (slurp doc-file)]
+    (if (re-find is-img-regex mime-type)
+      (assoc base-doc :body "image" :image (.getBytes doc-content))
+      (assoc base-doc :body doc-content :image nil))))
 
 (defn save-fn
   "Load every document from a directory in to the database.
@@ -20,22 +35,43 @@
   update's `where' clause.
 
   Also note: there are two kinds of files to be loaded: text and images (binary)."
-  [tentacle src-dir]
-  (let [relpath-file-pairs (f/list-files-with-relative-paths src-dir)
-        tent-name (:name tentacle)]
+  [tent-name src-dir]
+  (let [relpath-file-pairs (f/list-files-with-relative-paths src-dir)]
     (doseq [[relpath doc-file] relpath-file-pairs
-            :let [new-doc {:name (str tent-name "-" (.getName doc-file))
-                           :body (slurp doc-file)
-                           :path doc-file
-                           :type (get-mime-type doc-file)
-                           :uri (str tent-name "/" relpath)
-                           :tentacle-name tent-name}]]
-      (db/save-document! new-doc))
+            :let [doc-mime-type (ring-mime/ext-mime-type relpath)
+                  base-doc {:name (str tent-name "-" (.getName doc-file))
+                            ;; :path doc-file
+                            :mime-type doc-mime-type
+                            :uri (str "/" configuration/docs-uri-prefix "/" tent-name relpath)
+                            :tentacle-name tent-name}]]
+      (if (nil? doc-mime-type)
+        (log/warn "Refusing to save" relpath ", cannot discern mime-type")
+        (let [new-doc (assign-body-and-image base-doc doc-file doc-mime-type)]
+          (log/debug "Reading doc from:" relpath)
+          (log/debug "Giving doc URI:" (:uri new-doc))
+          (db/save-document! new-doc))))
     (db/update-document-index)))
+
+(defn- build-body
+  "Examine a DB result to see if it's an image; if so, build a ByteArrayInputStream
+  and use it as the response body."
+  [res]
+  (if (= "image" (:body res))
+    (let [bais (ByteArrayInputStream. (:image res))]
+      (assoc res :body bais))
+    res))
+
+(defn- make-response
+  [res]
+  (-> (response/response (:body res))
+      (response/content-type (:mime-type res))))
 
 (defn load-fn
   [uri]
-  (db/get-document-by-uri uri))
+  (if-let [res (first (db/get-document-by-uri uri))]
+    (-> res
+        (build-body)
+        (make-response))))
 
 (defn remove-fn
   [document]
