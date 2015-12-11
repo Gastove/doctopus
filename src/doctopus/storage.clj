@@ -51,13 +51,10 @@
       (remove-fn k))))
 
 (def available-backends
-  (let [backends [storage-impls/temp-fs-backend
-                  storage-impls/permanent-fs-backend
-                  storage-impls/postgres-backend]]
+  (let [backends [storage-impls/postgres-backend]]
     (into {} (for [b backends] [(:name b) b]))))
 
-(def default-backend (:backend (server-config)))
-(log/info "Using backend:" default-backend)
+(def default-backend :postgres)
 (def backend (Backend. (atom (default-backend available-backends)) available-backends))
 
 (defn set-backend! [backend-key]
