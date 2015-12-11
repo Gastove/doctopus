@@ -11,10 +11,11 @@
   (:import [doctopus.doctopus.head Head]))
 
 (use-fixtures :once database-fixture)
-
+(def one-head (map->Head {:name "main"}))
 ;; (storage/set-backend! :temp-fs)
 
 (deftest head-test
+  (db/save-head! one-head)
   (testing "Can we bootstrap a Head's tentacles?"
     (let [head (map->Head (db/get-head "main"))
           tentacles (list-tentacles head {})]
