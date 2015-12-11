@@ -68,7 +68,7 @@
                                              :compiler {:main doctopus.main
                                                         :source-map "resources/public/assets/scripts/main.js.map"
                                                         :output-to "resources/public/assets/scripts/main.js"
-                                                        :asset-path "/assets/scripts"
+                                                        :asset-path "/assets/scripts/main"
                                                         :optimizations :advanced
                                                         :pretty-print false}}
                                             {:id "prod-omni"
@@ -77,7 +77,7 @@
                                              :compiler {:main doctopus.omni
                                                         :source-map "resources/public/assets/scripts/omni.js.map"
                                                         :output-to "resources/public/assets/scripts/omni.js"
-                                                        :asset-path "/assets/scripts"
+                                                        :asset-path "/assets/scripts/omni"
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}
              :figwheel {:cljsbuild {:builds [{:id "dev"
