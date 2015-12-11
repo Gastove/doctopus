@@ -37,68 +37,32 @@
             [lein-cljsbuild "1.1.1" :exclusions [org.clojure/clojurescript]]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"
-  :cljsbuild {:builds [{:id "dev"
-                        :source-paths ["src-cljs"]
+  :cljsbuild {:builds [{:source-paths ["env/dev/src-cljs" "src-cljs"]
                         :figwheel false
                         :incremental false
-                        :compiler {:main doctopus.main
+                        :compiler {:main doctopus.dev.main
                                    :source-map "resources/public/assets/scripts/main.js.map"
                                    :output-to "resources/public/assets/scripts/main.js"
                                    :output-dir "resources/public/assets/scripts/main"
                                    :asset-path "/assets/scripts/main"
                                    :optimizations :none
-                                   :pretty-print true}}
-                       {:id "dev-omni"
-                        :source-paths ["src-cljs"]
-                        :figwheel false
-                        :incremental false
-                        :compiler {:main doctopus.omni
-                                   :source-map "resources/public/assets/scripts/omni.js.map"
-                                   :output-to "resources/public/assets/scripts/omni.js"
-                                   :output-dir "resources/public/assets/scripts/omni"
-                                   :asset-path "/assets/scripts/omni"
-                                   :optimizations :none
                                    :pretty-print true}}]}
   :profiles {:uberjar {:aot :all
-                       :prep-tasks ["compile" ["cljsbuild" "once" "prod" "prod-omni"]]
+                       :prep-tasks ["compile" ["cljsbuild" "once"]]
                        :cljsbuild {:jar true
-                                   :builds [{:id "prod"
-                                             :source-paths ["src-cljs"]
+                                   :builds [{:source-paths ["env/prod/src-cljs" "src-cljs"]
                                              :figwheel false
-                                             :compiler {:main doctopus.main
-                                                        :source-map "resources/public/assets/scripts/main.js.map"
-                                                        :output-to "resources/public/assets/scripts/main.js"
-                                                        :asset-path "/assets/scripts/main"
-                                                        :optimizations :advanced
-                                                        :pretty-print false}}
-                                            {:id "prod-omni"
-                                             :source-paths ["src-cljs"]
-                                             :figwheel false
-                                             :compiler {:main doctopus.omni
-                                                        :source-map "resources/public/assets/scripts/omni.js.map"
-                                                        :output-to "resources/public/assets/scripts/omni.js"
-                                                        :asset-path "/assets/scripts/omni"
+                                             :compiler {:output-to "resources/public/assets/scripts/main.js"
                                                         :optimizations :advanced
                                                         :pretty-print false}}]}}
              :figwheel {:cljsbuild {:builds [{:id "dev"
-                                              :source-paths ["src-cljs"]
+                                              :source-paths ["env/dev/src-cljs" "src-cljs"]
                                               :figwheel true
                                               :incremental false
-                                              :compiler {:main doctopus.main
+                                              :compiler {:main doctopus.dev.main
                                                          :source-map "resources/public/assets/scripts/main.js.map"
                                                          :output-to "resources/public/assets/scripts/main.js"
                                                          :output-dir "resources/public/assets/scripts/main"
                                                          :asset-path "/assets/scripts/main"
-                                                         :optimizations :none
-                                                         :pretty-print true}}
-                                             {:id "dev-omni"
-                                              :source-paths ["src-cljs"]
-                                              :figwheel true
-                                              :incremental false
-                                              :compiler {:main doctopus.omni
-                                                         :source-map "resources/public/assets/scripts/omni.js.map"
-                                                         :output-to "resources/public/assets/scripts/omni.js"
-                                                         :output-dir "resources/public/assets/scripts/omni"
-                                                         :asset-path "/assets/scripts/omni"
                                                          :optimizations :none
                                                          :pretty-print true}}]}}})

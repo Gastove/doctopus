@@ -53,8 +53,8 @@
       [sidebar-component @state]
       [brand-component])))
 
-(defn init
+(defn init!
   [component]
-  (r/render-component component (dom/getElement "doctopus-omnibar")))
-
-(init [omnibar (get-app-state)])
+  (if-let [el (dom/getElement "doctopus-omnibar")]
+    (r/render-component component el)
+    (js/console.debug "omnibar: element not present, not loading")))

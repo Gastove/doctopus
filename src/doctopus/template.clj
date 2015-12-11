@@ -13,7 +13,7 @@
   (enlive/html
     [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]
     [:div#doctopus-omnibar]
-    [:script {:src "/assets/scripts/omni.js" :type "application/javascript"}]))
+    [:script {:src "/assets/scripts/main.js" :type "application/javascript"}]))
 
 (defn- omnibar-css
   "constructs a stylesheet reference for the domnibar"
