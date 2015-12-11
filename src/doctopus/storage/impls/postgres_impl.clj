@@ -43,25 +43,26 @@
                             ;; :path doc-file
                             :mime-type doc-mime-type
                             :uri (str configuration/docs-uri-prefix "/" tent-name relpath)
-                            :tentacle-name tent-name}
-                  new-doc (assign-body-and-image base-doc doc-file doc-mime-type)]]
-      (log/debug "Reading doc from:" relpath)
-      (log/debug "Giving doc URI:" (:uri new-doc))
-      (db/save-document! new-doc false))
+                            :tentacle-name tent-name}]]
+      (if (nil? doc-mime-type)
+        (log/warn "Refusing to save" relpath ", cannot discern mime-type")
+        (let [new-doc (assign-body-and-image base-doc doc-file doc-mime-type)]
+          (log/debug "Reading doc from:" relpath)
+          (log/debug "Giving doc URI:" (:uri new-doc))
+          (db/save-document! new-doc))))
     (db/update-document-index)))
 
 (defn- build-body
   "Examine a DB result to see if it's an image; if so, build a ByteArrayInputStream
   and use it as the response body."
   [res]
-  (if (nil? (:image res))
-    res
+  (if (= "image" (:body res))
     (let [bais (ByteArrayInputStream. (:image res))]
-      (assoc res :body bais))))
+      (assoc res :body bais))
+    res))
 
 (defn- make-response
   [res]
-  (log/debug "Content type from the DB is:" (:mime-type res))
   (-> (response/response (:body res))
       (response/content-type (:mime-type res))))
 
