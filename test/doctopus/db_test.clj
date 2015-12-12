@@ -54,6 +54,7 @@
         mock-doc {:name "doctopus_test"
                   :body "<p>I'm a paragraph and I'm <emph>OK</emph></p>"
                   :tentacle-name (:name (first mock-tentacles))
+                  :mime-type "text/html"
                   :uri "index.html"}]
 
     ;; Let's start some testing:
@@ -74,11 +75,11 @@
           "We should get one and only one tentacle")
       (is (= 1 (count (get-document-by-uri "index.html")))
           "Also, one tentacle.")
-      (is (= 1 (count (get-document-for-tentacle (first mock-tentacles))))
+      (is (= 1 (count (get-all-documents-for-tentacle (first mock-tentacles))))
           "One again.")
       (is (= (get-document-by-name "doctopus_test")
              (get-document-by-uri "index.html")
-             (get-document-for-tentacle (first mock-tentacles)))
+             (get-all-documents-for-tentacle (first mock-tentacles)))
           "We should get the same tentacle, regardless of retrieval"))
 
     ;; For these next two tests, we'll want to be able to reference the first
@@ -104,4 +105,4 @@
     (testing "Did the mappings table get updated correct?"
       (is (= 0 (count (get-all-mappings)))))
     (testing "Did the mock document get deleted when it's tentacle was nuked?"
-      (is (= 0 (count (get-document-for-tentacle (first mock-tentacles))))))))
+      (is (= 0 (count (get-all-documents-for-tentacle (first mock-tentacles))))))))

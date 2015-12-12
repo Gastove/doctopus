@@ -13,10 +13,9 @@
                  [jarohen/nomad "0.7.0"]
                  [com.taoensso/timbre "3.4.0"]
                  [ring/ring-defaults "0.1.4"]
-                 [ring/ring-core "1.3.2"]
-                 [ring/ring-devel "1.3.2"]
+                 [ring/ring-core "1.4.0"]
+                 [ring/ring-devel "1.4.0"]
                  [ring/ring-json "0.4.0"]
-                 [bidi "1.19.0"]
                  [enlive "1.1.5"]
                  [ring/ring-mock "0.2.0"]
                  [korma "0.4.1"]
@@ -25,13 +24,15 @@
                  [org.clojure/clojurescript "1.7.170"]
                  [cljs-http "0.1.38"]
                  [reagent "0.5.1"]
+                 [reagent-forms "0.5.13"]
                  [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]
                  [log4j "1.2.15" :exclusions [javax.mail/mail
                                               javax.jms/jms
                                               com.sun.jdmk/jmxtools
-                                              com.sun.jmx/jmxri]]]
+                                              com.sun.jmx/jmxri]]
+                 [compojure "1.4.0"]]
   :plugins [[michaelblume/lein-marginalia "0.9.0" :exclusions [org.clojure/clojurescript]]]
   :main ^:skip-aot doctopus.web
   :target-path "target/%s"

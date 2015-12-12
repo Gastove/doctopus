@@ -3,6 +3,7 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.db :as db]
+            [doctopus.db.schema :as schema]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus :refer :all]
             [doctopus.doctopus.tentacle :as t]
@@ -14,11 +15,12 @@
 
 (use-fixtures :once database-fixture)
 
-(storage/set-backend! :temp-fs)
+;; (storage/set-backend! :temp-fs)
 
 (def stunt-doctopus (Doctopus. {} {}))
 
 (deftest doctopus-test
+  (schema/bootstrap :test)
   (testing "Can we list heads?"
     (is (not (empty? (list-heads stunt-doctopus))))
     (is (= "main" (:name (first (list-heads stunt-doctopus))))))

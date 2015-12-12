@@ -3,8 +3,7 @@
             [clojure.test :refer :all]
             [doctopus.doctopus.head :refer [->Head]]
             [doctopus.doctopus.tentacle :refer [map->Tentacle]]
-            [doctopus.storage :refer [remove-from-storage backend]]
-            [doctopus.test-utilities :refer :all])
+            [doctopus.storage :refer [remove-from-storage backend]])
   (:import [org.joda.time DateTime]
            [org.joda.time.format DateTimeFormat]))
 

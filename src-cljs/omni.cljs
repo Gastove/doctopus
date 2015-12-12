@@ -1,7 +1,8 @@
 (ns doctopus.omni
   (:require [goog.dom :as dom]
             [reagent.core :as r]
-            [doctopus.util :refer [get-app-state]]))
+            [doctopus.util :refer [get-app-state]]
+            [doctopus.search :refer [search-form]]))
 
 (enable-console-print!)
 
@@ -39,10 +40,12 @@
 
 (defn- sidebar-component
   [full-state]
-  [:div#sidebar
-   [logo-component]
-   [close-component]
-   [state-component (:context full-state)]])
+  (let [context (:context full-state)]
+    [:div#sidebar
+     [logo-component]
+     [close-component]
+     [state-component context]
+     [search-form context]]))
 
 
 (defn omnibar
