@@ -118,8 +118,10 @@
                  :results [{:title "some document"
                             :snippet "beep boop this is a piece of snippet text"
                             :url "/some/url"}
+                           {:title "some non-contextualized document"
+                            :url "/some/other/thing"}
                            {:title "some other document"
-                            :snippet "this is some other piece of snipppet text for yer context"
+                            :snippet "this is some other piece of snippet text for yer context"
                             :url "/some/other/url"}]})))
 
 (defn add-tentacle

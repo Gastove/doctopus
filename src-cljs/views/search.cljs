@@ -37,7 +37,9 @@
       (let [{:keys [snippet url title]} result]
         [:div {:key (keyword title)}
          [:h3 [:a {:href url} title]]
-         [:p snippet]]))]])
+         (if (not (nil? snippet))
+           [:p snippet]
+           [:p "No additional context available."])]))]])
 
 (defn- loading-component
   []
