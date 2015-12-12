@@ -79,23 +79,6 @@
   (let [head-name (:name head)]
     {:name head-name :location (str "/heads/" head-name)}))
 
-(defn add-tentacle
-  "creates the page with form for adding a Doctopus tentacle"
-  [doctopus]
-  (html {:page "add-tentacle"
-         :submit "/add-tentacle"
-         :heads (map head-context (list-heads doctopus))
-         :tentacles (map tentacle-context (list-tentacles doctopus))
-         :csrf csrf-token/*anti-forgery-token*}))
-
-(defn add-head
-  "creates the page with form for adding a Doctopus head"
-  [doctopus]
-  (html {:page "add-head"
-         :submit-url "/add-head"
-         :heads (map head-context (list-heads doctopus))
-         :csrf csrf-token/*anti-forgery-token*}))
-
 (defn heads-list
   [doctopus]
   (html {:page "heads-list"
