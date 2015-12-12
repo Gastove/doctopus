@@ -108,6 +108,22 @@
   [_]
   (serve-html (templates/add-tentacle doctopus)))
 
+(defn serve-search-results
+  [request]
+  (let [query (:query-params request)
+        {:keys [tentacle-name tentacle-local]} query]
+    (serve-json {:ok true
+                 :tentacle-name tentacle-name
+                 :tentacle-local tentacle-local
+                 :results [{:title "some document"
+                            :snippet "beep boop this is a piece of snippet text"
+                            :url "/some/url"}
+                           {:title "some non-contextualized document"
+                            :url "/some/other/thing"}
+                           {:title "some other document"
+                            :snippet "this is some other piece of snippet text for yer context"
+                            :url "/some/other/url"}]})))
+
 (defn add-tentacle
   [request]
   (let [params (keywordize-keys (:body request))
@@ -129,7 +145,8 @@
    (GET "/add-head" [] serve-add-head-form)
    (POST "/add-head" [] add-head)
    (GET "/add-tentacle" [] serve-add-tentacle-form)
-   (POST "/add-tentacle" [] add-tentacle)))
+   (POST "/add-tentacle" [] add-tentacle)
+   (GET "/search" [] serve-search-results)))
 
 (defn- get-tentacle-from-uri
   [request-uri]
