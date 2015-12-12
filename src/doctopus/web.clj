@@ -7,6 +7,7 @@
             [doctopus.configuration :refer [server-config docs-uri-prefix]]
             [doctopus.db :as db]
             [doctopus.db.schema :as schema]
+            [doctopus.web.jsapi :as jsapi]
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.files.predicates :refer [html?]]
             [doctopus.template :as templates]
@@ -146,7 +147,8 @@
    (POST "/add-head" [] add-head)
    (GET "/add-tentacle" [] serve-add-tentacle-form)
    (POST "/add-tentacle" [] add-tentacle)
-   (GET "/search" [] serve-search-results)))
+   (GET "/search" [] serve-search-results)
+   (context "/jsapi/v1" [] jsapi/jsapi-routes)))
 
 (defn- get-tentacle-from-uri
   [request-uri]
