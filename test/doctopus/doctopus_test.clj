@@ -7,17 +7,16 @@
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus :refer :all]
             [doctopus.doctopus.tentacle :as t]
-            [doctopus.test-database :refer [database-fixture]]
+            [doctopus.test-database :refer [schema-and-content-fixture]]
             [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus Doctopus]
            [doctopus.doctopus.head Head]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-and-content-fixture)
 
 (def stunt-doctopus (Doctopus. {} {}))
 
 (deftest doctopus-test
-  (schema/bootstrap :test)
   (testing "Can we list heads?"
     (is (not (empty? (list-heads stunt-doctopus))))
     (is (= "main" (:name (first (list-heads stunt-doctopus))))))

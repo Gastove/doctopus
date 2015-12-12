@@ -6,21 +6,19 @@
             [doctopus.db.schema :as schema]
             [doctopus.doctopus.head :refer :all]
             [doctopus.doctopus.tentacle :as t]
-            [doctopus.test-database :refer [database-fixture]]
+            [doctopus.test-database :refer [schema-only-fixture]]
             [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus.head Head]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-only-fixture)
 
-(deftest head-test
-  ;; Uses all the default mappings from bootstrapping; might as well
-  (schema/bootstrap :test)
-  (testing "Can we bootstrap a Head's tentacles?"
-    (let [head (map->Head (db/get-head "main"))
-          tentacles (list-tentacles head {})]
-      (is (not (nil? tentacles)) "Should have tentacles now")
-      (is (= "doctopus" (:name (first tentacles)))
-          "Should have a tentacle with a known name"))))
+;; (deftest head-test
+;;   (db/save-head! one-head)
+;;   (testing "Can we bootstrap a Head's tentacles?"
+;;     (let [tentacles (list-tentacles head {})]
+;;       (is (not (empty? tentacles)) "Should have tentacles now")
+;;       (is (= "doctopus" (:name (first tentacles)))
+;;           "Should have a tentacle with a known name"))))
 
 (deftest injest-shell-strings-test
   (let [input-single-vec ["make -C docs/ html"]
