@@ -6,11 +6,11 @@
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
-            [doctopus.test-database :refer [database-fixture]]
+            [doctopus.test-database :refer [schema-only-fixture]]
             [doctopus.test-utilities :as utils]
             [me.raynes.fs :as fs]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-only-fixture)
 
 (def test-map-props
   (h/parse-tentacle-config-map
@@ -18,10 +18,13 @@
 
 (def one-tentacle (map->Tentacle test-map-props))
 
+(defn truthy? [v]
+  (or (true? v) (and (not (nil? v)) (false? v))))
+
 (deftest tentacle-test
   (db/save-tentacle! one-tentacle)
   (testing "Generating HTML"
-    (is (not= nil (generate-html one-tentacle)) "This should return a truthy value on success")
+    (is (truthy? (generate-html one-tentacle)) "This should return a truthy value on success")
     (is (< 0 (count-records one-tentacle))
         "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
