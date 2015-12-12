@@ -1,6 +1,6 @@
 (ns doctopus.doctopus.tentacle
   "A `Tentacle' defines a single unit of documentation -- one 'source' worth,
-  and all the configs required to build it."
+  and all the configs and tooling required to build it."
   (:require [clojure.string :as str]
             [compojure.core :refer [GET routes]]
             [doctopus
@@ -148,4 +148,4 @@
             (-> res
                 (build-body)
                 (make-response))))))
-  (count-records [this] (count (db/get-all-documents-for-tentacle (:name this)))))
+  (count-records [this] (count (db/get-all-documents-for-tentacle this))))
