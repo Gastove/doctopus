@@ -31,4 +31,12 @@
         "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
-      (is (= loaded-entrypoint "/docs/doctopus-test/index.html")))))
+      (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
+  (testing "Routes"
+    (let [tent-routes (generate-routes one-tentacle)
+          response (utils/fake-request tent-routes
+                                       :get
+                                       "/docs/doctopus-test/index.html")]
+      (is (truthy? (:body response)))
+      (is (= "text/html" ((:headers response) "Content-Type")))
+      (is (= 200 (:status response))))))

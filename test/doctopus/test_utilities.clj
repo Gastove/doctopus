@@ -17,6 +17,13 @@
   (let [today (DateTime.)]
     (.print iso-formatter today)))
 
+;; Make mock requests
+(defn fake-request
+  [routes method uri & params]
+  (routes {:request-method method :uri uri :params (first params)}))
+
+;; Data-Mocking functions
+
 (defmulti mock-data (fn [kind length] kind))
 
 (defmethod mock-data :int
