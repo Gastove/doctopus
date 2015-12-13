@@ -1,32 +1,14 @@
 (ns doctopus.db.schema
+  "Define and bootstrap the Doctopus DB Schema."
   (:require [clojure.edn :as edn]
             [clojure.java.io :as io]
             [clojure.java.jdbc :as sql]
             [clojure.string :as str]
-            [doctopus.configuration :refer [server-config]]
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :as t]
-            [taoensso.timbre :as log]))
-
-(defn- get-subname
-  "pull database options out of the local config"
-  [{:keys [host port db] :or {host "localhost" port 5432 db "doctopus"}}]
-  (let [tpl "//%s:%d/%s"]
-    (format tpl host port db)))
-
-(defn build-db-spec
-  [{:keys [user password] :as cfg-map}]
-  {:classname "org.postgresql.Driver"
-   :subprotocol "postgresql"
-   :subname (get-subname cfg-map)
-   :user user
-   :password password})
-
-(defn build-db-spec-by-name
-  [db-name]
-  (let [db-map (get-in (server-config) [:database db-name])]
-    (build-db-spec db-map)))
+            [taoensso.timbre :as log]
+            [doctopus.db.jdbc :refer [build-db-spec-by-name]]))
 
 (defn table-created?
   "check our database for a table"
@@ -56,6 +38,17 @@
    [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]
    ["PRIMARY KEY(head_name, tentacle_name)"]])
 
+(def document-schema
+  [[:name "varchar(50)" "PRIMARY KEY"]
+   [:uri "varchar(100) NOT NULL"]
+   [:body :text "NOT NULL"]
+   [:mime_type "varchar(127) NOT NULL"] ;; Max length according to RFC http://tools.ietf.org/html/rfc4288#section-4.2
+   [:image "bytea"]
+   [:search_vector "tsvector"]
+   [:tentacle_name "varchar(50) references tentacles(name) on delete cascade"]
+   [:created :timestamp "NOT NULL DEFAULT NOW()"]
+   [:updated :timestamp "NOT NULL"]])
+
 (defn do-sql-with-logging!
   [sql-statement db-name]
   (try (sql/db-do-commands (build-db-spec-by-name db-name) sql-statement)
@@ -77,7 +70,8 @@
 
 (def table-name-schema-pairs [["heads" head-schema]
                               ["tentacles" tentacle-schema]
-                              ["head_tentacle_mappings" head-tentacle-schema]])
+                              ["head_tentacle_mappings" head-tentacle-schema]
+                              ["documents" document-schema]])
 
 (defn- load-doctopus
   "On bootstrap, we want to create a Head, a Tentacle for Doctopus itself, and
@@ -92,11 +86,40 @@
     (db/save-tentacle! tentacle)
     (db/create-mapping! head tentacle)))
 
+(defn- create-fts-document-index
+  [db-name]
+  (let [update-sql "UPDATE documents SET search_vector = to_tsvector('english', name || ' ' || body)"
+        idx-sql (->> ["DO $$"
+                     "BEGIN"
+                     "IF NOT EXISTS ("
+                     "SELECT 1"
+                     "FROM pg_class c"
+                     "JOIN pg_namespace n ON n.oid = c.relnamespace"
+                     "WHERE c.relname = 'fts_idx'"
+                     "AND n.nspname = 'public'"
+                     ") THEN"
+                     "CREATE INDEX fts_idx ON documents USING GIN(search_vector);"
+                     "END IF;"
+                     "END$$"]
+                    (str/join \newline))]
+    (log/info "Ensuring FTS Index for the documents table")
+    (do-sql-with-logging! update-sql db-name)
+    (do-sql-with-logging! idx-sql db-name)
+    (log/info "Index successfully created")))
+
+(defn bootstrap-schema
+  "Create DB schema"
+  [db-name]
+  (doseq [[table-name schema] table-name-schema-pairs]
+    (when (not (table-created? db-name table-name))
+      (create-table! db-name table-name schema))))
+
 (defn bootstrap
-  "checks for the presence of tables and creates them if necessary"
+  "Checks for the presence of tables and creates them if necessary
+
+  Loads some default data in to the DB."
   ([] (bootstrap :main))
   ([db-name]
-   (doseq [[table-name schema] table-name-schema-pairs]
-     (when (not (table-created? db-name table-name))
-       (create-table! db-name table-name schema)))
-   (load-doctopus)))
+   (bootstrap-schema db-name)
+   (load-doctopus)
+   (create-fts-document-index db-name)))

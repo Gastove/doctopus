@@ -1,17 +1,23 @@
 (ns doctopus.web
-  (:require [bidi.ring :as bidi :refer [->Resources]]
+  (:require [cheshire.core :as json]
             [clojure.java.io :as io]
-            [doctopus.configuration :refer [server-config]]
+            [clojure.string :as str]
+            [clojure.walk :refer [keywordize-keys]]
+            [compojure.core :refer [routes defroutes context GET POST ANY]]
+            [doctopus.configuration :refer [server-config docs-uri-prefix]]
+            [doctopus.db :as db]
+            [doctopus.db.schema :as schema]
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
-            [doctopus.template :as templates]
             [doctopus.files.predicates :refer [html?]]
+            [doctopus.template :as templates]
             [org.httpkit.server :as server]
             [ring.middleware.defaults :refer [wrap-defaults site-defaults]]
+            [ring.middleware.json :refer [wrap-json-body]]
             [ring.middleware.reload :as reload]
+            [ring.middleware.resource :refer [wrap-resource]]
             [ring.middleware.stacktrace :as trace]
             [ring.util.response :as ring-response]
-            [taoensso.timbre :as log]
-            [clojure.walk :refer [keywordize-keys]])
+            [taoensso.timbre :as log])
   (:import [doctopus.doctopus Doctopus]))
 
 (defn wrap-error-page
@@ -39,6 +45,26 @@
       response
       (four-oh-four (:uri request)))))
 
+(defn wrap-trim-trailing-slash
+  "Compojure can't use regex; chomp a trailing slash before calling the handler."
+  [handler]
+  (fn [request]
+    (let [uri (:uri request)
+          new-uri (if (and (not (= "/" uri))
+                           (re-find #"/$" uri))
+                    (subs uri 0 (dec (count uri)))
+                    uri)]
+      (handler (assoc request :uri new-uri)))))
+
+(defn serve-json
+  "Turns a clojure data-structure into JSON and serves it with the correct
+   content-type"
+  [data]
+  (-> data
+      (json/generate-string)
+      (ring-response/response)
+      (ring-response/content-type "application/json")))
+
 (defn serve-html
   "Just returns html, with the content-type set correctly"
   [html]
@@ -59,85 +85,121 @@
   [_]
   (serve-html (templates/index doctopus)))
 
-(defn serve-iframe
-  [_]
-  (serve-html (templates/project-frame)))
-
 (defn serve-add-head-form
   [_]
-  (serve-html (templates/add-head)))
-
-(defn serve-add-tentacle-form
-  [_]
-  (serve-html (templates/add-tentacle doctopus)))
+  (serve-html (templates/add-head doctopus)))
 
 (defn add-head
   [request]
-   (let [head-name (get (:form-params request) "name")]
-     (serve-html (str "ADD A HEAD: " head-name))))
+  (let [head-name (get-in request [:body "name"])]
+    (do
+      (db/save-head! {:name head-name})
+      (serve-json {:success-url (str "/heads/" head-name)}))))
 
 (defn serve-head
-  [request]
-  (let [head-name (get-in request [:params :head-name])]
-    (serve-html (templates/head-page head-name doctopus))))
+  [params]
+  (serve-html (templates/head-page (get-in params [:route-params :head-name]))))
 
 (defn serve-all-heads
   [_]
   (serve-html (templates/heads-list doctopus)))
 
+(defn serve-add-tentacle-form
+  [_]
+  (serve-html (templates/add-tentacle doctopus)))
+
+(defn serve-search-results
+  [request]
+  (let [query (:query-params request)
+        {:keys [tentacle-name tentacle-local]} query]
+    (serve-json {:ok true
+                 :tentacle-name tentacle-name
+                 :tentacle-local tentacle-local
+                 :results [{:title "some document"
+                            :snippet "beep boop this is a piece of snippet text"
+                            :url "/some/url"}
+                           {:title "some non-contextualized document"
+                            :url "/some/other/thing"}
+                           {:title "some other document"
+                            :snippet "this is some other piece of snippet text for yer context"
+                            :url "/some/other/url"}]})))
+
 (defn add-tentacle
   [request]
-   (let [params (keywordize-keys (:form-params request))]
-     (serve-html
-      (str "ADD A TENTACLE: " (:name params) " BELONGING TO: " (:head params)))))
+  (let [params (keywordize-keys (:body request))
+        tentacle {:name            (:name params)
+                  :html-commands   (str/split-lines (:command params))
+                  :source-location (:source params)}
+        head (db/get-head (:head params))]
+    (db/save-tentacle! tentacle)
+    (db/create-mapping! head tentacle)
+    (serve-json {:success-url (str "/tentacles/" (:name tentacle))})))
 
-;; Bidi routes are defined as nested sets of ""
-(def routes ["/" {""             {:get serve-index}
-                  "index.html"   {:get serve-index}
-                  "assets"       (->Resources {:prefix "public/assets"})
-                  "frame.html"   {:get serve-iframe}
-                  "heads"        {"/"           {:get serve-all-heads}
-                                  ""            {:get serve-all-heads}
-                                  [:head-name]  {:get serve-head}}
-                  "add-head"     {:get serve-add-head-form :post add-head}
-                  "add-tentacle" {:get serve-add-tentacle-form :post add-tentacle}
-                  "docs"         (load-routes doctopus)}])
+(def doctopus-routes
+  (routes
+   (GET "/" [] serve-index)
+   (GET "/index.html" [] serve-index)
+   (GET "/frame.html" [] serve-all-heads)
+   (GET "/heads" [] serve-all-heads)
+   (GET "/heads/:head-name" [head-name] serve-head)
+   (GET "/add-head" [] serve-add-head-form)
+   (POST "/add-head" [] add-head)
+   (GET "/add-tentacle" [] serve-add-tentacle-form)
+   (POST "/add-tentacle" [] add-tentacle)
+   (GET "/search" [] serve-search-results)))
 
 (defn- get-tentacle-from-uri
   [request-uri]
   (let [pieces (re-find #"/docs/([^/]+)/.+" request-uri)]
     (if pieces (second pieces) nil)))
 
-(def application-handlers
-  (bidi/make-handler routes))
-
-(defn wrap-iframe-transform
+(defn wrap-omnibar-transform
   [handler]
   (fn [request]
     (let [response (handler request)
-          file (:body response)
+          body (:body response)
           tentacle-name (get-tentacle-from-uri (:uri request))]
-      (if (and tentacle-name file (html? file))
-        (assoc response :body (templates/add-frame (slurp file)))
+      (if (and tentacle-name body (html? body))
+        (assoc response :body (templates/add-omnibar body {:tentacle-name tentacle-name}))
         response))))
 
-(def application
-  (-> (wrap-defaults application-handlers site-defaults)
-      (wrap-iframe-transform)
+(def doctopus-ring-defaults
+  (-> site-defaults
+      (assoc-in [:static :resources] "public")))
+
+(defn create-application
+  [app-handlers]
+  (-> (wrap-defaults app-handlers doctopus-ring-defaults)
+      (wrap-trim-trailing-slash)
+      (wrap-json-body)
+      (wrap-omnibar-transform)
       (wrap-route-not-found)
       (reload/wrap-reload)
       ((if (= (:env (server-config)) :production)
          wrap-error-page
          trace/wrap-stacktrace))))
 
+(defn parse-env []
+  (case (:nomad/environment (server-config))
+    ["dev" "travis"] :test
+    ["prod"] :main
+    :test))
+
 ;; # Http Server
 ;; This is what lifts the whole beast off the ground. Reads its configs out of
 ;; resources/configuration.edn
 (defn -main
   []
-  (let [{:keys [port]} (server-config)]
+  (let [{:keys [port]} (server-config)
+        env (parse-env)
+        ;; Building routes here to avoid loading the full doctopus stack until
+        ;; app launch.
+        application-routes (routes
+                            (context (str "/" docs-uri-prefix) [] (load-routes doctopus))
+                            doctopus-routes)
+        application (create-application application-routes)]
     (log/info "Checking DB is set up...")
-    (schema/bootstrap)
+    (schema/bootstrap env)
     (log/info "Bootstrapping heads")
     (bootstrap-heads doctopus)
     (log/info "Starting HTTP server on port" port)

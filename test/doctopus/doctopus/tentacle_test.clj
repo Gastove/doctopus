@@ -3,12 +3,19 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.configuration :as cfg]
+            [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
-            [doctopus.storage :as storage]
-            [doctopus.storage.impls.temp-fs :as temp-fs]
-            [doctopus.test-utilities :as utils]
+            [doctopus.test-database :refer [schema-only-fixture]]
+            [doctopus.test-utilities :as utils :refer [truthy?]]
             [me.raynes.fs :as fs]))
+
+(use-fixtures :once schema-only-fixture)
+
+(deftest test-image-regex
+  (testing "Our regex should match image types and nothing else!"
+    (is (truthy? (re-find image-re "image/png")) "We should match image/png")
+    (is (nil? (re-find image-re "text/html")) "We should not match text/html")))
 
 (def test-map-props
   (h/parse-tentacle-config-map
@@ -16,16 +23,20 @@
 
 (def one-tentacle (map->Tentacle test-map-props))
 
-(storage/set-backend! :temp-fs)
-
 (deftest tentacle-test
+  (db/save-tentacle! one-tentacle)
   (testing "Generating HTML"
-    (is (not= nil (generate-html one-tentacle)) "This should return a truthy value on success")
-    (binding [fs/*cwd* @temp-fs/temp-dir]
-      (let [html-location (fs/file "doctopus-test/index.html")]
-        (is (fs/exists? html-location)
-            "There should be some HTML in a known location"))))
+    (is (truthy? (generate-html one-tentacle)) "This should return a truthy value on success")
+    (is (< 0 (count-records one-tentacle))
+        "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
       (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
-  (utils/clean-up-test-html "doctopus-test"))
+  (testing "Routes"
+    (let [tent-routes (generate-routes one-tentacle)
+          response (utils/fake-request tent-routes
+                                       :get
+                                       "/docs/doctopus-test/index.html")]
+      (is (truthy? (:body response)))
+      (is (= "text/html" ((:headers response) "Content-Type")))
+      (is (= 200 (:status response))))))

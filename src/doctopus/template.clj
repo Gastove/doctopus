@@ -1,125 +1,115 @@
 (ns doctopus.template
-  (:require [doctopus.doctopus :refer [list-heads list-tentacles]]
-            [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
+  (:require [net.cgrand.enlive-html :as enlive :refer [deftemplate defsnippet]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
-            [ring.util.anti-forgery :as csrf]))
+            [clojure.data.json :as json]
+            [ring.util.anti-forgery :as csrf]
+            [ring.middleware.anti-forgery :as csrf-token]))
 
-(defn- make-anchor
-  "given a uri and text, construct an anchor element"
-  [href text]
-  [:a {:href href} text])
-
-(defn- head-li
-  "constructs a list item with head link"
-  [head]
-  (let [head-name (:name head)]
-    (enlive/html [:li (make-anchor (str "/heads/" head-name) head-name)])))
-
-(defn- head-option
-  "constructs an option element with head"
-  [head]
-  (let [head-name (:name head)]
-    (enlive/html [:option {:value head-name} head-name])))
-
-(defn- tentacle-li
-  "constructs a list item with tentacle link"
-  [tentacle]
-  (let [tentacle-name (:name tentacle)]
-    (enlive/html
-     [:li (make-anchor (get-html-entrypoint tentacle) tentacle-name)])))
-
-(defn- iframe-html
-  "constructs an iframe element with relevant src attribute"
+(defn- omnibar-html
+  "constructions domnibar (the doctopus omnibar) html"
   []
   (enlive/html
-   [:iframe {:src "/frame.html" :width "100%" :height "90" :frameBorder "0"}]))
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]
+    [:div#doctopus-omnibar]
+    [:script {:src "/assets/scripts/main.js" :type "application/javascript"}]))
 
-(defn- prepend-frame
-  "injects the Doctopus iframe into the first body element of the given HTML"
-  [main frame]
-  (enlive/sniptest main [[:body enlive/first-of-type]] (enlive/prepend frame)))
+(defn- omnibar-css
+  "constructs a stylesheet reference for the domnibar"
+  []
+  (enlive/html
+    [:script {:src "//use.typekit.net/txl6yqy.js" :type "application/javascript"}]
+    [:script "try{Typekit.load();}catch(e){}"]
+    [:link {:rel "stylesheet" :href "/assets/styles/css/omni.css"}]))
+
+(defn- add-to-element-with-fn
+  [main element snippet f]
+  (enlive/sniptest main [[element enlive/first-of-type]] (f snippet)))
+
+(defn- append-to-element
+  "Given an an html string and an enlive-compiled html to-append, insert at the
+  end of the given element; defaults to :body"
+  ([main to-append]
+   (append-to-element main :body to-append))
+  ([main element to-append]
+   (add-to-element-with-fn main element to-append enlive/append)))
+
+(defn- prepend-to-element
+  "Given an an html string and an enlive-compiled html to-prepend, insert at the
+  beginning of the given element; defaults to :body"
+  ([main to-prepend]
+   (prepend-to-element main :body to-prepend))
+  ([main element to-prepend]
+   (add-to-element-with-fn main element to-prepend enlive/prepend)))
 
 (deftemplate base-template "templates/base.html"
-  [body]
+  [context]
   [:h1] (enlive/wrap :a)
   [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
-  [:body] (enlive/content body))
-
-(defsnippet index-snippet "templates/index.html"
-  [:#doctopus-main]
-  [doctopus]
-  [:#doctopus-heads] (enlive/content (map head-li (list-heads doctopus)))
-  [:#doctopus-tentacles] (enlive/content
-                          (map tentacle-li
-                               (flatten (list-tentacles doctopus)))))
-
-(defsnippet head-snippet "templates/head.html"
-  [:#doctopus-main]
-  [head-name doctopus]
-  [:#doctopus-head-name] (enlive/content head-name)
-  [:#doctopus-tentacles] (enlive/content
-                          (map tentacle-li
-                               (flatten
-                                (list-tentacles-by-head doctopus head-name)))))
-
-(defsnippet heads-list-snippet "templates/head-list.html"
-  [:#doctopus-main]
-  [head-list]
-  [:#doctopus-heads] (enlive/content (map head-li head-list)))
-
-(defsnippet add-head-snippet "templates/add-head.html"
-  [:form]
-  []
-  [:form] (enlive/set-attr :action "/add-head")
-  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
-
-(defsnippet add-tentacle-snippet "templates/add-tentacle.html"
-  [:form]
-  [doctopus]
-  [:form] (enlive/set-attr :action "/add-tentacle")
-  [:select] (enlive/content (map head-option (list-heads doctopus)))
-  [:#csrf] (enlive/html-content (csrf/anti-forgery-field)))
+  [:#app-state] (enlive/content (json/write-str context)))
 
 (defn- html
   "wraps the given body in the base template"
-  [body]
-  (apply str (base-template body)))
+  [context]
+  (apply str (base-template context)))
 
-(defn index
-  "returns an HTML string for main doctopus navigation"
-  [doctopus]
-  (html (index-snippet doctopus)))
+(defn- app-context
+  "generates an enlive-encoded html description map for app-state; a known
+  element used to communicate context to the frontend cljs app on page load"
+  [context]
+  (enlive/html
+    [:script#app-state {:type "application/json"} (json/write-str context)]))
 
-(defn project-frame
-  "returns a string of HTML suitable for serving an iframe with doctopus
-   navigation"
-  []
-  (base-template ""))
+(defn add-omnibar
+  "given a string of HTML, returns a string with a the Doctopus omnibar and
+  associated assets inserted into the appropriate places."
+  [html-str context]
+  (-> html-str
+      (prepend-to-element :body (omnibar-html))
+      (prepend-to-element :head (omnibar-css))
+      (append-to-element :head (app-context context))))
 
-(defn add-frame
-  "given a string of HTML, returns a string with a Doctopus iframe inserted into
-   its body"
-  [html-str]
-  (apply str (prepend-frame html-str (iframe-html))))
+(defn- tentacle-context
+  [tentacle]
+  {:name (:name tentacle) :location (get-html-entrypoint tentacle)})
 
-(defn heads-list
-  "creates a page for listing all heads"
-  [doctopus]
-  (html (heads-list-snippet (list-heads doctopus))))
-
-(defn head-page
-  "creates the page for a Doctopus head"
-  [head-name doctopus]
-  (html (head-snippet head-name doctopus)))
-
-(defn add-head
-  "creates the page with form for adding a Doctopus head"
-  []
-  (html (add-head-snippet)))
+(defn head-context
+  [head]
+  (let [head-name (:name head)]
+    {:name head-name :location (str "/heads/" head-name)}))
 
 (defn add-tentacle
   "creates the page with form for adding a Doctopus tentacle"
   [doctopus]
-  (html (add-tentacle-snippet doctopus)))
+  (html {:page "add-tentacle"
+         :submit "/add-tentacle"
+         :heads (map head-context (list-heads doctopus))
+         :tentacles (map tentacle-context (list-tentacles doctopus))
+         :csrf csrf-token/*anti-forgery-token*}))
+
+(defn add-head
+  "creates the page with form for adding a Doctopus head"
+  [doctopus]
+  (html {:page "add-head"
+         :submit-url "/add-head"
+         :heads (map head-context (list-heads doctopus))
+         :csrf csrf-token/*anti-forgery-token*}))
+
+(defn heads-list
+  [doctopus]
+  (html {:page "heads-list"
+         :heads (map head-context (list-heads doctopus))}))
+
+(defn head-page
+  [head-name]
+  (html {:page "head-page"
+         :submit-url "/update-head"
+         :original-name head-name
+         :csrf csrf-token/*anti-forgery-token*}))
+
+(defn index
+  [doctopus]
+  (html {:page "index"
+         :tentacles (map tentacle-context (list-tentacles doctopus))
+         :heads (map head-context (list-heads doctopus))}))

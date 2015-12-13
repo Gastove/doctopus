@@ -12,3 +12,5 @@ pom.xml.asc
 *.swo
 /docs-tmp/
 /resources/configuration-local.edn
+/resources/public/assets/scripts
+/figwheel_server.log

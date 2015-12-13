@@ -3,25 +3,29 @@
             [clojure.java.io :as io]
             [clojure.test :refer :all]
             [doctopus.db :as db]
+            [doctopus.db.schema :as schema]
             [doctopus.doctopus.head :refer :all]
             [doctopus.doctopus.tentacle :as t]
-            [doctopus.storage :as storage]
-            [doctopus.test-database :refer [database-fixture]]
+            [doctopus.test-database :refer [schema-only-fixture]]
             [doctopus.test-utilities :as utils])
   (:import [doctopus.doctopus.head Head]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-only-fixture)
 
-(storage/set-backend! :temp-fs)
+(def test-map-props
+  (parse-tentacle-config-map
+   (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn")))))
+
+(def one-head (map->Head {:name "test"}))
+(def one-tentacle (t/map->Tentacle test-map-props))
 
 (deftest head-test
-  (testing "Can we bootstrap a Head's tentacles?"
-    (let [head (map->Head (db/get-head "main"))
-          tentacles (list-tentacles head {})]
-      (is (not (nil? tentacles)) "Should have tentacles now")
-      (is (= "doctopus" (:name (first tentacles)))
-          "Should have a tentacle with a known name"))
-    (utils/clean-up-test-html "doctopus-test")))
+  (db/save-head! one-head)
+  (db/save-tentacle! one-tentacle)
+  (db/create-mapping! one-head one-tentacle)
+  (testing "Can we bootstrap tentacles"
+    (bootstrap-tentacles one-head)
+    (is (< 0 (t/count-records one-tentacle)) "There should be HTML for this tentacle")))
 
 (deftest injest-shell-strings-test
   (let [input-single-vec ["make -C docs/ html"]
