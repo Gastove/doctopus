@@ -5,9 +5,9 @@
              [test-utilities :as utils]]
             [doctopus.db.jdbc :as jdbc]
             [doctopus.db.schema :refer :all]
-            [doctopus.test-database :refer [database-fixture truncate!]]))
+            [doctopus.test-database :refer [schema-only-fixture truncate!]]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-only-fixture)
 
 (deftest db-name-and-data-transforms
   (testing "->kebab-keys transforms all keys to kebab-case"
