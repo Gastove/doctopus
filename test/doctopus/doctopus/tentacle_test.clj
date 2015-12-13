@@ -6,12 +6,16 @@
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
-            [doctopus.storage :as storage :refer [count-records-for-tentacle backend]]
-            [doctopus.test-database :refer [database-fixture]]
-            [doctopus.test-utilities :as utils]
+            [doctopus.test-database :refer [schema-only-fixture]]
+            [doctopus.test-utilities :as utils :refer [truthy?]]
             [me.raynes.fs :as fs]))
 
-(use-fixtures :once database-fixture)
+(use-fixtures :once schema-only-fixture)
+
+(deftest test-image-regex
+  (testing "Our regex should match image types and nothing else!"
+    (is (truthy? (re-find image-re "image/png")) "We should match image/png")
+    (is (nil? (re-find image-re "text/html")) "We should not match text/html")))
 
 (def test-map-props
   (h/parse-tentacle-config-map
@@ -22,10 +26,17 @@
 (deftest tentacle-test
   (db/save-tentacle! one-tentacle)
   (testing "Generating HTML"
-    (is (not= nil (generate-html one-tentacle)) "This should return a truthy value on success")
-    (is (< 0 (count-records-for-tentacle backend one-tentacle))
+    (is (truthy? (generate-html one-tentacle)) "This should return a truthy value on success")
+    (is (< 0 (count-records one-tentacle))
         "There should be some HTML in the DB"))
   (testing "Can we correctly load the HTML entrypoint of this tentacle?"
     (let [loaded-entrypoint (get-html-entrypoint one-tentacle)]
       (is (= loaded-entrypoint "/docs/doctopus-test/index.html"))))
-  (utils/clean-up-test-html "doctopus-test"))
+  (testing "Routes"
+    (let [tent-routes (generate-routes one-tentacle)
+          response (utils/fake-request tent-routes
+                                       :get
+                                       "/docs/doctopus-test/index.html")]
+      (is (truthy? (:body response)))
+      (is (= "text/html" ((:headers response) "Content-Type")))
+      (is (= 200 (:status response))))))

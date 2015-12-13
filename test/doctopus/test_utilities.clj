@@ -2,10 +2,13 @@
   (:require [clojure.string :as str]
             [clojure.test :refer :all]
             [doctopus.doctopus.head :refer [->Head]]
-            [doctopus.doctopus.tentacle :refer [map->Tentacle]]
-            [doctopus.storage :refer [remove-from-storage backend]])
+            [doctopus.doctopus.tentacle :refer [map->Tentacle]])
   (:import [org.joda.time DateTime]
            [org.joda.time.format DateTimeFormat]))
+
+(defn truthy? [v]
+  (or (true? v)
+      (and (not (nil? v)) (not (false? v)))))
 
 (def iso-formatter (DateTimeFormat/forPattern "yyyy-MM-dd"))
 
@@ -14,9 +17,12 @@
   (let [today (DateTime.)]
     (.print iso-formatter today)))
 
-(defn clean-up-test-html
-  [k]
-  (remove-from-storage backend k))
+;; Make mock requests
+(defn fake-request
+  [routes method uri & params]
+  (routes {:request-method method :uri uri :params (first params)}))
+
+;; Data-Mocking functions
 
 (defmulti mock-data (fn [kind length] kind))
 

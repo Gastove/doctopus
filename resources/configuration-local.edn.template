@@ -4,8 +4,6 @@
 
 {:env :development ;; sets a development environment
  :permanent-fs-root "change me to where you want doctopus to write"
- :backend "Optional; change to override the backend set in configuration.edn. Set
-           Set to one of: :postgres, :permanent-fs, :temp-fs (the default)"
  :database {:main {:db "database name, defaults to doctopus"
                    :user "database username"
                    :password "database password"

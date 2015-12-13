@@ -1,17 +1,11 @@
 (ns doctopus.test-database
   (:require [clojure.test :refer :all]
             [doctopus.configuration :refer [server-config]]
-            ;; [doctopus.db :as db]
             [doctopus.db :refer :all]
             [doctopus
              [db :refer :all]]
             [doctopus.db.schema :refer :all]
             [korma.db :refer [default-connection postgres]]))
-
-
-;; (defdb test-db (postgres
-;;                 (select-keys (get-in (server-config) [:database :test])
-;;                              [:db :user :password :host :port])))
 
 (defn truncate!
   [table-name]
@@ -23,8 +17,14 @@
   (do-sql-with-logging! "DROP SCHEMA public CASCADE" :test)
   (do-sql-with-logging! "CREATE  SCHEMA public" :test))
 
-(defn database-fixture
+(defn schema-only-fixture
   [f]
   (bootstrap-schema :test)
+  (f)
+  (obliterate!))
+
+(defn schema-and-content-fixture
+  [f]
+  (bootstrap :test)
   (f)
   (obliterate!))
