@@ -143,7 +143,6 @@
       (if success?
         (do (binding [fs/*cwd* target-dir]
               (let [html-dir (fs/file output-root)]
-                (log/debug html-dir)
                 (make-html-from-vec html-commands target-dir)
                 (check-and-report
                  (save-build-output this html-dir) name "generated HTML" "generate HTML"))))

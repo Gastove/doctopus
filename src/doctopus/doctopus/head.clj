@@ -1,7 +1,9 @@
 (ns doctopus.doctopus.head
-  (:require [clojure.edn :as edn]
+  (:require [clojure.core.async :as async]
+            [clojure.edn :as edn]
             [clojure.string :as str]
             [compojure.core :refer [context routes]]
+            [doctopus.channels :refer [build-channel]]
             [doctopus.configuration :refer [server-config]]
             [doctopus.db :as db]
             [doctopus.doctopus.tentacle :refer [map->Tentacle] :as t]
@@ -52,7 +54,7 @@
 
 ;; Head
 (defprotocol HeadMethods
-  (bootstrap-tentacles [this] [this subs-map])
+  (bootstrap-tentacles [this] [this subs-map] [this subs-map async?])
   (list-tentacles [this subs-map])
   (load-tentacle-routes [this subs-map]))
 
@@ -66,8 +68,13 @@
   (bootstrap-tentacles [this]
     (bootstrap-tentacles this {}))
   (bootstrap-tentacles [this subs-map]
+    (bootstrap-tentacles this {} false))
+  (bootstrap-tentacles [this subs-map async?]
     (let [tentacles (list-tentacles this subs-map)]
-      (doseq [tentacle tentacles] (t/load-html tentacle))))
+      (doseq [tentacle tentacles]
+        (if async?
+          (async/go (async/>! build-channel [t/load-html tentacle]))
+          (t/load-html tentacle)))))
   (load-tentacle-routes [this subs-map]
     (apply routes
            (for [tentacle (list-tentacles this subs-map)
