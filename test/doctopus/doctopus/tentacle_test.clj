@@ -7,19 +7,21 @@
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :refer :all]
             [doctopus.test-database :refer [schema-only-fixture]]
-            [doctopus.test-utilities :as utils]
+            [doctopus.test-utilities :as utils :refer [truthy?]]
             [me.raynes.fs :as fs]))
 
 (use-fixtures :once schema-only-fixture)
+
+(deftest test-image-regex
+  (testing "Our regex should match image types and nothing else!"
+    (is (truthy? (re-find image-re "image/png")) "We should match image/png")
+    (is (nil? (re-find image-re "text/html")) "We should not match text/html")))
 
 (def test-map-props
   (h/parse-tentacle-config-map
    (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn")))))
 
 (def one-tentacle (map->Tentacle test-map-props))
-
-(defn truthy? [v]
-  (or (true? v) (and (not (nil? v)) (false? v))))
 
 (deftest tentacle-test
   (db/save-tentacle! one-tentacle)
