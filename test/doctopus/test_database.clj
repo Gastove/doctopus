@@ -25,6 +25,6 @@
 
 (defn schema-and-content-fixture
   [f]
-  (bootstrap-schema :test)
+  (bootstrap :test)
   (f)
   (obliterate!))

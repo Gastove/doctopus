@@ -6,6 +6,10 @@
   (:import [org.joda.time DateTime]
            [org.joda.time.format DateTimeFormat]))
 
+(defn truthy? [v]
+  (or (true? v)
+      (and (not (nil? v)) (not (false? v)))))
+
 (def iso-formatter (DateTimeFormat/forPattern "yyyy-MM-dd"))
 
 (defn make-today

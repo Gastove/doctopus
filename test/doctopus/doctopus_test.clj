@@ -8,7 +8,8 @@
             [doctopus.doctopus :refer :all]
             [doctopus.doctopus.tentacle :as t]
             [doctopus.test-database :refer [schema-and-content-fixture]]
-            [doctopus.test-utilities :as utils])
+            [doctopus.test-utilities :as utils]
+            [taoensso.timbre :as log])
   (:import [doctopus.doctopus Doctopus]
            [doctopus.doctopus.head Head]))
 
@@ -18,8 +19,9 @@
 
 (deftest doctopus-test
   (testing "Can we list heads?"
-    (is (not (empty? (list-heads stunt-doctopus))))
-    (is (= "main" (:name (first (list-heads stunt-doctopus))))))
+    (let [heads (list-heads stunt-doctopus)]
+      (is (not (empty? heads)))
+      (is (= "main" (:name (first heads))))))
   (testing "Can we list tentacles?"
     (let [tent-list (list-tentacles stunt-doctopus)]
       (is (= 1 (count tent-list))
