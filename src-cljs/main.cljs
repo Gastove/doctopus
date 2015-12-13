@@ -16,10 +16,8 @@
   (if-let [page (:page app-state)]
     [((keyword page) pages) app-state]))
 
-(defn init
+(defn init!
   [app-state]
   (if-let [page-component (get-page-component app-state)]
     (reagent/render-component page-component (dom/getElement "app-content"))
     (js/console.debug "Abandoning init: no component is defined for this page")))
-
-(init (get-app-state))

@@ -61,8 +61,11 @@ For development, [figwheel][] is included. Do the following to get the figwheel
 server running and autobuilding:
 
 ```bash
-lein with-profile figwheel figwheel dev dev-omni # yes, figwheel twice!
+lein figwheel
 ```
+
+**Note:** ClojureScript building for the local dev environment assumes your lein
+environment is `:dev`; which is the case by default.
 
 ### SASS
 
