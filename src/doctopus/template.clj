@@ -45,8 +45,6 @@
 
 (deftemplate base-template "templates/base.html"
   [context]
-  [:h1] (enlive/wrap :a)
-  [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
   [:#app-state] (enlive/content (json/write-str context)))
 
 (defn- html
@@ -91,8 +89,35 @@
          :original-name head-name
          :csrf csrf-token/*anti-forgery-token*}))
 
+(defn tentacle-items
+  [tentacles]
+  [:ul
+    (for [tentacle tentacles]
+      (let [tentacle-name (:name tentacle)
+            tentacle-location (:location tentacle)]
+        ^{:key tentacle-name} [:li
+                               [:a {:href tentacle-location} tentacle-name]]))])
+
+(defn head-items
+  [heads]
+  [:ul
+    (for [head heads]
+      (let [head-name (:name head) head-location (:location head)]
+        ^{:key head-name} [:li [:a {:href head-location} head-name]]))])
+
+(defn- index-template
+  [doctopus]
+  (enlive/html
+    [:main
+     [:section.module
+      [:div.sub-header
+       [:h2 "Heads"]]
+      (head-items (map head-context (list-heads doctopus)))]
+     [:section.module
+      [:div.sub-header
+       [:h2 "Tentacles"]]
+      (tentacle-items (map tentacle-context (list-tentacles doctopus)))]]))
+
 (defn index
   [doctopus]
-  (html {:page "index"
-         :tentacles (map tentacle-context (list-tentacles doctopus))
-         :heads (map head-context (list-heads doctopus))}))
+  (add-to-element-with-fn (html {}) :body (index-template doctopus) enlive/substitute))
