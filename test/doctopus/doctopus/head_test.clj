@@ -12,13 +12,20 @@
 
 (use-fixtures :once schema-only-fixture)
 
-;; (deftest head-test
-;;   (db/save-head! one-head)
-;;   (testing "Can we bootstrap a Head's tentacles?"
-;;     (let [tentacles (list-tentacles head {})]
-;;       (is (not (empty? tentacles)) "Should have tentacles now")
-;;       (is (= "doctopus" (:name (first tentacles)))
-;;           "Should have a tentacle with a known name"))))
+(def test-map-props
+  (parse-tentacle-config-map
+   (edn/read-string (slurp (io/resource "test/heads/test/doctopus-test.edn")))))
+
+(def one-head (map->Head {:name "test"}))
+(def one-tentacle (t/map->Tentacle test-map-props))
+
+(deftest head-test
+  (db/save-head! one-head)
+  (db/save-tentacle! one-tentacle)
+  (db/create-mapping! one-head one-tentacle)
+  (testing "Can we bootstrap tentacles"
+    (bootstrap-tentacles one-head)
+    (is (< 0 (t/count-records one-tentacle)) "There should be HTML for this tentacle")))
 
 (deftest injest-shell-strings-test
   (let [input-single-vec ["make -C docs/ html"]

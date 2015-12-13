@@ -17,6 +17,15 @@
 
 (def stunt-doctopus (Doctopus. {} {}))
 
+;; ### A Note About this Stack of Tests
+;; One might notice that, while we test route matching in tentacle_tests.clj, we
+;; do _not_ do any route matching here, or in the tests for Head. This is
+;; because those routes effectively dispacth down to the tentacle -- which has
+;; to be able to match an arbirarily segmented URI, and thus has to do a GET "*"
+;; match on the entire URI. _However_, that match _also_ must include
+;; the "/docs" context, which is added to routes in web.clj. Therefore, routes
+;; are tested two places: in tentacle_tests; in web_tests.
+
 (deftest doctopus-test
   (testing "Can we list heads?"
     (let [heads (list-heads stunt-doctopus)]
