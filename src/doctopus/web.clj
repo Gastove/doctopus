@@ -94,6 +94,10 @@
   [_]
   (serve-html (templates/heads-list doctopus)))
 
+(defn serve-admin
+  [request]
+  (serve-html (templates/admin doctopus)))
+
 (defn serve-search-results
   [request]
   (let [query (:query-params request)
@@ -114,7 +118,8 @@
   (routes
    (GET "/" [] serve-index)
    (GET "/index.html" [] serve-index)
-   ;(GET "/admin/*" [] serve-admin)
+   (GET "/admin" [] serve-admin)
+   (GET "/admin/*" [] serve-admin)
    (GET "/heads" [] serve-all-heads)
    (GET "/heads/:head-name" [head-name] serve-head)
    ;(GET "/tentacles" [] serve-all-tentacles)

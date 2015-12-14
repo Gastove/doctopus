@@ -3,7 +3,7 @@
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
-            [clojure.data.json :as json]
+            [cheshire.core :as json]
             [ring.util.anti-forgery :as csrf]
             [ring.middleware.anti-forgery :as csrf-token]))
 
@@ -45,7 +45,7 @@
 
 (deftemplate base-template "templates/base.html"
   [context]
-  [:#app-state] (enlive/content (json/write-str context)))
+  [:#app-state] (enlive/content (json/generate-string context)))
 
 (defn- html
   "wraps the given body in the base template"
@@ -57,7 +57,7 @@
   element used to communicate context to the frontend cljs app on page load"
   [context]
   (enlive/html
-    [:script#app-state {:type "application/json"} (json/write-str context)]))
+    [:script#app-state {:type "application/json"} (json/generate-string context)]))
 
 (defn add-omnibar
   "given a string of HTML, returns a string with a the Doctopus omnibar and
@@ -121,3 +121,10 @@
 (defn index
   [doctopus]
   (add-to-element-with-fn (html {}) :body (index-template doctopus) enlive/substitute))
+
+(defn admin
+  [doctopus]
+  (html {:page "admin"
+         :tentacles (list-tentacles doctopus)
+         :heads (list-heads doctopus)
+         :csrf csrf-token/*anti-forgery-token*}))

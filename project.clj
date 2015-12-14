@@ -25,6 +25,10 @@
                  [cljs-http "0.1.38"]
                  [reagent "0.5.1"]
                  [reagent-forms "0.5.13"]
+                 [reagent-utils "0.1.5"]
+                 [secretary "1.2.3"]
+                 [venantius/accountant "0.1.5"
+                  :exclusions [org.clojure/tools.reader]]
                  [org.postgresql/postgresql "9.4-1206-jdbc4"]
                  [org.clojure/java.jdbc "0.3.6"]
                  [camel-snake-kebab "0.3.1" :exclusions [org.clojure/clojure]]

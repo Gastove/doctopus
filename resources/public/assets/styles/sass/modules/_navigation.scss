@@ -1,1 +1,11 @@
 // Navigation
+
+nav {
+    ul {
+        border: none;
+
+        > li {
+            float: right;
+        }
+    }
+}

@@ -834,7 +834,7 @@ input:-moz-placeholder {
 input[disabled] {
   border-color: #dfdfdf;
   box-shadow: none; }
-  input[disabled][type="button"] {
+  input[disabled][type="button"], input[disabled][type="submit"] {
     border-color: #dfdfdf;
     background: #dfdfdf; }
 
@@ -932,6 +932,11 @@ main,
     -webkit-transform: translateY(-50%);
     -ms-transform: translateY(-50%);
     transform: translateY(-50%); }
+
+nav ul {
+  border: none; }
+  nav ul > li {
+    float: right; }
 
 html {
   height: 100%; }
