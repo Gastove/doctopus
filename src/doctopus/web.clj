@@ -201,6 +201,6 @@
     (log/info "Checking DB is set up...")
     (schema/bootstrap env)
     (log/info "Bootstrapping heads")
-    (bootstrap-heads doctopus)
+    (bootstrap-heads doctopus true)
     (log/info "Starting HTTP server on port" port)
     (server/run-server application {:port port})))
