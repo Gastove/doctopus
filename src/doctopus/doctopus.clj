@@ -7,7 +7,9 @@
   Each Doctopus will have one or more Heads, which represent a logical grouping
   of docs, and some number of Tentacles -- individual sources of documentation
   orchestrated by the Head. "
-  (:require [compojure.core :refer [context routes]]
+  (:require [clojure.core.async :as async]
+            [compojure.core :refer [context routes]]
+            [doctopus.channels :refer [build-channel]]
             [doctopus.db :as db]
             [doctopus.doctopus.head :as h]
             [doctopus.doctopus.tentacle :as t]
@@ -16,18 +18,30 @@
 
 ;; Here there be Peculiar Metaphors for Information Dissemination
 (defprotocol DoctopusMethods
-  (bootstrap-heads [this])
+  (bootstrap-heads [this] [this async?])
   (load-routes [this])
   (list-heads [this])
   (list-tentacles [this])
   (list-tentacles-by-head [this head]))
 
+(defn start-html-builder
+  "Spins up a go loop that builds HTML away from the main application
+  process."
+  []
+  (async/go-loop []
+    (let [[val ch] (async/alts! [build-channel (async/timeout 1000)])]
+      (if val ;; val will be a pair of [fn fn-args]
+        ((first val) (second val)))
+      (recur))))
+
 (defrecord Doctopus
     [configuration substitutions]
   DoctopusMethods
-  (bootstrap-heads [this]
+  (bootstrap-heads [this] (bootstrap-heads this false))
+  (bootstrap-heads [this async?]
+    (start-html-builder)
     (let [heads (map h/map->Head (db/get-all-heads))]
-      (doall (map #(h/bootstrap-tentacles % substitutions) heads))))
+      (doall (map #(h/bootstrap-tentacles % substitutions async?) heads))))
   (list-heads [this] (doall (map h/map->Head (db/get-all-heads))))
   (list-tentacles [this]
     (into [] (flatten (for [head (list-heads this)
