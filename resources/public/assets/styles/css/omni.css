@@ -154,7 +154,7 @@
   #doctopus-omnibar input[disabled] {
     border-color: #dfdfdf;
     box-shadow: none; }
-    #doctopus-omnibar input[disabled][type="button"] {
+    #doctopus-omnibar input[disabled][type="button"], #doctopus-omnibar input[disabled][type="submit"] {
       border-color: #dfdfdf;
       background: #dfdfdf; }
   #doctopus-omnibar .half-field,

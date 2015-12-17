@@ -3,31 +3,12 @@
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to in? maybe-conj]]
             [doctopus.validation :as validation]
-            [doctopus.views.common :refer [button]]
+            [doctopus.views.common :refer [button create-input create-submit-form]]
             [reagent.core :refer [atom]])
   (:require-macros [cljs.core.async.macros :refer [go go-loop]]))
 
-(defn- create-submit-form
-  [submit-url csrf-token]
-  (fn [form-data]
-    (go
-      (<! (http/post submit-url
-                     {:json-params form-data
-                      :headers {"X-CSRF-Token" csrf-token}})))))
-
-(defn- create-head-input
-  [form-atom]
-  (fn [form-data errors]
-    (let [head-name (:name form-data)]
-      [:div
-       [:input#head-name
-        {:type "text"
-         :value head-name
-         :on-change #(swap! form-atom assoc :name (get-value %))}]
-       (when (in? :name-invalid errors)
-         [:p "Head name invalid"])
-       (when (in? :name-taken errors)
-         [:p "Head name taken"])])))
+(def head-name-errors {:name-invalid "Head name invalid"
+                       :name-taken   "Head name taken"})
 
 (defn create-head-form
   [channel]
@@ -39,7 +20,7 @@
           validator (validation/create-form-validator validation-map)
           form-atom (atom {:original-name original-name :name original-name})
           errors (atom [:name-empty])
-          head-input (create-head-input form-atom)
+          head-input (create-input :name form-atom head-name-errors)
           submit-form! (create-submit-form submit-url csrf)
           on-submit (fn [event]
                       (.preventDefault event)

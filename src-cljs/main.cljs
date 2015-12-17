@@ -18,7 +18,7 @@
 (defn init!
   [app-state]
   (if (= (:page app-state) "admin")
-    (admin/init!)
+    (admin/init! app-state)
     (if-let [page-component (get-page-component app-state)]
       (reagent/render-component page-component (dom/getElement "app-content"))
       (js/console.debug "Abandoning init: no component is defined for this page"))))

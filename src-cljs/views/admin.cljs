@@ -11,6 +11,9 @@
 
 (declare route-home route-head route-tentacle)
 
+(defonce app-state (r/atom {}))
+(defonce heads (r/atom {}))
+
 ;; -------------------------
 ;; Views
 
@@ -21,14 +24,17 @@
     [:li [:a {:href (route-tentacle)} "Deal with Tentacles"]]]])
 
 (defn head-page []
-  (let [channel (chan)
-        head-form (create-head-form channel)]
+  (let [page-state (r/atom {})
+        head-channel (chan)
+        head-form (create-head-form head-channel)]
     (go-loop []
-      (let [response (<! channel)]
-        (println response)
+      (let [response (<! head-channel)]
+        (swap! heads assoc :heads (:body response))
         (recur)))
     [:div [:h2 "Head!"]
-     [:div [head-form {:submit-url "/a/b/c"}]]
+     [:div [head-form {:submit-url "/jsapi/v1/heads"
+                       :csrf (:csrf @app-state)
+                       :heads (map last @heads)}]]
      [:div [:a {:href (route-home)} "go home"]]]))
 
 (defn tentacle-page []
@@ -59,7 +65,11 @@
 (defn mount-root []
   (r/render [current-page] (.getElementById js/document "app-content")))
 
-(defn init! []
-  (accountant/configure-navigation!)
-  (accountant/dispatch-current!)
-  (mount-root))
+(defn init! [initial-state]
+  (let [h (get initial-state :heads [])
+        heads-map (zipmap (map #(keyword (:name %)) h) h)]
+    (reset! app-state initial-state)
+    (reset! heads heads-map)
+    (accountant/configure-navigation!)
+    (accountant/dispatch-current!)
+    (mount-root)))
