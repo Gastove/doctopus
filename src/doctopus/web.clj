@@ -7,6 +7,7 @@
             [doctopus.configuration :refer [server-config docs-uri-prefix]]
             [doctopus.db :as db]
             [doctopus.db.schema :as schema]
+            [doctopus.web.jsapi :as jsapi]
             [doctopus.doctopus :refer [load-routes bootstrap-heads list-heads]]
             [doctopus.files.predicates :refer [html?]]
             [doctopus.template :as templates]
@@ -85,17 +86,6 @@
   [_]
   (serve-html (templates/index doctopus)))
 
-(defn serve-add-head-form
-  [_]
-  (serve-html (templates/add-head doctopus)))
-
-(defn add-head
-  [request]
-  (let [head-name (get-in request [:body "name"])]
-    (do
-      (db/save-head! {:name head-name})
-      (serve-json {:success-url (str "/heads/" head-name)}))))
-
 (defn serve-head
   [params]
   (serve-html (templates/head-page (get-in params [:route-params :head-name]))))
@@ -104,9 +94,9 @@
   [_]
   (serve-html (templates/heads-list doctopus)))
 
-(defn serve-add-tentacle-form
-  [_]
-  (serve-html (templates/add-tentacle doctopus)))
+(defn serve-admin
+  [request]
+  (serve-html (templates/admin doctopus)))
 
 (defn serve-search-results
   [request]
@@ -124,29 +114,18 @@
                             :snippet "this is some other piece of snippet text for yer context"
                             :url "/some/other/url"}]})))
 
-(defn add-tentacle
-  [request]
-  (let [params (keywordize-keys (:body request))
-        tentacle {:name            (:name params)
-                  :html-commands   (str/split-lines (:command params))
-                  :source-location (:source params)}
-        head (db/get-head (:head params))]
-    (db/save-tentacle! tentacle)
-    (db/create-mapping! head tentacle)
-    (serve-json {:success-url (str "/tentacles/" (:name tentacle))})))
-
 (def doctopus-routes
   (routes
    (GET "/" [] serve-index)
    (GET "/index.html" [] serve-index)
-   (GET "/frame.html" [] serve-all-heads)
+   (GET "/admin" [] serve-admin)
+   (GET "/admin/*" [] serve-admin)
    (GET "/heads" [] serve-all-heads)
    (GET "/heads/:head-name" [head-name] serve-head)
-   (GET "/add-head" [] serve-add-head-form)
-   (POST "/add-head" [] add-head)
-   (GET "/add-tentacle" [] serve-add-tentacle-form)
-   (POST "/add-tentacle" [] add-tentacle)
-   (GET "/search" [] serve-search-results)))
+   ;(GET "/tentacles" [] serve-all-tentacles)
+   ;(GET "/tentacles/:tentacle-name" [tentacle-name] serve-tentacle)
+   (GET "/search" [] serve-search-results)
+   (context "/jsapi/v1" [] jsapi/jsapi-routes)))
 
 (defn- get-tentacle-from-uri
   [request-uri]

@@ -3,7 +3,7 @@
             [doctopus.configuration :refer [server-config]]
             [doctopus.doctopus :refer [list-heads list-tentacles list-tentacles-by-head]]
             [doctopus.doctopus.tentacle :refer [get-html-entrypoint]]
-            [clojure.data.json :as json]
+            [cheshire.core :as json]
             [ring.util.anti-forgery :as csrf]
             [ring.middleware.anti-forgery :as csrf-token]))
 
@@ -45,9 +45,7 @@
 
 (deftemplate base-template "templates/base.html"
   [context]
-  [:h1] (enlive/wrap :a)
-  [[:a enlive/first-of-type]] (enlive/set-attr :href "/" :target "_parent")
-  [:#app-state] (enlive/content (json/write-str context)))
+  [:#app-state] (enlive/content (json/generate-string context)))
 
 (defn- html
   "wraps the given body in the base template"
@@ -59,7 +57,7 @@
   element used to communicate context to the frontend cljs app on page load"
   [context]
   (enlive/html
-    [:script#app-state {:type "application/json"} (json/write-str context)]))
+    [:script#app-state {:type "application/json"} (json/generate-string context)]))
 
 (defn add-omnibar
   "given a string of HTML, returns a string with a the Doctopus omnibar and
@@ -79,23 +77,6 @@
   (let [head-name (:name head)]
     {:name head-name :location (str "/heads/" head-name)}))
 
-(defn add-tentacle
-  "creates the page with form for adding a Doctopus tentacle"
-  [doctopus]
-  (html {:page "add-tentacle"
-         :submit "/add-tentacle"
-         :heads (map head-context (list-heads doctopus))
-         :tentacles (map tentacle-context (list-tentacles doctopus))
-         :csrf csrf-token/*anti-forgery-token*}))
-
-(defn add-head
-  "creates the page with form for adding a Doctopus head"
-  [doctopus]
-  (html {:page "add-head"
-         :submit-url "/add-head"
-         :heads (map head-context (list-heads doctopus))
-         :csrf csrf-token/*anti-forgery-token*}))
-
 (defn heads-list
   [doctopus]
   (html {:page "heads-list"
@@ -108,8 +89,42 @@
          :original-name head-name
          :csrf csrf-token/*anti-forgery-token*}))
 
+(defn tentacle-items
+  [tentacles]
+  [:ul
+    (for [tentacle tentacles]
+      (let [tentacle-name (:name tentacle)
+            tentacle-location (:location tentacle)]
+        ^{:key tentacle-name} [:li
+                               [:a {:href tentacle-location} tentacle-name]]))])
+
+(defn head-items
+  [heads]
+  [:ul
+    (for [head heads]
+      (let [head-name (:name head) head-location (:location head)]
+        ^{:key head-name} [:li [:a {:href head-location} head-name]]))])
+
+(defn- index-template
+  [doctopus]
+  (enlive/html
+    [:main
+     [:section.module
+      [:div.sub-header
+       [:h2 "Heads"]]
+      (head-items (map head-context (list-heads doctopus)))]
+     [:section.module
+      [:div.sub-header
+       [:h2 "Tentacles"]]
+      (tentacle-items (map tentacle-context (list-tentacles doctopus)))]]))
+
 (defn index
   [doctopus]
-  (html {:page "index"
-         :tentacles (map tentacle-context (list-tentacles doctopus))
-         :heads (map head-context (list-heads doctopus))}))
+  (add-to-element-with-fn (html {}) :body (index-template doctopus) enlive/substitute))
+
+(defn admin
+  [doctopus]
+  (html {:page "admin"
+         :tentacles (list-tentacles doctopus)
+         :heads (list-heads doctopus)
+         :csrf csrf-token/*anti-forgery-token*}))

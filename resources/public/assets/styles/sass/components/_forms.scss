@@ -147,7 +147,7 @@ input[disabled] {
     border-color:#dfdfdf;
     box-shadow:none;
 
-    &[type="button"] {
+    &[type="button"], &[type="submit"] {
         border-color: #dfdfdf;
         background: #dfdfdf;
     }
