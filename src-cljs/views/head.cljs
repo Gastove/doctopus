@@ -1,4 +1,4 @@
-(ns doctopus.views.head-form
+(ns doctopus.views.head
   (:require [cljs.core.async :refer [<! >! chan]]
             [cljs-http.client :as http]
             [doctopus.util :refer [get-value http-ok? redirect-to in? maybe-conj]]
@@ -40,3 +40,12 @@
               [head-input @form-atom @errors]]]
             [:input
              (maybe-conj (> (count @errors) 0) {:type :submit :value "Save"} {:disabled true})]]])))))
+
+(defn create-head-list
+  [channel]
+  (fn
+     [{:keys [csrf delete-url heads] :or {heads []}}]
+     (fn []
+       [:ul
+        (for [head heads]
+          [:li (:name head)])])))
